@@ -5,8 +5,16 @@ const InfosContent = () => {
   return (
     <Container>
       <InfosContentImageContainer>
-        {/* <InfosContentImage /> */}
+        <InfosContentImage />
       </InfosContentImageContainer>
+      <InfosContentCardRounded>
+        <span>QUANTITÉ</span>
+        <span>200</span>
+      </InfosContentCardRounded>
+      <InfosContentCardRounded>
+        <span>Total</span>
+        <span>2</span>
+      </InfosContentCardRounded>
       <InfosContentCard>
         <InfosContentCardTitle>NOM</InfosContentCardTitle>
         <InfosContentCardText>
@@ -60,9 +68,9 @@ const InfosContent = () => {
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 1rem;
+  & > div {
+    margin-bottom: 1rem;
+  }
 `;
 
 const InfosContentImageContainer = styled.div`
@@ -70,6 +78,9 @@ const InfosContentImageContainer = styled.div`
   height: 150px;
   border: 1px solid ${color.border};
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const InfosContentImage = styled.img`
@@ -87,13 +98,32 @@ const InfosContentCard = styled.div`
   row-gap: 0.2rem;
   border-radius: 5px;
 `;
+
+const InfosContentCardRounded = styled.div`
+  display: inline-block;
+  padding: 0.5rem;
+  border-radius: 40px;
+  margin-right: 1rem;
+  background: ${color.blue2};
+  color: ${color.darkBlue};
+  & > span:first-child {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+  & > span:last-child {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-right: 10px;
+  }
+`;
 const InfosContentCardTitle = styled.h2`
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: ${color.darkBlue};
   text-transform: uppercase;
 `;
-const InfosContentCardText = styled.h2`
+const InfosContentCardText = styled.p`
   font-size: 0.9rem;
   font-weight: 500;
   color: ${color.darkBlue};

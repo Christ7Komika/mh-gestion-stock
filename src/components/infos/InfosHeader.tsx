@@ -19,6 +19,11 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 20px 1fr;
   column-gap: 0.5rem;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: #fff;
+  box-shadow: 0.5px 1px 6px rgba(0, 0, 0, 0.2);
 `;
 
 const ColorLine = styled.div`
@@ -36,8 +41,8 @@ const InfosHeaderColumnContent = styled.div`
 `;
 
 const InfosHeaderTitle = styled.h2`
-  font-size: 1.2rem;
-  font-weight: 900;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: ${color.darkBlue};
   text-transform: uppercase;
 `;

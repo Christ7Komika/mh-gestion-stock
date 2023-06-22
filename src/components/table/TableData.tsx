@@ -3,19 +3,26 @@ import { color } from "../../utils/color";
 import AddButton from "../input/AddButton";
 import SimpleSearchBard from "../input/SimpleSearchBard";
 import Table from "./Table";
+import { useState } from "react";
+import Modal from "../modal/Modal";
 
-const TableData = () => (
-  <>
-    <Container>
-      <HeaderTitle>FOURNISSEURS</HeaderTitle>
-      <GroupButton>
-        <SimpleSearchBard />
-        <AddButton />
-      </GroupButton>
-    </Container>
-    <Table />
-  </>
-);
+const TableData = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {open && <Modal />}
+      <Container>
+        <HeaderTitle>FOURNISSEURS</HeaderTitle>
+        <GroupButton>
+          <SimpleSearchBard />
+          <AddButton setOpen={setOpen} />
+        </GroupButton>
+      </Container>
+      <Table />
+    </>
+  );
+};
 
 export const Container = styled.div`
   display: grid;

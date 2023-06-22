@@ -2,9 +2,13 @@ import { IoAdd } from "react-icons/io5";
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
 
-const AddButton = () => {
+interface Props {
+  setOpen: Function;
+}
+
+const AddButton = ({ setOpen }: Props) => {
   return (
-    <Container>
+    <Container onClick={() => setOpen(true)}>
       <ButtonIcon>
         <IoAdd size={25} />
       </ButtonIcon>
