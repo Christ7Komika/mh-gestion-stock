@@ -21,7 +21,7 @@ export const Container = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 2fr;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 `;
 
 export const HeaderTitle = styled.div`

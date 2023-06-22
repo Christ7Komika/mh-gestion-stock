@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { color } from "../../utils/color";
 
 export const SectionX3 = styled.main`
   display: grid;
@@ -11,6 +12,18 @@ export const Section = styled.section`
   background: #fff;
   width: 100%;
   height: 100%;
-  padding: 1rem;
   overflow-y: auto;
+  position: relative;
+  & > div {
+    padding: 1rem;
+  }
+  &::-webkit-scrollbar {
+    width: 5px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${color.border};
+    border-radius: 5px;
+  }
 `;

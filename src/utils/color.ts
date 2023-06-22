@@ -5,4 +5,12 @@ export const color = {
   selectedBorder: "#0582FF",
   fadeBlue: "#C1E0FE",
   grey: "#F9F9F9",
+  red: "#FF5F66",
+  orange: "#FEC584",
+  blue: "#67B8FF",
+  green: "#55D88A",
+  darkRed: "#6E050A",
+  darkSkyBlue: "#01549C",
+  darkOrange: "#AC6311",
+  darkGreen: "#196638",
 };

@@ -1,5 +1,7 @@
 import GroupCard from "../components/card/GroupCard";
 import Header from "../components/header/Header";
+import InfosContent from "../components/infos/InfosContent";
+import InfosHeader from "../components/infos/InfosHeader";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/table/TableData";
 
@@ -13,7 +15,10 @@ const Suppliers = () => {
           <GroupCard />
           <TableData />
         </Section>
-        <Section>3</Section>
+        <Section>
+          <InfosHeader />
+          <InfosContent />
+        </Section>
       </SectionX3>
     </>
   );
