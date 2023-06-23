@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import SupplierModal from "./SupplierModal";
+import { color } from "../../utils/color";
 
 const Modal = () => {
   return (
@@ -21,6 +22,38 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 2rem;
+  height: 35px;
+`;
+
+export const ModalHeaderTitle = styled.div`
+  font-size: 1rem;
+  font-weight: 600;
+  color: ${color.darkBlue};
+`;
+
+export const ModalHeaderExit = styled.div`
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  background-color: ${color.red};
+  color: ${color.darkRed};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const ModalForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.4rem;
 `;
 
 export default Modal;
