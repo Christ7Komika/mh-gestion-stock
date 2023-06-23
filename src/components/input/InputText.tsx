@@ -1,11 +1,32 @@
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
+import { useEffect, useState } from "react";
 
-const InputText = () => {
+interface Props {
+  setValue: Function;
+  name: string;
+  id: string;
+  defaultValue: string | null;
+  error: string | null;
+}
+
+const InputText = ({ name, defaultValue, id, setValue, error }: Props) => {
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    setValue(text);
+  }, [text]);
   return (
     <Container>
-      <Label htmlFor="name">Nom</Label>
-      <Input id="name" />
+      <Label htmlFor={id}>
+        {name}
+        {error && <LabelError>{error}</LabelError>}
+      </Label>
+      <Input
+        id={id}
+        onChange={(e) => setText(e.target.value)}
+        defaultValue={text ? text : defaultValue ? defaultValue : ""}
+      />
     </Container>
   );
 };
@@ -17,9 +38,17 @@ const Container = styled.div`
 `;
 
 const Label = styled.label`
+  width: 100%;
   font-size: 0.9rem;
   font-weight: 600;
   color: ${color.darkBlue};
+  display: flex;
+  justify-content: space-between;
+`;
+
+const LabelError = styled.small`
+  color: ${color.red};
+  font-size: 0.75rem;
 `;
 
 const Input = styled.input`

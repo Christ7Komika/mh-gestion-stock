@@ -5,7 +5,7 @@ import InfosContent from "../components/infos/InfosContent";
 import InfosHeader from "../components/infos/InfosHeader";
 import InfosHistoricalHeader from "../components/infos/InfosHistoricalHeader";
 import { Section, SectionX3 } from "../components/layout/Layout";
-import TableData from "../components/table/TableData";
+import TableData from "../components/section/suppliers/TableData";
 
 const Clients = () => {
   return (

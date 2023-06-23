@@ -9,7 +9,7 @@ export const color = {
   orange: "#FEC584",
   blue: "#67B8FF",
   blue2: "#C1E0FE",
-  green: "#55D88A",
+  green: "#C7E8CA",
   darkRed: "#6E050A",
   darkSkyBlue: "#01549C",
   darkOrange: "#AC6311",

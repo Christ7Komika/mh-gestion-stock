@@ -18,9 +18,9 @@ interface Props {
   setAction: Function;
 }
 
-const SupplierModal = ({ setAction }: Props) => {
+const ClientModal = ({ setAction }: Props) => {
   const [name, setName] = useState<string | null>(null);
-  const [reference, setReference] = useState<string | null>(null);
+  const [societe, setSociete] = useState<string | null>(null);
   const [tel1, setTel1] = useState<string | null>(null);
   const [tel2, setTel2] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
@@ -47,7 +47,7 @@ const SupplierModal = ({ setAction }: Props) => {
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Ajouter un fournisseur</ModalHeaderTitle>
+          <ModalHeaderTitle>Ajouter un Client</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
@@ -62,10 +62,10 @@ const SupplierModal = ({ setAction }: Props) => {
             error={nameError}
           />
           <InputText
-            name="Référence *"
-            id="reference"
-            defaultValue={reference}
-            setValue={setReference}
+            name="Société *"
+            id="société"
+            defaultValue={societe}
+            setValue={setSociete}
             error={referenceError}
           />
           <InputText
@@ -127,4 +127,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default SupplierModal;
+export default ClientModal;

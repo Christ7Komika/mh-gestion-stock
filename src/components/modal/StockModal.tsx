@@ -7,18 +7,20 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
+  ModalSection3,
   ModalValidButton,
 } from "../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import InputText from "../input/InputText";
 import React, { useEffect, useState } from "react";
 import InputImage from "../input/InputImage";
+import InputSelect from "../input/InputSelect";
 
 interface Props {
   setAction: Function;
 }
 
-const SupplierModal = ({ setAction }: Props) => {
+const StockModal = ({ setAction }: Props) => {
   const [name, setName] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
   const [tel1, setTel1] = useState<string | null>(null);
@@ -52,44 +54,85 @@ const SupplierModal = ({ setAction }: Props) => {
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <ModalForm>
-          <InputImage setValue={setImage} id="image" defaultImage={""} />
-          <InputText
-            name="Nom *"
-            id="name"
-            defaultValue={name}
-            setValue={setName}
-            error={nameError}
-          />
-          <InputText
-            name="Référence *"
-            id="reference"
-            defaultValue={reference}
-            setValue={setReference}
-            error={referenceError}
-          />
-          <InputText
-            name="Téléphone 1 *"
-            id="tel1"
-            defaultValue={tel1}
-            setValue={setTel1}
-            error={tel1Error}
-          />
-          <InputText
-            name="Téléphone 2"
-            id="tel2"
-            defaultValue={tel2}
-            setValue={setTel2}
-            error={tel1Error}
-          />
-          <InputText
-            name="Email *"
-            id="email"
-            defaultValue={email}
-            setValue={setEmail}
-            error={emailError}
-          />
-        </ModalForm>
+        <ModalSection3>
+          <ModalForm>
+            <InputImage setValue={setImage} id="image" defaultImage={""} />
+            <InputText
+              name="Nom *"
+              id="name"
+              defaultValue={name}
+              setValue={setName}
+              error={nameError}
+            />
+            <InputText
+              name="Référence *"
+              id="reference"
+              defaultValue={reference}
+              setValue={setReference}
+              error={referenceError}
+            />
+            <InputText
+              name="Téléphone 1 *"
+              id="tel1"
+              defaultValue={tel1}
+              setValue={setTel1}
+              error={tel1Error}
+            />
+            <InputText
+              name="Téléphone 2"
+              id="tel2"
+              defaultValue={tel2}
+              setValue={setTel2}
+              error={tel1Error}
+            />
+            <InputSelect
+              name="Reference *"
+              id="email"
+              defaultValue={email}
+              setValue={setEmail}
+              error={emailError}
+            />
+          </ModalForm>
+          <ModalForm>
+            <InputImage setValue={setImage} id="image" defaultImage={""} />
+            <InputText
+              name="Nom *"
+              id="name"
+              defaultValue={name}
+              setValue={setName}
+              error={nameError}
+            />
+            <InputText
+              name="Référence *"
+              id="reference"
+              defaultValue={reference}
+              setValue={setReference}
+              error={referenceError}
+            />
+            <InputText
+              name="Téléphone 1 *"
+              id="tel1"
+              defaultValue={tel1}
+              setValue={setTel1}
+              error={tel1Error}
+            />
+            <InputText
+              name="Téléphone 2"
+              id="tel2"
+              defaultValue={tel2}
+              setValue={setTel2}
+              error={tel1Error}
+            />
+            <InputText
+              name="Email *"
+              id="email"
+              defaultValue={email}
+              setValue={setEmail}
+              error={emailError}
+            />
+          </ModalForm>
+        </ModalSection3>
+
         <ModalGroupButton>
           <ModalValidButton onClick={(e) => submit(e)}>
             Valider
@@ -127,4 +170,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default SupplierModal;
+export default StockModal;

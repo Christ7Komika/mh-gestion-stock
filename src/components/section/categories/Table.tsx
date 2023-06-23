@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { color } from "../../utils/color";
+import { color } from "../../../utils/color";
 import { IoAdd, IoCreate } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 
