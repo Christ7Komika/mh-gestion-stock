@@ -67,12 +67,38 @@ export const ModalForm = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.4rem;
+  width: 300px;
+`;
+
+export const ModalDoubleFormGroup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.5rem;
+  width: 300px;
+`;
+export const ModalTripleFormGroup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 0.5rem;
+  width: 300px;
 `;
 
 export const ModalGroupButton = styled.div`
   display: flex;
   width: 100%;
   column-gap: 0.5rem;
+`;
+
+export const ModalInfosTitle = styled.h2`
+  width: 300px;
+  height: 60px;
+  border-radius: 5px;
+  background: ${color.fadeBlue};
+  color: ${color.darkBlue};
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 60px;
+  text-align: center;
 `;
 
 export const ModalButton = styled.button`
@@ -84,6 +110,20 @@ export const ModalButton = styled.button`
   &:hover {
     opacity: 0.8;
   }
+`;
+
+export const ModalStockInfos = styled.div`
+  width: 100%;
+  display: flex;
+  column-gap: 1rem;
+`;
+export const ModalStockInfosData = styled.p`
+  padding: 0.5rem 1.5rem;
+  height: 35px;
+  border-radius: 35px;
+  background: ${color.fadeBlue};
+  color: ${color.darkBlue};
+  font-size: 0.9rem;
 `;
 
 export const ModalValidButton = styled(ModalButton)`

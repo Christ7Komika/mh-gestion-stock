@@ -1,52 +1,5 @@
-import styled from "styled-components";
-import { color } from "../../../utils/color";
-import { IoAdd, IoCreate } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
-
-const Table = () => {
-  return (
-    <TableContainer>
-      <table>
-        <TableHeader>
-          <THRow>
-            <THead>ID</THead>
-            <THead>Nom</THead>
-            <THead>Référence</THead>
-            <THead>Téléphone</THead>
-            <THead>Email</THead>
-            <THead>Ajouté le</THead>
-            <THead>Action</THead>
-          </THRow>
-        </TableHeader>
-        <TableBody>
-          <TRow>
-            <TData>1</TData>
-            <TData>Christ Komika</TData>
-            <TData>WB56DED</TData>
-            <TData>+242 05 564 32 95</TData>
-            <TData>christkomika7@gmail.com</TData>
-            <TData>21/06/2023</TData>
-            <TData>
-              <OptionGroup>
-                <Option action="add">
-                  <IoAdd size={15} />
-                </Option>
-
-                <Option action="update">
-                  <IoCreate size={15} />
-                </Option>
-
-                <Option action="delete">
-                  <MdDelete size={15} />
-                </Option>
-              </OptionGroup>
-            </TData>
-          </TRow>
-        </TableBody>
-      </table>
-    </TableContainer>
-  );
-};
+import { styled } from "styled-components";
+import { color } from "../../utils/color";
 
 interface OptionProps {
   action: "delete" | "update" | "add" | "remove";
@@ -56,7 +9,7 @@ interface TRowProps {
   selected?: boolean;
 }
 
-const TableContainer = styled.div`
+export const TableContainer = styled.div`
   width: 100%;
 
   & table {
@@ -66,7 +19,7 @@ const TableContainer = styled.div`
   }
 `;
 
-const TableHeader = styled.thead`
+export const TableHeader = styled.thead`
   border-bottom: 10px solid #fff;
   position: sticky;
   top: 154px;
@@ -74,7 +27,7 @@ const TableHeader = styled.thead`
   background: #fff;
   backdrop-filter: blur(1000px);
 `;
-const THead = styled.th`
+export const THead = styled.th`
   font-size: 1rem;
   font-weight: 500;
   color: ${color.darkBlue};
@@ -83,7 +36,7 @@ const THead = styled.th`
   background: #fff;
   backdrop-filter: blur(1000px);
 `;
-const THRow = styled.tr`
+export const THRow = styled.tr`
   height: 50px;
   background-color: #fff;
   border-radius: 5px;
@@ -93,7 +46,7 @@ const THRow = styled.tr`
   appearance: none;
   z-index: 2;
 `;
-const TRow = styled.tr<TRowProps>`
+export const TRow = styled.tr<TRowProps>`
   appearance: none;
   height: 50px;
   outline: ${({ selected }) =>
@@ -103,11 +56,29 @@ const TRow = styled.tr<TRowProps>`
   transition: linear 0.4s;
 `;
 
-const TData = styled.td`
+export const TDImg = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: contain;
+  object-position: center center;
+  background-color: ${color.grey};
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+export const TData = styled.td`
   text-align: center;
   font-size: 0.9rem;
+  position: relative;
 `;
-const TableBody = styled.tbody`
+
+export const TableBody = styled.tbody`
   margin-top: 0.5rem;
   & tr {
     background: ${color.fadeBlue};
@@ -117,13 +88,13 @@ const TableBody = styled.tbody`
   }
 `;
 
-const OptionGroup = styled.div`
+export const OptionGroup = styled.div`
   display: flex;
   justify-content: center;
   column-gap: 5px;
 `;
 
-const Option = styled.div<OptionProps>`
+export const Option = styled.div<OptionProps>`
   width: 25px;
   height: 25px;
   border-radius: 25px;
@@ -149,4 +120,3 @@ const Option = styled.div<OptionProps>`
       ? color.darkGreen
       : color.darkOrange};
 `;
-export default Table;

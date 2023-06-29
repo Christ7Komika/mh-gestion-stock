@@ -2,12 +2,15 @@ import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import {
   ModalCancelButton,
+  ModalDoubleFormGroup,
   ModalForm,
   ModalGroupButton,
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
+  ModalInfosTitle,
   ModalSection3,
+  ModalTripleFormGroup,
   ModalValidButton,
 } from "../layout/Layout";
 import { IoExit } from "react-icons/io5";
@@ -15,36 +18,35 @@ import InputText from "../input/InputText";
 import React, { useEffect, useState } from "react";
 import InputImage from "../input/InputImage";
 import InputSelect from "../input/InputSelect";
+import InputPlainText from "../input/inputPlainText";
 
 interface Props {
   setAction: Function;
 }
 
 const StockModal = ({ setAction }: Props) => {
+  const [image, setImage] = useState<File | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
-  const [tel1, setTel1] = useState<string | null>(null);
-  const [tel2, setTel2] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [referenceError, setReferenceError] = useState<string | null>(null);
-  const [tel1Error, setTel1Error] = useState<string | null>(null);
-  const [tel2Error, setTel2Error] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const [code, setCode] = useState<string | null>(null);
+  const [supplier, setSupplier] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
+  const [designation, setDesignation] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<string | null>(null);
+  const [length, setLength] = useState<string | null>(null);
+  const [unitPrice, setUnitPrice] = useState<string | null>(null);
+  const [sellingPrice, setSellingPrice] = useState<string | null>(null);
+  const [purchasePrice, setPurchasePrice] = useState<string | null>(null);
+  const [warehouse, setWarehouse] = useState<string | null>(null);
+  const [lotNumber, setLotNumber] = useState<string | null>(null);
+  const [operatingPressure, setOperatingPressure] = useState<string | null>(
+    null
+  );
+  const [diameter, setDiameter] = useState<string | null>(null);
+  const [fluid, setFluid] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  const [comment, setComment] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (nameError && name) {
-      setNameError(null);
-    }
-  }, [nameError, tel1Error, tel2Error, emailError]);
-
-  const submit = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (!name) {
-      return setNameError("Champ vide");
-    }
-  };
   return (
     <ModalContainer>
       <Modal>
@@ -62,81 +64,147 @@ const StockModal = ({ setAction }: Props) => {
               id="name"
               defaultValue={name}
               setValue={setName}
-              error={nameError}
+              error={""}
             />
             <InputText
-              name="Référence *"
+              name="Code *"
+              id="code"
+              defaultValue={code}
+              setValue={setCode}
+              error={""}
+            />
+            <InputText
+              name="Type"
+              id="type"
+              defaultValue={type}
+              setValue={setType}
+              error={""}
+            />
+
+            <InputSelect
+              name="Reference *"
               id="reference"
               defaultValue={reference}
               setValue={setReference}
-              error={referenceError}
-            />
-            <InputText
-              name="Téléphone 1 *"
-              id="tel1"
-              defaultValue={tel1}
-              setValue={setTel1}
-              error={tel1Error}
-            />
-            <InputText
-              name="Téléphone 2"
-              id="tel2"
-              defaultValue={tel2}
-              setValue={setTel2}
-              error={tel1Error}
+              error={""}
+              placeholder="Sélectionner une référence"
             />
             <InputSelect
-              name="Reference *"
-              id="email"
-              defaultValue={email}
-              setValue={setEmail}
-              error={emailError}
+              placeholder="Sélectionner un fournisseur"
+              name="Fournisseur *"
+              id="supplier"
+              defaultValue={supplier}
+              setValue={setSupplier}
+              error={""}
             />
           </ModalForm>
           <ModalForm>
-            <InputImage setValue={setImage} id="image" defaultImage={""} />
+            <InputSelect
+              name="Entrepôt"
+              id="warehouse"
+              defaultValue={warehouse}
+              setValue={setWarehouse}
+              placeholder="Sélectionner l'entrepôt"
+              error={""}
+            />
+            <InputPlainText
+              name="Désignation"
+              id="designation"
+              defaultValue={designation}
+              setValue={setDesignation}
+              error={""}
+            />
+            <ModalDoubleFormGroup>
+              <InputText
+                name="Quantité"
+                id="quantity"
+                defaultValue={quantity}
+                setValue={setQuantity}
+                error={""}
+              />
+              <InputText
+                name="Longueur"
+                id="length"
+                defaultValue={length}
+                setValue={setLength}
+                error={""}
+                suffix="(m)"
+              />
+            </ModalDoubleFormGroup>
+            <ModalTripleFormGroup>
+              <InputText
+                name="Prix d'achat"
+                id="pa"
+                defaultValue={purchasePrice}
+                setValue={setPurchasePrice}
+                error={""}
+              />
+              <InputText
+                name="Prix de vente"
+                id="pv"
+                defaultValue={sellingPrice}
+                setValue={setSellingPrice}
+                error={""}
+              />
+              <InputText
+                name="Prix unitaire"
+                id="pu"
+                defaultValue={unitPrice}
+                setValue={setUnitPrice}
+                error={""}
+              />
+            </ModalTripleFormGroup>
             <InputText
-              name="Nom *"
-              id="name"
-              defaultValue={name}
-              setValue={setName}
-              error={nameError}
+              name="Numéro Lot"
+              id="nl"
+              defaultValue={lotNumber}
+              setValue={setLotNumber}
+              error={""}
+            />
+            <InputPlainText
+              name="Commentaire"
+              id="comment"
+              defaultValue={comment}
+              setValue={setComment}
+              error={""}
+            />
+          </ModalForm>
+          <ModalForm>
+            <ModalInfosTitle>Infos supplémentaire</ModalInfosTitle>
+            <InputSelect
+              name="Catégorie"
+              id="category"
+              defaultValue={category}
+              setValue={setCategory}
+              placeholder="Sélectionner une catégorie"
+              error={""}
             />
             <InputText
-              name="Référence *"
-              id="reference"
-              defaultValue={reference}
-              setValue={setReference}
-              error={referenceError}
+              name="Pression de service *"
+              id="pressionService"
+              defaultValue={operatingPressure}
+              setValue={setOperatingPressure}
+              error={""}
             />
             <InputText
-              name="Téléphone 1 *"
-              id="tel1"
-              defaultValue={tel1}
-              setValue={setTel1}
-              error={tel1Error}
+              name="Diamétre"
+              id="diameter"
+              defaultValue={diameter}
+              setValue={setDiameter}
+              error={""}
             />
             <InputText
-              name="Téléphone 2"
-              id="tel2"
-              defaultValue={tel2}
-              setValue={setTel2}
-              error={tel1Error}
-            />
-            <InputText
-              name="Email *"
-              id="email"
-              defaultValue={email}
-              setValue={setEmail}
-              error={emailError}
+              name="Fluide"
+              id="fluid"
+              defaultValue={fluid}
+              setValue={setFluid}
+              error={""}
             />
           </ModalForm>
         </ModalSection3>
 
         <ModalGroupButton>
-          <ModalValidButton onClick={(e) => submit(e)}>
-            Valider
-          </ModalValidButton>
+          <ModalValidButton>Valider</ModalValidButton>
           <ModalCancelButton onClick={() => setAction(false)}>
             Annuler
           </ModalCancelButton>

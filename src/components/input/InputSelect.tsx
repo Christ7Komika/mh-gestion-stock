@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 interface Props {
@@ -9,20 +9,58 @@ interface Props {
   id: string;
   defaultValue: string | null;
   error: string | null;
+  placeholder: string;
 }
 
-const InputSelect = ({ name, defaultValue, id, setValue, error }: Props) => {
+const InputSelect = ({
+  name,
+  defaultValue,
+  id,
+  setValue,
+  error,
+  placeholder,
+}: Props) => {
   const [text, setText] = useState<string | null>(null);
   const [selectId, setSelectId] = useState<number | null>(null);
   const [focus, setFocus] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const selectRef = useRef<HTMLDivElement>(null);
+
+  const filterSelect = () => {
+    const filter = data.filter(
+      (option) =>
+        option.name.toLowerCase().search(search.toLocaleLowerCase()) !== -1
+    );
+    if (filter) {
+      return filter;
+    } else {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        selectRef.current &&
+        !selectRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setValue(text);
   }, [text]);
   return (
-    <Container>
+    <Container ref={selectRef}>
       <Label htmlFor={id}>
         {name}
         {error && <LabelError>{error}</LabelError>}
@@ -34,39 +72,38 @@ const InputSelect = ({ name, defaultValue, id, setValue, error }: Props) => {
               setFocus(true);
               setOpen(true);
             }}
-            onChange={(e) => setSearch(e.target.value)}
-            value={search ? search : text ? text : ""}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setText(e.target.value);
+            }}
+            placeholder={placeholder}
+            value={text ? text : defaultValue ? defaultValue : ""}
           />
           <SelectIcon>
             <span onClick={() => setOpen(!open)}>
-              <IoChevronDown size={15} />
+              <IoChevronDown size={12} />
             </span>
           </SelectIcon>
         </Select>
         {open && (
           <Options>
-            {data
-              .filter(
-                (option) =>
-                  option.name
-                    .toLowerCase()
-                    .search(search.toLocaleLowerCase()) !== -1
-              )
-              .map((option) => {
-                if (option) {
-                  return (
-                    <Option
-                      onClick={() => {
-                        setText(option.name);
-                        setSelectId(option.id);
-                      }}
-                    >
-                      {option.name}
-                    </Option>
-                  );
-                }
-                return <Empty>Aucune référence trouvé</Empty>;
-              })}
+            {filterSelect() && filterSelect()?.length ? (
+              filterSelect()?.map((option, i) => (
+                <Option
+                  onClick={() => {
+                    setSearch("");
+                    setText(option.name);
+                    setSelectId(option.id);
+                    setOpen(false);
+                  }}
+                  key={"select-" + i}
+                >
+                  {option.name}
+                </Option>
+              ))
+            ) : (
+              <Empty>Aucune référence trouvé</Empty>
+            )}
           </Options>
         )}
       </SelectContainer>
@@ -99,7 +136,7 @@ const LabelError = styled.small`
 `;
 
 const SelectContainer = styled.div`
-  width: 300px;
+  width: 100%;
   position: relative;
 `;
 
@@ -123,9 +160,9 @@ const SelectIcon = styled.span`
   width: 35px;
   height: 35px;
   & span {
-    width: 25px;
-    height: 25px;
-    border-radius: 25px;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
     background: ${color.darkBlue};
     color: #fff;
     display: flex;
@@ -157,6 +194,7 @@ const Options = styled.div`
   padding-block: 0.5rem;
   overflow-y: auto;
   box-shadow: 0.5px 0.5px 9px rgba(0, 0, 0, 0.4);
+  z-index: 3;
 
   &::-webkit-scrollbar {
     width: 5px;

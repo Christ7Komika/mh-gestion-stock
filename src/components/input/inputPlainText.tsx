@@ -8,19 +8,9 @@ interface Props {
   id: string;
   defaultValue: string | null;
   error: string | null;
-  suffix?: string;
-  type?: string;
 }
 
-const InputText = ({
-  name,
-  defaultValue,
-  id,
-  setValue,
-  error,
-  suffix,
-  type,
-}: Props) => {
+const inputPlainText = ({ name, defaultValue, id, setValue, error }: Props) => {
   const [text, setText] = useState("");
 
   useEffect(() => {
@@ -29,11 +19,10 @@ const InputText = ({
   return (
     <Container>
       <Label htmlFor={id}>
-        {suffix ? name + " " + suffix : name}
+        {name}
         {error && <LabelError>{error}</LabelError>}
       </Label>
-      <Input
-        type={type ? type : "text"}
+      <TextArea
         id={id}
         onChange={(e) => setText(e.target.value)}
         defaultValue={text ? text : defaultValue ? defaultValue : ""}
@@ -62,16 +51,20 @@ const LabelError = styled.small`
   font-size: 0.75rem;
 `;
 
-const Input = styled.input`
+const TextArea = styled.textarea`
   width: 100%;
-  height: 35px;
+  min-width: 300px;
+  max-width: 100%;
+  height: 50px;
+  min-height: 40px;
+  max-height: 70px;
   border-radius: 5px;
   border: 1px solid ${color.border};
-  padding-inline: 0.5rem;
+  padding: 0.5rem;
 
   &:focus {
     outline: 1.5px solid ${color.border};
   }
 `;
 
-export default InputText;
+export default inputPlainText;

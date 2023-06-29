@@ -4,7 +4,7 @@ import AddButton from "../../input/AddButton";
 import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
 import { useState } from "react";
-import StockModal from "../../modal/StockModal";
+import AddToStockModal from "../../modal/StockModal";
 // import SupplierModal from "../../modal/SupplierModal";
 
 const TableData = () => {
@@ -13,7 +13,7 @@ const TableData = () => {
   return (
     <>
       {/* {open && <SupplierModal setAction={setOpen} />} */}
-      {open && <StockModal setAction={setOpen} />}
+      {open && <AddToStockModal setAction={setOpen} />}
       <Container>
         <HeaderTitle>FOURNISSEURS</HeaderTitle>
         <GroupButton>
