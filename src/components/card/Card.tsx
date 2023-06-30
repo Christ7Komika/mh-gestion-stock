@@ -2,15 +2,20 @@ import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import { MdStore } from "react-icons/md";
 
-const Card = () => {
+interface Props {
+  title: string;
+  value: number | string;
+}
+
+const Card = ({ title, value }: Props) => {
   return (
     <Container>
       <CardIcon>
         <MdStore />
       </CardIcon>
       <CardContent>
-        <CardTitle>Fournisseur enregistré</CardTitle>
-        <CardText>235</CardText>
+        <CardTitle>{title}</CardTitle>
+        <CardText>{value}</CardText>
       </CardContent>
     </Container>
   );

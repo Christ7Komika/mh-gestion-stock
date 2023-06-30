@@ -13,7 +13,7 @@ const InputImage = ({ setValue, id, defaultImage }: Props) => {
   const [image, setImage] = useState<File | null>();
 
   useEffect(() => {
-    setValue();
+    setValue(image ? image : defaultImage ? defaultImage : null);
   }, [image]);
   return (
     <Container>

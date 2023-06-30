@@ -1,14 +1,22 @@
 import styled from "styled-components";
 import Card from "./Card";
 import { color } from "../../utils/color";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/store";
+import { getClients } from "../../redux/features/client";
+import { useEffect } from "react";
 
 const GroupCard = () => {
+  const dispatch = useDispatch();
+  const clients = useSelector((state: RootState) => state.client.datas);
+
+  useEffect(() => {
+    getClients()(dispatch);
+  }, []);
+
   return (
     <Container>
-      <Card />
-      <Card />
-      <Card />
-      <Card />
+      <Card title="Client enregistré" value={clients?.length || 0} />
     </Container>
   );
 };

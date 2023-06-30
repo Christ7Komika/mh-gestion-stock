@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import careerReducer from "./features/career";
+import clientReducer from "./features/client";
 
 export const store = configureStore({
   reducer: {
-    career: careerReducer,
+    client: clientReducer,
   },
 });
 

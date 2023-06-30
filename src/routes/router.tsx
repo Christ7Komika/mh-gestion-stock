@@ -3,14 +3,16 @@ import Home from "../pages/Home";
 import Warehouse from "../pages/Warehouse";
 import Tickets from "../pages/Tickets";
 import Stores from "../pages/Stores";
-import Positions from "../pages/Positions";
 import Categories from "../pages/Categories";
 import Suppliers from "../pages/Suppliers";
 import Clients from "../pages/Clients";
 import Historical from "../pages/Historical";
-import Settings from "../pages/Settings";
 
 export const router = createBrowserRouter([
+  {
+    path: "/stocks",
+    element: <Stores />,
+  },
   {
     path: "/",
     element: <Home />,
@@ -22,14 +24,6 @@ export const router = createBrowserRouter([
   {
     path: "/ticket",
     element: <Tickets />,
-  },
-  {
-    path: "/stocks",
-    element: <Stores />,
-  },
-  {
-    path: "/emplacement",
-    element: <Positions />,
   },
   {
     path: "/categories",
@@ -46,9 +40,5 @@ export const router = createBrowserRouter([
   {
     path: "/historique",
     element: <Historical />,
-  },
-  {
-    path: "/configurations",
-    element: <Settings />,
   },
 ]);

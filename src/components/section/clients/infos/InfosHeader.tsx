@@ -1,13 +1,24 @@
 import styled from "styled-components";
-import { color } from "../../utils/color";
+import { color } from "../../../../utils/color";
+import { ClientType } from "../../../../redux/features/client";
 
-const InfosHeader = () => {
+interface Props {
+  client: ClientType | null;
+}
+
+const InfosHeader = ({ client }: Props) => {
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
         <InfosHeaderTitle>Aperçu fournisseur</InfosHeaderTitle>
-        <InfosHeaderDate>18/06/2023</InfosHeaderDate>
+        {client && client.createdAt ? (
+          <InfosHeaderDate>
+            {new Date(client.createdAt).toLocaleDateString()}
+          </InfosHeaderDate>
+        ) : (
+          "..."
+        )}
       </InfosHeaderColumnContent>
     </Container>
   );

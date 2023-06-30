@@ -14,17 +14,14 @@ const NavBar = () => {
         <CustomLink to="/" active={isActive("/")}>
           ACCEUIL
         </CustomLink>
-        <CustomLink active={isActive("/entrepot")} to="/entrepot">
-          ENTREPÔTS
-        </CustomLink>
         <CustomLink active={isActive("/stocks")} to="/stocks">
           STOCKS
         </CustomLink>
+        <CustomLink active={isActive("/entrepot")} to="/entrepot">
+          ENTREPÔTS
+        </CustomLink>
         <CustomLink active={isActive("/ticket")} to="/ticket">
           TICKETS
-        </CustomLink>
-        <CustomLink active={isActive("/emplacement")} to="/emplacement">
-          EMPLACEMENTS
         </CustomLink>
         <CustomLink active={isActive("/categories")} to="/categories">
           CATÉGORIES
@@ -37,9 +34,6 @@ const NavBar = () => {
         </CustomLink>
         <CustomLink active={isActive("/historique")} to="/historique">
           HISTORIQUE
-        </CustomLink>
-        <CustomLink active={isActive("/configurations")} to="/configurations">
-          CONFIGURATION
         </CustomLink>
       </GroupLink>
     </Container>

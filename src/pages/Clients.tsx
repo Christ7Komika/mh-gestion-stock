@@ -1,13 +1,26 @@
 import GroupCard from "../components/card/GroupCard";
 import Header from "../components/header/Header";
 import InfosHistoricalContent from "../components/historical/InfosHistoricalContent";
-import InfosContent from "../components/infos/InfosContent";
-import InfosHeader from "../components/infos/InfosHeader";
-import InfosHistoricalHeader from "../components/infos/InfosHistoricalHeader";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/clients/TableData";
+import InfosContent from "../components/section/clients/infos/InfosContent";
+import InfosHeader from "../components/section/clients/infos/InfosHeader";
+import InfosHistoricalHeader from "../components/section/clients/infos/InfosHistoricalHeader";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { RootState } from "../redux/store";
+import { getClient } from "../redux/features/client";
 
 const Clients = () => {
+  const client = useSelector((state: RootState) => state.client.data);
+  const id = useSelector((state: RootState) => state.client.currentId);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (id) {
+      getClient(id)(dispatch);
+    }
+  }, [id]);
   return (
     <>
       <Header />
@@ -21,8 +34,12 @@ const Clients = () => {
           <TableData />
         </Section>
         <Section>
-          <InfosHeader />
-          <InfosContent />
+          {client && (
+            <>
+              <InfosHeader client={client} />
+              <InfosContent client={client} />
+            </>
+          )}
         </Section>
       </SectionX3>
     </>

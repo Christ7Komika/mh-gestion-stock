@@ -1,11 +1,12 @@
 import GroupCard from "../components/card/GroupCard";
 import Header from "../components/header/Header";
 import InfosHistoricalContent from "../components/historical/InfosHistoricalContent";
-import InfosContent from "../components/infos/InfosContent";
-import InfosHeader from "../components/infos/InfosHeader";
-import InfosHistoricalHeader from "../components/infos/InfosHistoricalHeader";
 import { Section, SectionX3 } from "../components/layout/Layout";
-import TableData from "../components/section/suppliers/TableData";
+import TableData from "../components/section/categories/TableData";
+import InfosContent from "../components/section/categories/infos/InfosContent";
+import InfosHeader from "../components/section/categories/infos/InfosHeader";
+import InfosHistoricalHeader from "../components/section/categories/infos/InfosHistoricalHeader";
+
 const Categories = () => {
   return (
     <>

@@ -1,1 +1,1 @@
-export const host = "https://maingers-back.onrender.com";
+export const host = "http://127.0.0.1:3000";

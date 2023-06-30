@@ -24,7 +24,7 @@ const InputText = ({
   const [text, setText] = useState("");
 
   useEffect(() => {
-    setValue(text);
+    setValue(text ? text : defaultValue ? defaultValue : "");
   }, [text]);
   return (
     <Container>

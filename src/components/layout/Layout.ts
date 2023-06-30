@@ -70,6 +70,13 @@ export const ModalForm = styled.div`
   width: 300px;
 `;
 
+export const ModalMessageError = styled.p`
+  padding: 1rem;
+  border-radius: 5px;
+  background: ${color.lightRed};
+  color: ${color.darkBlue};
+`;
+
 export const ModalDoubleFormGroup = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -106,7 +113,6 @@ export const ModalButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   transition: linear 0.2s;
-
   &:hover {
     opacity: 0.8;
   }

@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { color } from "../../utils/color";
-import DatePicker from "../input/DatePicker";
+import { color } from "../../../../utils/color";
 import { useEffect, useState } from "react";
+import DatePicker from "../../../input/DatePicker";
 
 const InfosHistoricalHeader = () => {
   const [dates, setDates] = useState<Date[]>([]);
@@ -66,7 +66,7 @@ const InfosHistoricalHeader = () => {
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Historique fournisseur</InfosHeaderTitle>
+        <InfosHeaderTitle>Historique Client</InfosHeaderTitle>
         <DatePicker
           setDates={setDates}
           dates={format}
