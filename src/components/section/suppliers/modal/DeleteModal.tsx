@@ -14,8 +14,11 @@ import { IoExit } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../input/InputText";
-import { deleteClient, getHistory } from "../../../../redux/features/client";
 import { RootState } from "../../../../redux/store";
+import {
+  deleteSupplier,
+  getHistory,
+} from "../../../../redux/features/supplier";
 
 interface Props {
   setAction: Function;
@@ -27,8 +30,8 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
   const [name, setName] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.client.isLoad);
-  const isError = useSelector((state: RootState) => state.client.isError);
+  const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
+  const isError = useSelector((state: RootState) => state.supplier.isError);
 
   useEffect(() => {
     if (name && nameError) {
@@ -47,7 +50,7 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     }
 
     if (name === trueName) {
-      deleteClient(id, (exit: boolean) => {
+      deleteSupplier(id, (exit: boolean) => {
         if (exit) {
           getHistory()(dispatch);
           return setAction(false);
@@ -61,13 +64,13 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer un client</ModalHeaderTitle>
+          <ModalHeaderTitle>Retirer un fournisseur</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer le client ''{trueName}''.</p>
-        <p>Inserer le nom du client que vous voulez supprimer.</p>
+        <p>Êtes vous sur de vouloir supprimer le fournisseur ''{trueName}''.</p>
+        <p>Inserer le nom du fournisseur que vous voulez supprimer.</p>
         <ModalForm>
           <InputText
             name=""
@@ -86,7 +89,7 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>

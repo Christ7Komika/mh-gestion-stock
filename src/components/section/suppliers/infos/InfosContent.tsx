@@ -1,68 +1,41 @@
 import { styled } from "styled-components";
 import { color } from "../../../../utils/color";
+import { SupplierType } from "../../../../redux/features/supplier";
 
-const InfosContent = () => {
+interface Props {
+  supplier: SupplierType | null;
+}
+
+const InfosContent = ({ supplier }: Props) => {
   return (
     <Container>
       <InfosContentImageContainer>
-        <InfosContentImage />
+        <InfosContentImage src={supplier?.logo} />
       </InfosContentImageContainer>
-      <InfosContentCardRounded>
-        <span>QUANTITÉ</span>
-        <span>200</span>
-      </InfosContentCardRounded>
-      <InfosContentCardRounded>
-        <span>Total</span>
-        <span>2</span>
-      </InfosContentCardRounded>
       <InfosContentCard>
         <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
+        <InfosContentCardText>{supplier?.name}</InfosContentCardText>
       </InfosContentCard>
       <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
+        <InfosContentCardTitle>REFERENEC</InfosContentCardTitle>
+        {supplier?.reference.map((reference, id) => (
+          <InfosContentCardText key={"supplier-reference-" + { id }}>
+            {reference.name}
+          </InfosContentCardText>
+        ))}
       </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
+      {supplier && supplier.phone && (
+        <InfosContentCard>
+          <InfosContentCardTitle>TÉLÉPHONE</InfosContentCardTitle>
+          <InfosContentCardText>{supplier.phone}</InfosContentCardText>
+        </InfosContentCard>
+      )}
+      {supplier && supplier.email && (
+        <InfosContentCard>
+          <InfosContentCardTitle>EMAIL</InfosContentCardTitle>
+          <InfosContentCardText>{supplier.email}</InfosContentCardText>
+        </InfosContentCard>
+      )}
     </Container>
   );
 };
@@ -99,24 +72,6 @@ const InfosContentCard = styled.div`
   border-radius: 5px;
 `;
 
-const InfosContentCardRounded = styled.div`
-  display: inline-block;
-  padding: 0.5rem;
-  border-radius: 40px;
-  margin-right: 1rem;
-  background: ${color.blue2};
-  color: ${color.darkBlue};
-  & > span:first-child {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-right: 10px;
-  }
-  & > span:last-child {
-    font-weight: 500;
-    font-size: 0.9rem;
-    margin-right: 10px;
-  }
-`;
 const InfosContentCardTitle = styled.h2`
   font-size: 1rem;
   font-weight: 600;

@@ -26,7 +26,7 @@ const InfosContent = ({ client }: Props) => {
           <InfosContentCardText>{client.phone}</InfosContentCardText>
         </InfosContentCard>
       )}
-      {client && client.phone && (
+      {client && client.email && (
         <InfosContentCard>
           <InfosContentCardTitle>EMAIL</InfosContentCardTitle>
           <InfosContentCardText>{client.email}</InfosContentCardText>
@@ -68,24 +68,6 @@ const InfosContentCard = styled.div`
   border-radius: 5px;
 `;
 
-const InfosContentCardRounded = styled.div`
-  display: inline-block;
-  padding: 0.5rem;
-  border-radius: 40px;
-  margin-right: 1rem;
-  background: ${color.blue2};
-  color: ${color.darkBlue};
-  & > span:first-child {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-right: 10px;
-  }
-  & > span:last-child {
-    font-weight: 500;
-    font-size: 0.9rem;
-    margin-right: 10px;
-  }
-`;
 const InfosContentCardTitle = styled.h2`
   font-size: 1rem;
   font-weight: 600;

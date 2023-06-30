@@ -5,11 +5,16 @@ import axios from "axios";
 import { host } from "../host";
 
 // Define a type for the slice state
-export interface ClientType {
+
+export type Reference = {
+  name: string;
+};
+
+export interface SupplierType {
   id: string;
   logo: string;
   name: string;
-  company: string;
+  reference: Reference[];
   email: string;
   phone: string;
   ticketId: boolean;
@@ -27,7 +32,7 @@ export interface History {
   comment: string | null;
 }
 
-export interface Client {
+export interface Supplier {
   logo?: string;
   name?: string;
   company?: string;
@@ -35,9 +40,9 @@ export interface Client {
   phone?: string;
 }
 
-interface clientState {
-  datas: null | ClientType[];
-  data: null | ClientType;
+interface supplierState {
+  datas: null | SupplierType[];
+  data: null | SupplierType;
   currentId: string | null;
   history: History[] | null;
   isLoad: boolean;
@@ -46,7 +51,7 @@ interface clientState {
 }
 
 // Define the initial state using that type
-const initialState: clientState = {
+const initialState: supplierState = {
   datas: null,
   data: null,
   isLoad: false,
@@ -56,14 +61,14 @@ const initialState: clientState = {
   currentId: null,
 };
 
-export const clientSlice = createSlice({
-  name: "client",
+export const supplierSlice = createSlice({
+  name: "supplier",
   initialState,
   reducers: {
-    clients: (state, action: PayloadAction<ClientType[]>) => {
+    suppliers: (state, action: PayloadAction<SupplierType[]>) => {
       state.datas = [...action.payload];
     },
-    client: (state, action: PayloadAction<ClientType>) => {
+    supplier: (state, action: PayloadAction<SupplierType>) => {
       state.data = action.payload;
     },
     history: (state, action: PayloadAction<History[]>) => {
@@ -79,34 +84,34 @@ export const clientSlice = createSlice({
     isError: (state, action: PayloadAction<boolean>) => {
       state.isLoad = action.payload;
     },
-    clientId: (state, action: PayloadAction<string>) => {
+    supplierId: (state, action: PayloadAction<string>) => {
       state.currentId = action.payload;
     },
   },
 });
 
 export const {
-  client,
-  clients,
+  supplier,
+  suppliers,
   isLoad,
   isSuccess,
   isError,
-  clientId,
+  supplierId,
   history,
-} = clientSlice.actions;
+} = supplierSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 
-export const getClients = () => (dispatch: AppDispatch) => {
+export const getSuppliers = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/client",
+    url: host + "/supplier",
   };
 
-  axios<ClientType[]>(config)
+  axios<SupplierType[]>(config)
     .then(({ data }) => {
-      dispatch(clients(data));
+      dispatch(suppliers(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
     })
@@ -115,17 +120,17 @@ export const getClients = () => (dispatch: AppDispatch) => {
       dispatch(isLoad(false));
     });
 };
-export const searchClients = (data: string) => (dispatch: AppDispatch) => {
+export const searchSupplier = (data: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "post",
-    url: host + "/client/find",
+    url: host + "/supplier/find",
     data: { search: data },
   };
 
-  axios<ClientType[]>(config)
+  axios<SupplierType[]>(config)
     .then(({ data }) => {
-      dispatch(clients(data));
+      dispatch(suppliers(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
     })
@@ -135,16 +140,16 @@ export const searchClients = (data: string) => (dispatch: AppDispatch) => {
     });
 };
 
-export const getClient = (id: string) => (dispatch: AppDispatch) => {
+export const getSupplier = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/client/" + id,
+    url: host + "/supplier/" + id,
   };
 
-  axios<ClientType>(config)
+  axios<SupplierType>(config)
     .then(({ data }) => {
-      dispatch(client(data));
+      dispatch(supplier(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
     })
@@ -157,7 +162,7 @@ export const getHistory = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/client/history/add",
+    url: host + "/supplier/history/add",
   };
 
   axios<History[]>(config)
@@ -177,7 +182,7 @@ export const filterHistory =
     dispatch(isLoad(true));
     const config = {
       method: "post",
-      url: host + "/client/history/filter",
+      url: host + "/supplier/history/filter",
       data: data,
     };
 
@@ -193,22 +198,22 @@ export const filterHistory =
       });
   };
 
-export const getClientId = (id: string) => (dispatch: AppDispatch) => {
-  dispatch(clientId(id));
+export const getSupplierId = (id: string) => (dispatch: AppDispatch) => {
+  dispatch(supplierId(id));
 };
 
-export const createClient =
+export const createSupplier =
   (data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
     const config = {
       method: "post",
-      url: host + "/client/",
+      url: host + "/supplier/",
       data: data,
     };
 
-    axios<ClientType[]>(config)
+    axios<SupplierType[]>(config)
       .then(({ data }) => {
-        dispatch(clients(data));
+        dispatch(suppliers(data));
         dispatch(isSuccess(true));
         dispatch(isLoad(false));
         exit(true);
@@ -219,18 +224,18 @@ export const createClient =
       });
   };
 
-export const updateClient =
+export const updateSupplier =
   (id: string, data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
     const config = {
       method: "put",
-      url: host + "/client/" + id,
+      url: host + "/supplier/" + id,
       data: data,
     };
 
-    axios<ClientType[]>(config)
+    axios<SupplierType[]>(config)
       .then(({ data }) => {
-        dispatch(clients(data));
+        dispatch(suppliers(data));
         dispatch(isSuccess(true));
         dispatch(isLoad(false));
         exit(true);
@@ -241,16 +246,16 @@ export const updateClient =
       });
   };
 
-export const deleteClient =
+export const deleteSupplier =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
     const config = {
       method: "delete",
-      url: host + "/client/" + id,
+      url: host + "/supplier/" + id,
     };
-    axios<ClientType[]>(config)
+    axios<SupplierType[]>(config)
       .then(({ data }) => {
-        dispatch(clients(data));
+        dispatch(suppliers(data));
         dispatch(isSuccess(true));
         dispatch(isLoad(false));
         exit(true);
@@ -261,4 +266,4 @@ export const deleteClient =
       });
   };
 
-export default clientSlice.reducer;
+export default supplierSlice.reducer;

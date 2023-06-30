@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import InputText from "../../../input/InputText";
 import InputImage from "../../../input/InputImage";
-import { createClient } from "../../../../redux/features/client";
+import { createClient, getHistory } from "../../../../redux/features/client";
 import { color } from "../../../../utils/color";
 
 interface Props {
@@ -70,6 +70,7 @@ const ClientModal = ({ setAction }: Props) => {
     form.append("email", email);
     createClient(form, (exit: boolean) => {
       if (exit) {
+        getHistory()(dispatch);
         setAction(false);
       }
     })(dispatch);
@@ -117,13 +118,13 @@ const ClientModal = ({ setAction }: Props) => {
         {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Validation en cour...
             </ModalValidButton>
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>

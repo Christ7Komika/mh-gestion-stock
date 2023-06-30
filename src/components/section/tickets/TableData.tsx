@@ -4,7 +4,7 @@ import AddButton from "../../input/AddButton";
 import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
 import { useState } from "react";
-import SupplierModal from "../../modal/SupplierModal";
+import SupplierModal from "../suppliers/modal/SupplierModal";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);

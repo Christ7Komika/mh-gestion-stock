@@ -1,14 +1,32 @@
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import { IoSearch } from "react-icons/io5";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { Loader } from "../loader/Loader";
 
-const SimpleSearchBard = () => {
+interface Props {
+  setSearch: Function;
+  isValid: Function;
+}
+
+const SimpleSearchBard = ({ setSearch, isValid }: Props) => {
+  const [text, setText] = useState<string | null>(null);
+  const isLoad = useSelector((state: RootState) => state.client.isLoad);
+
+  const submit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    setSearch(text);
+    isValid(true);
+  };
   return (
     <Container>
-      <SearchIcon>
-        <IoSearch size={25} />
+      <SearchIcon onClick={submit}>
+        {isLoad ? <Loader /> : <IoSearch size={25} />}
       </SearchIcon>
-      <SearchText type="text" />
+      <SearchText type="text" onChange={(e) => setText(e.target.value)} />
     </Container>
   );
 };
@@ -33,6 +51,7 @@ export const SearchIcon = styled.span`
   border-radius: 30px;
   background-color: #fff;
   color: ${color.darkBlue};
+  cursor: pointer;
 `;
 
 export const SearchText = styled.input`

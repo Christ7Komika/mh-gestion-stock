@@ -1,13 +1,24 @@
 import styled from "styled-components";
 import { color } from "../../../../utils/color";
+import { SupplierType } from "../../../../redux/features/supplier";
 
-const InfosHeader = () => {
+interface Props {
+  supplier: SupplierType | null;
+}
+
+const InfosHeader = ({ supplier }: Props) => {
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
         <InfosHeaderTitle>Aperçu fournisseur</InfosHeaderTitle>
-        <InfosHeaderDate>18/06/2023</InfosHeaderDate>
+        {supplier && supplier.createdAt ? (
+          <InfosHeaderDate>
+            {new Date(supplier.createdAt).toLocaleDateString()}
+          </InfosHeaderDate>
+        ) : (
+          "..."
+        )}
       </InfosHeaderColumnContent>
     </Container>
   );

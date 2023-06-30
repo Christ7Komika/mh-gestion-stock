@@ -44,7 +44,6 @@ const InfosHistoricalHeader = () => {
             year: "numeric",
           }),
         ]);
-        console.log("format 1: ", format);
       } else if (dates.length === 2) {
         setFormat([
           dates[0].toLocaleDateString("fr-FR", {

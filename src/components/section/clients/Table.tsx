@@ -31,7 +31,6 @@ const Table = () => {
   const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalUpdate, setModalUpdate] = useState<boolean>(false);
   const [clientData, setClientData] = useState<ClientType | null>(null);
-  const [select, setSelect] = useState<boolean>(false);
 
   useEffect(() => {
     getClients()(dispatch);
@@ -76,7 +75,7 @@ const Table = () => {
           </TableHeader>
           <TableBody>
             {clients?.map((client, id) => (
-              <TRow key={`client-table-${id}`} selected={select}>
+              <TRow key={`client-table-${id}`}>
                 <TData>{id + 1}</TData>
                 <TData>
                   <TDImg />

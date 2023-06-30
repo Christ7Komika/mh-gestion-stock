@@ -1,11 +1,13 @@
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
+import { History } from "../../redux/features/client";
 
 interface Props {
   status: "add" | "update" | "delete";
+  history: History;
 }
 
-const HistoricalStock = ({ status }: Props) => {
+const HistoricalStock = ({ status, history }: Props) => {
   return (
     <Container status={status}>
       <HistoricalStockHeader>
@@ -18,43 +20,23 @@ const HistoricalStock = ({ status }: Props) => {
         ) : (
           <HistoricalStockStatusDelete>Suppression</HistoricalStockStatusDelete>
         )}
-        <HistoricalStockDate>22/06/2023</HistoricalStockDate>
+        <HistoricalStockDate>
+          {new Date(history.createdAt).toLocaleDateString()}
+        </HistoricalStockDate>
       </HistoricalStockHeader>
-      <HistoricalStockContent>
-        <HistoricalStockImgContainer>
-          {/* <HistoricalStockImg /> */}
-        </HistoricalStockImgContainer>
 
-        <HistoricalStockTextContent>
-          <HistoricalStockText>
-            Vous avez ajouté 2 articles :{" "}
-            <span>RACCORD A CAMES MALE TYPE E DN100 ANNELEE 4" LAITON</span>
-          </HistoricalStockText>
-        </HistoricalStockTextContent>
-      </HistoricalStockContent>
       <HistoricalStockTextGroup>
-        <HistoricalStockText>
-          Code :<span>XAW325</span>
-        </HistoricalStockText>
-        <HistoricalStockText>
-          Emplacement :<span>AG-10</span>
-        </HistoricalStockText>
-        <HistoricalStockText>
-          Entrepôt :<span>Dépôt</span>
-        </HistoricalStockText>
-        <HistoricalStockText>
-          Fournisseur :<span>hycodif</span>
-        </HistoricalStockText>
+        <HistoricalStockText>{history.message}</HistoricalStockText>
       </HistoricalStockTextGroup>
       <HistoricalStockTextGroup>
-        <HistoricalStockRapportTitle>
-          Rapport ajout ARTICLE(S)
-        </HistoricalStockRapportTitle>
-        <HistoricalStockText>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-          repellendus rem mollitia culpa voluptate reiciendis at aliquid esse
-          aliquam. Deserunt molestiae hic nisi delectus odit.
-        </HistoricalStockText>
+        {history.comment && (
+          <>
+            <HistoricalStockRapportTitle>
+              Commentaire
+            </HistoricalStockRapportTitle>
+            <HistoricalStockText>{history.comment}</HistoricalStockText>
+          </>
+        )}
       </HistoricalStockTextGroup>
     </Container>
   );

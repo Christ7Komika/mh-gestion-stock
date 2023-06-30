@@ -15,63 +15,60 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import InputText from "../../../input/InputText";
 import InputImage from "../../../input/InputImage";
-import {
-  ClientType,
-  updateClient,
-  getHistory,
-} from "../../../../redux/features/client";
+
 import { color } from "../../../../utils/color";
+import {
+  SupplierType,
+  getHistory,
+  updateSupplier,
+} from "../../../../redux/features/supplier";
 
 interface Props {
   setAction: Function;
-  client: ClientType | null;
+  supplier: SupplierType | null;
 }
 
-const UpdateClientModal = ({ setAction, client }: Props) => {
+const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [name, setName] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
+  // const [reference, setReference] = useState<string>("");
   const [tel, setTel] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
-  const [companyError, setCompanyError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
 
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.client.isLoad);
-  const isError = useSelector((state: RootState) => state.client.isError);
+  const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
+  const isError = useSelector((state: RootState) => state.supplier.isError);
 
   useEffect(() => {
     if (nameError && name) {
       setNameError("");
     }
 
-    if (companyError && company) {
-      setCompanyError("");
-    }
-
     if (emailError && email) {
       setEmailError("");
     }
-  }, [nameError, emailError, companyError]);
+  }, [nameError, emailError]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    if (!name && !image && !company && !tel && !email) {
+    // if (!name && !image && !reference && !tel && !email) {
+    if (!name && !image && !tel && !email) {
       return setError(true);
     }
 
     let logo = image && image.name ? image.name : "";
-    if (client) {
+    if (supplier) {
       const form = new FormData();
       form.append("logo", logo);
       form.append("name", name);
-      form.append("company", company);
+      // form.append("reference", reference);
       form.append("phone", tel);
       form.append("email", email);
-      updateClient(client.id, form, (exit: boolean) => {
+      updateSupplier(supplier.id, form, (exit: boolean) => {
         if (exit) {
           getHistory()(dispatch);
           setAction(false);
@@ -83,7 +80,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Ajouter un Client</ModalHeaderTitle>
+          <ModalHeaderTitle>Ajouter un fournisseur</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
@@ -92,31 +89,35 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
           <InputImage
             setValue={setImage}
             id="image"
-            defaultImage={client && client.logo ? client.logo : ""}
+            defaultImage={supplier && supplier.logo ? supplier.logo : ""}
           />
           <InputText
             name="Nom *"
             id="name"
             defaultValue={
-              name ? name : client && client.name ? client.name : ""
+              name ? name : supplier && supplier.name ? supplier.name : ""
             }
             setValue={setName}
             error={nameError}
           />
-          <InputText
-            name="Société *"
-            id="société"
+          {/* <InputText
+            name="Référence "
+            id="reference"
             defaultValue={
-              company ? company : client && client.company ? client.company : ""
+              reference
+                ? reference
+                : supplier && supplier.reference
+                ? supplier.reference[]
+                : ""
             }
-            setValue={setCompany}
-            error={companyError}
-          />
+            setValue={setReference}
+            error={""}
+          /> */}
           <InputText
-            name="Téléphone 1"
-            id="tel1"
+            name="Numéro de téléphone"
+            id="tel"
             defaultValue={
-              tel ? tel : client && client.phone ? client.phone : ""
+              tel ? tel : supplier && supplier.phone ? supplier.phone : ""
             }
             setValue={setTel}
             error={""}
@@ -125,7 +126,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
             name="Email"
             id="email"
             defaultValue={
-              email ? email : client && client.email ? client.email : ""
+              email ? email : supplier && supplier.email ? supplier.email : ""
             }
             setValue={setEmail}
             error={emailError}
@@ -139,13 +140,13 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
         )}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Validation en cour...
             </ModalValidButton>
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>
@@ -182,4 +183,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default UpdateClientModal;
+export default UpdateSupplierModal;

@@ -3,11 +3,27 @@ import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
 import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ClientModal from "./modal/ClientModal";
+import { getClients, searchClients } from "../../../redux/features/client";
+import { useDispatch } from "react-redux";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [isValid, setIsValid] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isValid && search) {
+      searchClients(search)(dispatch);
+    }
+
+    if (isValid && !search) {
+      getClients()(dispatch);
+    }
+  }, [search, isValid]);
 
   return (
     <>
@@ -15,7 +31,7 @@ const TableData = () => {
       <Container>
         <HeaderTitle>CLIENTS</HeaderTitle>
         <GroupButton>
-          <SimpleSearchBard />
+          <SimpleSearchBard setSearch={setSearch} isValid={setIsValid} />
           <AddButton setOpen={setOpen} />
         </GroupButton>
       </Container>

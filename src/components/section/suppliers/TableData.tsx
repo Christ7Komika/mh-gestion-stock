@@ -3,21 +3,35 @@ import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
 import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
-import { useState } from "react";
-import AddToStockModal from "../../modal/StockModal";
-// import SupplierModal from "../../modal/SupplierModal";
+import { useEffect, useState } from "react";
+import SupplierModal from "./modal/SupplierModal";
+import { useDispatch } from "react-redux";
+import { getSuppliers, searchSupplier } from "../../../redux/features/supplier";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [isValid, setIsValid] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isValid && search) {
+      searchSupplier(search)(dispatch);
+    }
+
+    if (isValid && !search) {
+      getSuppliers()(dispatch);
+    }
+  }, [search, isValid]);
 
   return (
     <>
-      {/* {open && <SupplierModal setAction={setOpen} />} */}
-      {open && <AddToStockModal setAction={setOpen} />}
+      {open && <SupplierModal setAction={setOpen} />}
       <Container>
         <HeaderTitle>FOURNISSEURS</HeaderTitle>
         <GroupButton>
-          <SimpleSearchBard />
+          <SimpleSearchBard setSearch={setSearch} isValid={setIsValid} />
           <AddButton setOpen={setOpen} />
         </GroupButton>
       </Container>
