@@ -79,7 +79,7 @@ const InfosHistoricalHeader = () => {
 
 const Container = styled.div`
   width: 100%;
-  height: 100px;
+  height: 120px;
   display: grid;
   grid-template-columns: 20px 1fr;
   column-gap: 0.5rem;

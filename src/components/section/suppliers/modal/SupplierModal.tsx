@@ -7,41 +7,64 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
+  ModalMessageError,
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import InputText from "../../../input/InputText";
 import React, { useEffect, useState } from "react";
 import InputImage from "../../../input/InputImage";
+import {
+  createSupplier,
+  getHistory,
+} from "../../../../redux/features/supplier";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
 }
 
 const SupplierModal = ({ setAction }: Props) => {
-  const [name, setName] = useState<string | null>(null);
-  const [reference, setReference] = useState<string | null>(null);
-  const [tel1, setTel1] = useState<string | null>(null);
-  const [tel2, setTel2] = useState<string | null>(null);
-  const [email, setEmail] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [referenceError, setReferenceError] = useState<string | null>(null);
-  const [tel1Error, setTel1Error] = useState<string | null>(null);
-  const [tel2Error, setTel2Error] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const [name, setName] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [nameError, setNameError] = useState<string>("");
+  const [emailError, setEmailError] = useState<string>("");
+  const [phoneError, setPhoneError] = useState<string>("");
+
+  const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
+  const isError = useSelector((state: RootState) => state.supplier.isError);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (nameError && name) {
-      setNameError(null);
+      setNameError("");
     }
-  }, [nameError, tel1Error, tel2Error, emailError]);
+  }, [nameError]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!name) {
       return setNameError("Champ vide");
     }
+
+    let logo = image && image.name ? image.name : "";
+
+    const form = new FormData();
+    form.append("logo", logo);
+    form.append("name", name);
+    form.append("phone", phone);
+    form.append("email", email);
+    createSupplier(form, (exit: boolean) => {
+      if (exit) {
+        getHistory()(dispatch);
+        setAction(false);
+      }
+    })(dispatch);
   };
   return (
     <ModalContainer>
@@ -62,25 +85,11 @@ const SupplierModal = ({ setAction }: Props) => {
             error={nameError}
           />
           <InputText
-            name="Référence *"
-            id="reference"
-            defaultValue={reference}
-            setValue={setReference}
-            error={referenceError}
-          />
-          <InputText
-            name="Téléphone 1 *"
-            id="tel1"
-            defaultValue={tel1}
-            setValue={setTel1}
-            error={tel1Error}
-          />
-          <InputText
-            name="Téléphone 2"
-            id="tel2"
-            defaultValue={tel2}
-            setValue={setTel2}
-            error={tel1Error}
+            name="Téléphone"
+            id="tel"
+            defaultValue={phone}
+            setValue={setPhone}
+            error={phoneError}
           />
           <InputText
             name="Email *"
@@ -90,14 +99,23 @@ const SupplierModal = ({ setAction }: Props) => {
             error={emailError}
           />
         </ModalForm>
-        <ModalGroupButton>
-          <ModalValidButton onClick={(e) => submit(e)}>
-            Valider
-          </ModalValidButton>
-          <ModalCancelButton onClick={() => setAction(false)}>
-            Annuler
-          </ModalCancelButton>
-        </ModalGroupButton>
+        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
+        {isLoad ? (
+          <ModalGroupButton>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+              <Loader />
+            </ModalValidButton>
+          </ModalGroupButton>
+        ) : (
+          <ModalGroupButton>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+              Valider
+            </ModalValidButton>
+            <ModalCancelButton onClick={() => setAction(false)}>
+              Annuler
+            </ModalCancelButton>
+          </ModalGroupButton>
+        )}
       </Modal>
     </ModalContainer>
   );

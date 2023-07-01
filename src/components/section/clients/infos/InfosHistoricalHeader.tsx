@@ -70,8 +70,6 @@ const InfosHistoricalHeader = () => {
     if (dates) {
       const startDate = dates[0];
       const endDate = dates[1] || null;
-      console.log("start date => ", startDate);
-      console.log("end date => ", endDate);
       filterHistory({ startDate: startDate, endDate: endDate })(dispatch);
     }
   }, [dates]);

@@ -1,9 +1,9 @@
 import { styled } from "styled-components";
-import HistoricalStock from "./HistoricalStock";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
 import { useEffect } from "react";
-import { getHistory } from "../../redux/features/client";
+import { getHistory } from "../../../../redux/features/supplier";
+import { RootState } from "../../../../redux/store";
+import HistoricalStock from "../../../historical/HistoricalStock";
 
 const InfosHistoricalContent = () => {
   const histories = useSelector((state: RootState) => state.supplier.history);

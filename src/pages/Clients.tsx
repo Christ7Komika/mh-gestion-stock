@@ -1,4 +1,3 @@
-import GroupCard from "../components/card/GroupCard";
 import Header from "../components/header/Header";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/clients/TableData";
@@ -9,7 +8,8 @@ import { useEffect } from "react";
 import { RootState } from "../redux/store";
 import { getClient } from "../redux/features/client";
 import InfosHistoricalHeader from "../components/section/clients/infos/InfosHistoricalHeader";
-import InfosHistoricalContent from "../components/historical/InfosHistoricalContent";
+import GroupCard from "../components/section/clients/card/GroupCard";
+import InfosHistoricalContent from "../components/section/clients/infos/InfosHistoricalContent";
 
 const Clients = () => {
   const client = useSelector((state: RootState) => state.client.data);

@@ -15,11 +15,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../input/InputText";
 import { RootState } from "../../../../redux/store";
-import {
-  deleteSupplier,
-  getHistory,
-} from "../../../../redux/features/supplier";
 import { Loader } from "../../../loader/Loader";
+import { deleteCategory } from "../../../../redux/features/category";
 
 interface Props {
   setAction: Function;
@@ -31,8 +28,8 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
   const [name, setName] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
-  const isError = useSelector((state: RootState) => state.supplier.isError);
+  const isLoad = useSelector((state: RootState) => state.category.isLoad);
+  const isError = useSelector((state: RootState) => state.category.isError);
 
   useEffect(() => {
     if (name && nameError) {
@@ -51,9 +48,8 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     }
 
     if (name === trueName) {
-      deleteSupplier(id, (exit: boolean) => {
+      deleteCategory(id, (exit: boolean) => {
         if (exit) {
-          getHistory()(dispatch);
           return setAction(false);
         }
       })(dispatch);
@@ -65,13 +61,13 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer un fournisseur</ModalHeaderTitle>
+          <ModalHeaderTitle>Retirer une categorie</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer le fournisseur ''{trueName}''.</p>
-        <p>Inserer le nom du fournisseur que vous voulez supprimer.</p>
+        <p>Êtes vous sur de vouloir supprimer la catégorie ''{trueName}''.</p>
+        <p>Inserer le nom de la catégorie que vous voulez supprimer.</p>
         <ModalForm>
           <InputText
             name=""
@@ -90,7 +86,7 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton onClick={(e) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>

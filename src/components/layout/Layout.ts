@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { color } from "../../utils/color";
 
+interface SectionProps {
+  empty?: true;
+}
+
 export const SectionX3 = styled.main`
   display: grid;
   grid-template-columns: 300px 1fr 300px;
@@ -8,8 +12,8 @@ export const SectionX3 = styled.main`
   column-gap: 1rem;
 `;
 
-export const Section = styled.section`
-  background: #fff;
+export const Section = styled.section<SectionProps>`
+  background: ${({ empty }) => (empty ? "#F3F5F7" : "#fff")};
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -136,6 +140,8 @@ export const ModalValidButton = styled(ModalButton)`
   border: 1px solid ${color.green};
   background: ${color.green};
   color: ${color.darkGreen};
+  display: flex;
+  justify-content: center;
 `;
 export const ModalCancelButton = styled(ModalButton)`
   border: 1px solid ${color.red};

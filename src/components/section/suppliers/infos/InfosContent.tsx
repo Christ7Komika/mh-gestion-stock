@@ -9,21 +9,17 @@ interface Props {
 const InfosContent = ({ supplier }: Props) => {
   return (
     <Container>
-      <InfosContentImageContainer>
-        <InfosContentImage src={supplier?.logo} />
-      </InfosContentImageContainer>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>{supplier?.name}</InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>REFERENEC</InfosContentCardTitle>
-        {supplier?.reference.map((reference, id) => (
-          <InfosContentCardText key={"supplier-reference-" + { id }}>
-            {reference.name}
-          </InfosContentCardText>
-        ))}
-      </InfosContentCard>
+      {supplier?.logo && (
+        <InfosContentImageContainer>
+          <InfosContentImage src={supplier?.logo} />
+        </InfosContentImageContainer>
+      )}
+      {supplier?.name && (
+        <InfosContentCard>
+          <InfosContentCardTitle>NOM</InfosContentCardTitle>
+          <InfosContentCardText>{supplier?.name}</InfosContentCardText>
+        </InfosContentCard>
+      )}
       {supplier && supplier.phone && (
         <InfosContentCard>
           <InfosContentCardTitle>TÉLÉPHONE</InfosContentCardTitle>

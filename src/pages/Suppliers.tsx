@@ -1,13 +1,26 @@
-import GroupCard from "../components/card/GroupCard";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../components/header/Header";
-import InfosHistoricalContent from "../components/historical/InfosHistoricalContent";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/suppliers/TableData";
 import InfosContent from "../components/section/suppliers/infos/InfosContent";
 import InfosHeader from "../components/section/suppliers/infos/InfosHeader";
 import InfosHistoricalHeader from "../components/section/suppliers/infos/InfosHistoricalHeader";
+import { RootState } from "../redux/store";
+import { useEffect } from "react";
+import { getSupplier } from "../redux/features/supplier";
+import GroupCard from "../components/section/suppliers/card/GroupCard";
+import InfosHistoricalContent from "../components/section/suppliers/infos/InfosHistoricalContent";
 
 const Suppliers = () => {
+  const supplier = useSelector((state: RootState) => state.supplier.data);
+  const id = useSelector((state: RootState) => state.supplier.currentId);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (id) {
+      getSupplier(id)(dispatch);
+    }
+  }, [id]);
   return (
     <>
       <Header />
@@ -21,8 +34,12 @@ const Suppliers = () => {
           <TableData />
         </Section>
         <Section>
-          <InfosHeader />
-          <InfosContent />
+          {supplier && (
+            <>
+              <InfosHeader supplier={supplier} />
+              <InfosContent supplier={supplier} />
+            </>
+          )}
         </Section>
       </SectionX3>
     </>

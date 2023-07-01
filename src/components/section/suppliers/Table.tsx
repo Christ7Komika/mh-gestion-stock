@@ -67,9 +67,7 @@ const Table = () => {
           <TableHeader>
             <THRow>
               <THead>ID</THead>
-              <THead>Logo</THead>
               <THead>Nom</THead>
-              <THead>Référence</THead>
               <THead>Téléphone</THead>
               <THead>Email</THead>
               <THead>Ajouté le</THead>
@@ -80,11 +78,7 @@ const Table = () => {
             {suppliers?.map((supplier, id) => (
               <TRow key={`supplier-table-${id}`}>
                 <TData>{id + 1}</TData>
-                <TData>
-                  <TDImg />
-                </TData>
                 <TData>{supplier.name}</TData>
-                <TData>{supplier.reference[0].name}</TData>
                 <TData>{supplier.phone}</TData>
                 <TData>{supplier.email}</TData>
                 <TData>

@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../input/InputText";
 import { deleteClient, getHistory } from "../../../../redux/features/client";
 import { RootState } from "../../../../redux/store";
+import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
@@ -81,7 +82,7 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
-              Validation en cour...
+              <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (

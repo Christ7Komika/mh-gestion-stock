@@ -1,21 +1,19 @@
 import { styled } from "styled-components";
 import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
-import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
 import { useState } from "react";
-import SupplierModal from "../suppliers/modal/SupplierModal";
+import CategoriesModal from "../../modal/CategoriesModal";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {open && <SupplierModal setAction={setOpen} />}
+      {open && <CategoriesModal setAction={setOpen} />}
       <Container>
-        <HeaderTitle>FOURNISSEURS</HeaderTitle>
+        <HeaderTitle>CATEGORIE</HeaderTitle>
         <GroupButton>
-          <SimpleSearchBard />
           <AddButton setOpen={setOpen} />
         </GroupButton>
       </Container>

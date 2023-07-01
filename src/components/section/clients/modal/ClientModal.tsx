@@ -17,6 +17,7 @@ import InputText from "../../../input/InputText";
 import InputImage from "../../../input/InputImage";
 import { createClient, getHistory } from "../../../../redux/features/client";
 import { color } from "../../../../utils/color";
+import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
@@ -119,7 +120,7 @@ const ClientModal = ({ setAction }: Props) => {
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
-              Validation en cour...
+              <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (

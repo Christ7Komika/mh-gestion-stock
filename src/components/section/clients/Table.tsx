@@ -10,7 +10,6 @@ import {
   TableContainer,
   TableHeader,
   Option,
-  TDImg,
 } from "../../layout/table";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -64,7 +63,6 @@ const Table = () => {
           <TableHeader>
             <THRow>
               <THead>ID</THead>
-              <THead>Logo</THead>
               <THead>Nom</THead>
               <THead>Société</THead>
               <THead>Téléphone</THead>
@@ -77,9 +75,6 @@ const Table = () => {
             {clients?.map((client, id) => (
               <TRow key={`client-table-${id}`}>
                 <TData>{id + 1}</TData>
-                <TData>
-                  <TDImg />
-                </TData>
                 <TData>{client.name}</TData>
                 <TData>{client.company}</TData>
                 <TData>{client.phone}</TData>

@@ -14,7 +14,6 @@ export interface SupplierType {
   id: string;
   logo: string;
   name: string;
-  reference: Reference[];
   email: string;
   phone: string;
   ticketId: boolean;

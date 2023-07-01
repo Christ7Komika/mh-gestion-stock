@@ -1,5 +1,4 @@
 import { styled } from "styled-components";
-import { color } from "../../../../utils/color";
 import {
   ModalCancelButton,
   ModalForm,
@@ -11,86 +10,89 @@ import {
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import InputText from "../../../input/InputText";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import {
-  deleteSupplier,
-  getHistory,
-} from "../../../../redux/features/supplier";
+import InputText from "../../../input/InputText";
+import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
+import {
+  CategoryType,
+  updateCategory,
+} from "../../../../redux/features/category";
 
 interface Props {
   setAction: Function;
-  trueName: string;
-  id: string;
+  category: CategoryType | null;
 }
 
-const DeleteModal = ({ setAction, trueName, id }: Props) => {
-  const [name, setName] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
+const UpdateCategoryModal = ({ setAction, category }: Props) => {
+  const [name, setName] = useState<string>("");
+  const [nameError, setNameError] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
-  const isError = useSelector((state: RootState) => state.supplier.isError);
+  const isLoad = useSelector((state: RootState) => state.category.isLoad);
+  const isError = useSelector((state: RootState) => state.category.isError);
 
   useEffect(() => {
-    if (name && nameError) {
+    if (nameError && name) {
       setNameError("");
     }
-  }, [name]);
+  }, [nameError]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
+
     if (!name) {
-      return setNameError("Le champ est vide");
+      return setError(true);
     }
-
-    if (name !== trueName) {
-      return setNameError("Le nom inséré est invalide");
-    }
-
-    if (name === trueName) {
-      deleteSupplier(id, (exit: boolean) => {
+    if (category) {
+      const form = {
+        name: name,
+      };
+      updateCategory(category.id, form, (exit: boolean) => {
         if (exit) {
-          getHistory()(dispatch);
-          return setAction(false);
+          setAction(false);
         }
       })(dispatch);
-
-      return;
     }
   };
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer un fournisseur</ModalHeaderTitle>
+          <ModalHeaderTitle>Ajouter une catégorie</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer le fournisseur ''{trueName}''.</p>
-        <p>Inserer le nom du fournisseur que vous voulez supprimer.</p>
         <ModalForm>
           <InputText
-            name=""
+            name="Nom *"
             id="name"
-            defaultValue={name}
+            defaultValue={
+              name ? name : category && category.name ? category.name : ""
+            }
             setValue={setName}
             error={nameError}
           />
         </ModalForm>
         {isError && <ModalMessageError>La requête a été</ModalMessageError>}
+        {error && (
+          <ModalMessageError>
+            Veuillez remplir au moins un champ à modifier
+          </ModalMessageError>
+        )}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton onClick={(e) => submit(e)}>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton onClick={(e) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>
@@ -127,4 +129,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default DeleteModal;
+export default UpdateCategoryModal;

@@ -22,6 +22,7 @@ import {
   getHistory,
   updateSupplier,
 } from "../../../../redux/features/supplier";
+import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
@@ -31,7 +32,6 @@ interface Props {
 const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [name, setName] = useState<string>("");
-  // const [reference, setReference] = useState<string>("");
   const [tel, setTel] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
@@ -55,7 +55,6 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    // if (!name && !image && !reference && !tel && !email) {
     if (!name && !image && !tel && !email) {
       return setError(true);
     }
@@ -65,7 +64,6 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
       const form = new FormData();
       form.append("logo", logo);
       form.append("name", name);
-      // form.append("reference", reference);
       form.append("phone", tel);
       form.append("email", email);
       updateSupplier(supplier.id, form, (exit: boolean) => {
@@ -100,19 +98,6 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
             setValue={setName}
             error={nameError}
           />
-          {/* <InputText
-            name="Référence "
-            id="reference"
-            defaultValue={
-              reference
-                ? reference
-                : supplier && supplier.reference
-                ? supplier.reference[]
-                : ""
-            }
-            setValue={setReference}
-            error={""}
-          /> */}
           <InputText
             name="Numéro de téléphone"
             id="tel"
@@ -141,7 +126,7 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
-              Validation en cour...
+              <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (

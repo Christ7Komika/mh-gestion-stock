@@ -21,6 +21,7 @@ import {
   getHistory,
 } from "../../../../redux/features/client";
 import { color } from "../../../../utils/color";
+import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
@@ -140,7 +141,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e) => submit(e)}>
-              Validation en cour...
+              <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (
