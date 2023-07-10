@@ -5,31 +5,29 @@ import axios from "axios";
 import { host } from "../host";
 
 // Define a type for the slice state
-export interface CategoryType {
+export interface WarehouseType {
   id: string;
   name: string;
-  reference: string;
   description: string;
   createdAt: Date;
 }
 
-export interface Category {
+export interface Warehouse {
   name?: string;
-  reference?: string;
   description?: string;
 }
 
-interface CategoryState {
-  datas: null | CategoryType[];
-  data: null | CategoryType;
+interface WarehouseState {
+  datas: null | WarehouseType[];
+  data: null | WarehouseType;
   isLoad: boolean;
   currentId: string | null;
-  isError: Boolean;
-  isSuccess: Boolean;
+  isError: boolean;
+  isSuccess: boolean;
 }
 
 // Define the initial state using that type
-const initialState: CategoryState = {
+const initialState: WarehouseState = {
   datas: null,
   data: null,
   currentId: null,
@@ -38,14 +36,14 @@ const initialState: CategoryState = {
   isSuccess: false,
 };
 
-export const categorySlice = createSlice({
+export const warehouseSlice = createSlice({
   name: "category",
   initialState,
   reducers: {
-    categories: (state, action: PayloadAction<CategoryType[]>) => {
+    warehouses: (state, action: PayloadAction<WarehouseType[]>) => {
       state.datas = [...action.payload];
     },
-    category: (state, action: PayloadAction<CategoryType>) => {
+    warehouse: (state, action: PayloadAction<WarehouseType>) => {
       state.data = action.payload;
     },
     isLoad: (state, action: PayloadAction<boolean>) => {
@@ -57,27 +55,33 @@ export const categorySlice = createSlice({
     isError: (state, action: PayloadAction<boolean>) => {
       state.isLoad = action.payload;
     },
-    categoryId: (state, action: PayloadAction<string>) => {
+    warehouseId: (state, action: PayloadAction<string>) => {
       state.currentId = action.payload;
     },
   },
 });
 
-export const { categories, category, isLoad, isSuccess, isError, categoryId } =
-  categorySlice.actions;
+export const {
+  warehouses,
+  warehouse,
+  isLoad,
+  isSuccess,
+  isError,
+  warehouseId,
+} = warehouseSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 
-export const getCategories = () => (dispatch: AppDispatch) => {
+export const getWarehouses = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/category",
+    url: host + "/warehouse",
   };
 
-  axios<CategoryType[]>(config)
+  axios<WarehouseType[]>(config)
     .then(({ data }) => {
-      dispatch(categories(data));
+      dispatch(warehouses(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
     })
@@ -87,16 +91,16 @@ export const getCategories = () => (dispatch: AppDispatch) => {
     });
 };
 
-export const getCategory = (id: string) => (dispatch: AppDispatch) => {
+export const getWarehouse = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/category/" + id,
+    url: host + "/warehouse/" + id,
   };
 
-  axios<CategoryType>(config)
+  axios<WarehouseType>(config)
     .then(({ data }) => {
-      dispatch(category(data));
+      dispatch(warehouse(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
     })
@@ -106,20 +110,20 @@ export const getCategory = (id: string) => (dispatch: AppDispatch) => {
     });
 };
 
-export const createCategory =
-  (data: Category, exit?: Function) => (dispatch: AppDispatch) => {
+export const createWarehouse =
+  (data: Warehouse, exit?: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
     const config = {
       method: "post",
-      url: host + "/category/",
+      url: host + "/warehouse/",
       data: {
         ...data,
       },
     };
 
-    axios<CategoryType[]>(config)
+    axios<WarehouseType[]>(config)
       .then(({ data }) => {
-        dispatch(categories(data));
+        dispatch(warehouses(data));
         dispatch(isSuccess(true));
         dispatch(isLoad(false));
         if (exit) exit(true);
@@ -131,18 +135,18 @@ export const createCategory =
       });
   };
 
-export const updateCategory =
-  (id: string, data: Category, exit: Function) => (dispatch: AppDispatch) => {
+export const updateWarehouse =
+  (id: string, data: Warehouse, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
     const config = {
       method: "put",
-      url: host + "/category/" + id,
+      url: host + "/warehouse/" + id,
       data: { ...data },
     };
 
-    axios<CategoryType[]>(config)
+    axios<WarehouseType[]>(config)
       .then(({ data }) => {
-        dispatch(categories(data));
+        dispatch(warehouses(data));
         dispatch(isSuccess(true));
         dispatch(isLoad(false));
         if (exit) {
@@ -155,19 +159,21 @@ export const updateCategory =
       });
   };
 
-export const deleteCategory =
+export const deleteWarehouse =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
     const config = {
       method: "delete",
-      url: host + "/category/" + id,
+      url: host + "/warehouse/" + id,
     };
-    axios<CategoryType[]>(config)
+    axios<WarehouseType[]>(config)
       .then(({ data }) => {
-        dispatch(categories(data));
+        dispatch(warehouses(data));
         dispatch(isSuccess(true));
         dispatch(isLoad(false));
-        exit(true);
+        if (exit) {
+          exit(true);
+        }
       })
       .catch(() => {
         dispatch(isError(true));
@@ -175,8 +181,8 @@ export const deleteCategory =
       });
   };
 
-export const getCategoryId = (id: string) => (dispatch: AppDispatch) => {
-  dispatch(categoryId(id));
+export const getWarehouseId = (id: string) => (dispatch: AppDispatch) => {
+  dispatch(warehouseId(id));
 };
 
-export default categorySlice.reducer;
+export default warehouseSlice.reducer;

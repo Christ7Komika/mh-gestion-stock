@@ -1,13 +1,24 @@
 import styled from "styled-components";
 import { color } from "../../../../utils/color";
+import { WarehouseType } from "../../../../redux/features/warehouse";
 
-const InfosHeader = () => {
+interface Props {
+  warehouse: WarehouseType | null;
+}
+
+const InfosHeader = ({ warehouse }: Props) => {
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Aperçu fournisseur</InfosHeaderTitle>
-        <InfosHeaderDate>18/06/2023</InfosHeaderDate>
+        <InfosHeaderTitle>Aperçu entrepôt</InfosHeaderTitle>
+        {warehouse && warehouse.createdAt ? (
+          <InfosHeaderDate>
+            {new Date(warehouse.createdAt).toLocaleDateString()}
+          </InfosHeaderDate>
+        ) : (
+          "..."
+        )}
       </InfosHeaderColumnContent>
     </Container>
   );

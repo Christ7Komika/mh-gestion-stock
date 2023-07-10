@@ -3,14 +3,14 @@ import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
 import Table from "./Table";
 import { useState } from "react";
-import CategoriesModal from "../../modal/CategoriesModal";
+import CategoryModal from "./modal/CategoryModal";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {open && <CategoriesModal setAction={setOpen} />}
+      {open && <CategoryModal setAction={setOpen} />}
       <Container>
         <HeaderTitle>CATEGORIE</HeaderTitle>
         <GroupButton>

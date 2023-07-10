@@ -1,68 +1,26 @@
 import { styled } from "styled-components";
 import { color } from "../../../../utils/color";
+import { WarehouseType } from "../../../../redux/features/warehouse";
 
-const InfosContent = () => {
+interface Props {
+  warehouse: WarehouseType | null;
+}
+
+const InfosContent = ({ warehouse }: Props) => {
   return (
     <Container>
-      <InfosContentImageContainer>
-        <InfosContentImage />
-      </InfosContentImageContainer>
-      <InfosContentCardRounded>
-        <span>QUANTITÉ</span>
-        <span>200</span>
-      </InfosContentCardRounded>
-      <InfosContentCardRounded>
-        <span>Total</span>
-        <span>2</span>
-      </InfosContentCardRounded>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
+      {warehouse && warehouse.name && (
+        <InfosContentCard>
+          <InfosContentCardTitle>NOM</InfosContentCardTitle>
+          <InfosContentCardText>{warehouse.name}</InfosContentCardText>
+        </InfosContentCard>
+      )}
+      {warehouse && warehouse.description && (
+        <InfosContentCard>
+          <InfosContentCardTitle>DESCRIPTION</InfosContentCardTitle>
+          <InfosContentCardText>{warehouse.description}</InfosContentCardText>
+        </InfosContentCard>
+      )}
     </Container>
   );
 };

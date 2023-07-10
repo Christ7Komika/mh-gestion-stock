@@ -45,8 +45,8 @@ interface supplierState {
   currentId: string | null;
   history: History[] | null;
   isLoad: boolean;
-  isError: Boolean;
-  isSuccess: Boolean;
+  isError: boolean;
+  isSuccess: boolean;
 }
 
 // Define the initial state using that type

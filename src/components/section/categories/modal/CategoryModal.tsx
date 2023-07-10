@@ -16,7 +16,8 @@ import { RootState } from "../../../../redux/store";
 import InputText from "../../../input/InputText";
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
-import { createCategory } from "../../../../redux/features/category";
+import { createCategory, Category } from "../../../../redux/features/category";
+import InputPlainText from "../../../input/inputPlainText";
 
 interface Props {
   setAction: Function;
@@ -24,6 +25,8 @@ interface Props {
 
 const CategoryModal = ({ setAction }: Props) => {
   const [name, setName] = useState<string>("");
+  const [reference, setReference] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
 
   const dispatch = useDispatch();
@@ -42,7 +45,13 @@ const CategoryModal = ({ setAction }: Props) => {
       return setNameError("Champ vide");
     }
 
-    createCategory(name, (exit: boolean) => {
+    const data: Category = {
+      name: name,
+      reference: reference,
+      description: description,
+    };
+
+    createCategory(data, (exit: boolean) => {
       if (exit) {
         setAction(false);
       }
@@ -64,6 +73,20 @@ const CategoryModal = ({ setAction }: Props) => {
             defaultValue={name}
             setValue={setName}
             error={nameError}
+          />
+          <InputText
+            name="Référence"
+            id="reference"
+            defaultValue={reference}
+            setValue={setReference}
+            error={""}
+          />
+          <InputPlainText
+            name="Description"
+            id="description"
+            defaultValue={description}
+            setValue={setDescription}
+            error={""}
           />
         </ModalForm>
         {isError && <ModalMessageError>La requête a été</ModalMessageError>}
