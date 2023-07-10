@@ -6,12 +6,16 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getCategories } from "../redux/features/category";
 import { getSuppliers } from "../redux/features/supplier";
+import { getWarehouses } from "../redux/features/warehouse";
+import { getStores } from "../redux/features/stores";
 
 const Stores = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getCategories()(dispatch);
     getSuppliers()(dispatch);
+    getWarehouses()(dispatch);
+    getStores()(dispatch);
   }, []);
   return (
     <>

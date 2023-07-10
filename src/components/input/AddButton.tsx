@@ -4,15 +4,16 @@ import { color } from "../../utils/color";
 
 interface Props {
   setOpen: Function;
+  text: string;
 }
 
-const AddButton = ({ setOpen }: Props) => {
+const AddButton = ({ setOpen, text }: Props) => {
   return (
     <Container onClick={() => setOpen(true)}>
       <ButtonIcon>
         <IoAdd size={25} />
       </ButtonIcon>
-      <ButtonText>Ajout article</ButtonText>
+      <ButtonText>Ajout {text}</ButtonText>
     </Container>
   );
 };

@@ -32,7 +32,7 @@ const TableData = () => {
         <HeaderTitle>FOURNISSEURS</HeaderTitle>
         <GroupButton>
           <SimpleSearchBard setSearch={setSearch} isValid={setIsValid} />
-          <AddButton setOpen={setOpen} />
+          <AddButton setOpen={setOpen} text="fournisseur" />
         </GroupButton>
       </Container>
       <Table />

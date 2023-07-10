@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import { useEffect, useState } from "react";
 import { BsImageFill } from "react-icons/bs";
-
+import { RxCross2 } from "react-icons/rx";
 interface Props {
   setValue: Function;
   id: string;
@@ -11,15 +11,33 @@ interface Props {
 
 const InputImage = ({ setValue, id, defaultImage }: Props) => {
   const [image, setImage] = useState<File | null>();
+  const [previewImage, setPreviewImage] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     setValue(image ? image : defaultImage ? defaultImage : null);
+
+    if (image) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(image);
+    } else {
+      setPreviewImage(undefined);
+    }
   }, [image]);
+
   return (
     <Container>
+      <LabelDelete onClick={() => setImage(null)}>
+        <RxCross2 size={10} />
+      </LabelDelete>
+
       <Label htmlFor={id}>
-        {image ? (
-          <LabelImg src={image.name} />
+        {previewImage ? (
+          <LabelImg src={previewImage} />
         ) : defaultImage ? (
           <LabelImg src={defaultImage} />
         ) : (
@@ -39,6 +57,7 @@ const InputImage = ({ setValue, id, defaultImage }: Props) => {
 };
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   row-gap: 0.2rem;
@@ -49,7 +68,7 @@ const Container = styled.div`
 `;
 
 const Label = styled.label`
-  padding: 1rem;
+  padding: 0.2rem;
   font-size: 0.9rem;
   font-weight: 600;
   row-gap: 0.2rem;
@@ -68,8 +87,23 @@ const Label = styled.label`
 const LabelImg = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center center;
+`;
+
+const LabelDelete = styled.div`
+  position: absolute;
+  top: 1px;
+  left: 155px;
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${color.red};
+  color: #fff;
+  cursor: pointer;
 `;
 
 export default InputImage;

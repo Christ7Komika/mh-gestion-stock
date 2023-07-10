@@ -2,8 +2,12 @@ import styled from "styled-components";
 import { color } from "../../../utils/color";
 import { IoAdd, IoCreate } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import { RootState } from "../../../redux/store";
+import { useSelector } from "react-redux";
 
 const Table = () => {
+  const stores = useSelector((state: RootState) => state.store.datas);
+  console.log(stores);
   return (
     <TableContainer>
       <table>
@@ -23,33 +27,35 @@ const Table = () => {
           </THRow>
         </TableHeader>
         <TableBody>
-          <TRow>
-            <TData>1</TData>
-            <TData>Flexible inox</TData>
-            <TData>WB56DED</TData>
-            <TData>Flexible</TData>
-            <TData>12</TData>
-            <TData>-</TData>
-            <TData>250 CFA</TData>
-            <TData>300 CFA</TData>
-            <TData>3600 CFA</TData>
-            <TData>10/07/2023</TData>
-            <TData>
-              <OptionGroup>
-                <Option action="add">
-                  <IoAdd size={15} />
-                </Option>
+          {stores?.map((store, index) => (
+            <TRow>
+              <TData>{index + 1}</TData>
+              <TData>{store.name}</TData>
+              <TData>{store.reference || "-"}</TData>
+              <TData>Flexible</TData>
+              <TData>12</TData>
+              <TData>-</TData>
+              <TData>250 CFA</TData>
+              <TData>300 CFA</TData>
+              <TData>3600 CFA</TData>
+              <TData>10/07/2023</TData>
+              <TData>
+                <OptionGroup>
+                  <Option action="add">
+                    <IoAdd size={15} />
+                  </Option>
 
-                <Option action="update">
-                  <IoCreate size={15} />
-                </Option>
+                  <Option action="update">
+                    <IoCreate size={15} />
+                  </Option>
 
-                <Option action="delete">
-                  <MdDelete size={15} />
-                </Option>
-              </OptionGroup>
-            </TData>
-          </TRow>
+                  <Option action="delete">
+                    <MdDelete size={15} />
+                  </Option>
+                </OptionGroup>
+              </TData>
+            </TRow>
+          ))}
         </TableBody>
       </table>
     </TableContainer>

@@ -14,7 +14,7 @@ const TableData = () => {
       <Container>
         <HeaderTitle>CATEGORIE</HeaderTitle>
         <GroupButton>
-          <AddButton setOpen={setOpen} />
+          <AddButton setOpen={setOpen} text="categorie" />
         </GroupButton>
       </Container>
       <Table />

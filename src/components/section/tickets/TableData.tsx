@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
-import SimpleSearchBard from "../../input/SimpleSearchBard";
+// import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
 import { useState } from "react";
 import SupplierModal from "../suppliers/modal/SupplierModal";
@@ -15,8 +15,8 @@ const TableData = () => {
       <Container>
         <HeaderTitle>FOURNISSEURS</HeaderTitle>
         <GroupButton>
-          <SimpleSearchBard />
-          <AddButton setOpen={setOpen} />
+          {/* <SimpleSearchBard /> */}
+          <AddButton setOpen={setOpen} text="ticket" />
         </GroupButton>
       </Container>
       <Table />

@@ -20,7 +20,7 @@ const TableData = () => {
         <GroupButton>
           {/* <SimpleSearchBard /> */}
           <SwitchDisplay isDisplay={setChangeDisplay} />
-          <AddButton setOpen={setOpen} />
+          <AddButton setOpen={setOpen} text="article" />
         </GroupButton>
       </Container>
       {changeDisplay ? <CardView /> : <Table />}

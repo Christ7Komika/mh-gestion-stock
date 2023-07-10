@@ -20,9 +20,10 @@ import InputImage from "../../../input/InputImage";
 import InputSelect from "../../../input/InputSelect";
 import InputPlainText from "../../../input/inputPlainText";
 import SwitchData from "../../../input/SwitchData";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
+import { createStore } from "../../../../redux/features/stores";
 
 interface Props {
   setAction: Function;
@@ -57,7 +58,11 @@ const StockModal = ({ setAction }: Props) => {
   const [warehouse, setWarehouse] = useState<string | null>(null);
   const [warehouseError, setWarehouseError] = useState<string>("");
 
+  const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
+  const categories = useSelector((state: RootState) => state.category.datas);
+  const suppliers = useSelector((state: RootState) => state.supplier.datas);
+  const warehouses = useSelector((state: RootState) => state.warehouse.datas);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -117,6 +122,12 @@ const StockModal = ({ setAction }: Props) => {
     form.append("category", category || "");
     form.append("category", category || "");
     form.append("hasLength", isLength ? "true" : "false");
+
+    createStore(form, (exit: boolean) => {
+      if (exit) {
+        setAction(false);
+      }
+    })(dispatch);
   };
 
   return (
