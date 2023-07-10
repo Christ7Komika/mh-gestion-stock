@@ -10,6 +10,7 @@ interface Props {
   error: string | null;
   suffix?: string;
   type?: string;
+  placeholder?: string;
 }
 
 const InputText = ({
@@ -20,6 +21,7 @@ const InputText = ({
   error,
   suffix,
   type,
+  placeholder,
 }: Props) => {
   const [text, setText] = useState("");
 
@@ -37,6 +39,7 @@ const InputText = ({
         id={id}
         onChange={(e) => setText(e.target.value)}
         defaultValue={text ? text : defaultValue ? defaultValue : ""}
+        placeholder={placeholder ? placeholder : ""}
       />
     </Container>
   );
@@ -57,7 +60,7 @@ const Label = styled.label`
   justify-content: space-between;
 `;
 
-const LabelError = styled.small`
+export const LabelError = styled.small`
   color: ${color.red};
   font-size: 0.75rem;
 `;

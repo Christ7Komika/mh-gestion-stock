@@ -12,7 +12,7 @@ const AddButton = ({ setOpen }: Props) => {
       <ButtonIcon>
         <IoAdd size={25} />
       </ButtonIcon>
-      <ButtonText>Ajouter fournisseur</ButtonText>
+      <ButtonText>Ajout article</ButtonText>
     </Container>
   );
 };

@@ -57,7 +57,7 @@ const TextArea = styled.textarea`
   max-width: 100%;
   height: 50px;
   min-height: 40px;
-  max-height: 70px;
+  max-height: 110px;
   border-radius: 5px;
   border: 1px solid ${color.border};
   padding: 0.5rem;

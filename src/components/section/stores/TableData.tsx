@@ -1,25 +1,29 @@
 import { styled } from "styled-components";
 import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
-import SimpleSearchBard from "../../input/SimpleSearchBard";
+// import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
 import { useState } from "react";
-import SupplierModal from "../suppliers/modal/SupplierModal";
+import SwitchDisplay from "../../input/SwitchDisplay";
+import CardView from "./CardView";
+import StockModal from "./modal/StockModal";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);
+  const [changeDisplay, setChangeDisplay] = useState(false);
 
   return (
     <>
-      {open && <SupplierModal setAction={setOpen} />}
+      {open && <StockModal setAction={setOpen} />}
       <Container>
-        <HeaderTitle>FOURNISSEURS</HeaderTitle>
+        <HeaderTitle>ARTICLE</HeaderTitle>
         <GroupButton>
-          <SimpleSearchBard />
+          {/* <SimpleSearchBard /> */}
+          <SwitchDisplay isDisplay={setChangeDisplay} />
           <AddButton setOpen={setOpen} />
         </GroupButton>
       </Container>
-      <Table />
+      {changeDisplay ? <CardView /> : <Table />}
     </>
   );
 };

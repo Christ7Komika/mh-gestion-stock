@@ -12,8 +12,12 @@ const Table = () => {
             <THead>ID</THead>
             <THead>Nom</THead>
             <THead>Référence</THead>
-            <THead>Téléphone</THead>
-            <THead>Email</THead>
+            <THead>Catégorie</THead>
+            <THead>Quantité</THead>
+            <THead>Longueur</THead>
+            <THead>Prix Unitaire</THead>
+            <THead>Prix de vente</THead>
+            <THead>Total</THead>
             <THead>Ajouté le</THead>
             <THead>Action</THead>
           </THRow>
@@ -21,11 +25,15 @@ const Table = () => {
         <TableBody>
           <TRow>
             <TData>1</TData>
-            <TData>Christ Komika</TData>
+            <TData>Flexible inox</TData>
             <TData>WB56DED</TData>
-            <TData>+242 05 564 32 95</TData>
-            <TData>christkomika7@gmail.com</TData>
-            <TData>21/06/2023</TData>
+            <TData>Flexible</TData>
+            <TData>12</TData>
+            <TData>-</TData>
+            <TData>250 CFA</TData>
+            <TData>300 CFA</TData>
+            <TData>3600 CFA</TData>
+            <TData>10/07/2023</TData>
             <TData>
               <OptionGroup>
                 <Option action="add">

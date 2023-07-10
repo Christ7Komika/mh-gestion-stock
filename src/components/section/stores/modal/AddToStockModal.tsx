@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { color } from "../../utils/color";
+import { color } from "../../../../utils/color";
 import {
   ModalCancelButton,
   ModalDoubleFormGroup,
@@ -11,13 +11,13 @@ import {
   ModalStockInfos,
   ModalStockInfosData,
   ModalValidButton,
-} from "../layout/Layout";
+} from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
-import InputText from "../input/InputText";
-import React, { useEffect, useState } from "react";
-import InputImage from "../input/InputImage";
-import InputSelect from "../input/InputSelect";
-import InputPlainText from "../input/inputPlainText";
+import InputText from "../../../input/InputText";
+import { useState } from "react";
+// import InputImage from "../../../input/InputImage";
+import InputSelect from "../../../input/InputSelect";
+import InputPlainText from "../../../input/inputPlainText";
 
 interface Props {
   setAction: Function;
