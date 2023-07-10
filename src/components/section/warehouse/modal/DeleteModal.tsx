@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../input/InputText";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
-import { deleteCategory } from "../../../../redux/features/category";
+import { deleteWarehouse } from "../../../../redux/features/warehouse";
 
 interface Props {
   setAction: Function;
@@ -28,8 +28,8 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
   const [name, setName] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.category.isLoad);
-  const isError = useSelector((state: RootState) => state.category.isError);
+  const isLoad = useSelector((state: RootState) => state.warehouse.isLoad);
+  const isError = useSelector((state: RootState) => state.warehouse.isError);
 
   useEffect(() => {
     if (name && nameError) {
@@ -48,12 +48,11 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     }
 
     if (name === trueName) {
-      deleteCategory(id, (exit: boolean) => {
+      deleteWarehouse(id, (exit: boolean) => {
         if (exit) {
           return setAction(false);
         }
       })(dispatch);
-
       return;
     }
   };
@@ -61,13 +60,13 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer une categorie</ModalHeaderTitle>
+          <ModalHeaderTitle>Retirer un entrepôt</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer la catégorie ''{trueName}''.</p>
-        <p>Inserer le nom de la catégorie que vous voulez supprimer.</p>
+        <p>Êtes vous sur de vouloir supprimer un entrepôt ''{trueName}''.</p>
+        <p>Inserer le nom de l'entrepôt que vous voulez supprimer.</p>
         <ModalForm>
           <InputText
             name=""

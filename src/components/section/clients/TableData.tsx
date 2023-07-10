@@ -12,7 +12,6 @@ const TableData = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [isValid, setIsValid] = useState(false);
-
   const dispatch = useDispatch();
 
   useEffect(() => {

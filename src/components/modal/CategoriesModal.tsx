@@ -11,7 +11,10 @@ import {
 } from "../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import InputText from "../input/InputText";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import InputPlainText from "../input/inputPlainText";
+import { useDispatch, useSelector } from "react-redux";
+import { Category, createCategory } from "../../redux/features/category";
 
 interface Props {
   setAction: Function;
@@ -19,14 +22,44 @@ interface Props {
 
 const CategoriesModal = ({ setAction }: Props) => {
   const [name, setName] = useState<string | null>(null);
+  const [reference, setReference] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (name && nameError) {
+      setNameError(null);
+    }
+  }, [name, nameError]);
+
+  const submit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (!name) {
+      setName("Veuillez inserer le nom de la categorie");
+    }
+
+    const data: Category = {
+      name: name,
+      reference: reference,
+      description: description,
+    };
+
+    createCategory(data, (exit) => {
+      if (exit) {
+        setAction(false);
+      }
+    })(dispatch);
+  };
+
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
           <ModalHeaderTitle>Ajouter une catégorie</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
-            <IoExit />W
+            <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
         <ModalForm>
@@ -37,9 +70,23 @@ const CategoriesModal = ({ setAction }: Props) => {
             setValue={setName}
             error={nameError}
           />
+          <InputText
+            name="Référence"
+            id="reference"
+            defaultValue={reference}
+            setValue={setReference}
+            error={""}
+          />
+          <InputPlainText
+            name="Description"
+            id="description"
+            defaultValue={description}
+            setValue={setDescription}
+            error={""}
+          />
         </ModalForm>
         <ModalGroupButton>
-          <ModalValidButton>Valider</ModalValidButton>
+          <ModalValidButton onClick={submit}>Valider</ModalValidButton>
           <ModalCancelButton onClick={() => setAction(false)}>
             Annuler
           </ModalCancelButton>

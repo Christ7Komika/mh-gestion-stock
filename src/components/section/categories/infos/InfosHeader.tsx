@@ -1,13 +1,24 @@
 import styled from "styled-components";
 import { color } from "../../../../utils/color";
+import { CategoryType } from "../../../../redux/features/category";
 
-const InfosHeader = () => {
+interface Props {
+  category: CategoryType | null;
+}
+
+const InfosHeader = ({ category }: Props) => {
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Aperçu fournisseur</InfosHeaderTitle>
-        <InfosHeaderDate>18/06/2023</InfosHeaderDate>
+        <InfosHeaderTitle>Aperçu catégorie</InfosHeaderTitle>
+        {category && category.createdAt ? (
+          <InfosHeaderDate>
+            {new Date(category.createdAt).toLocaleDateString()}
+          </InfosHeaderDate>
+        ) : (
+          "..."
+        )}
       </InfosHeaderColumnContent>
     </Container>
   );

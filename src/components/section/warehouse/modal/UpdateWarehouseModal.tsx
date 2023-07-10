@@ -1,5 +1,4 @@
 import { styled } from "styled-components";
-import { color } from "../../../../utils/color";
 import {
   ModalCancelButton,
   ModalForm,
@@ -11,73 +10,99 @@ import {
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import InputText from "../../../input/InputText";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../redux/store";
+import InputText from "../../../input/InputText";
+import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
-import { deleteCategory } from "../../../../redux/features/category";
+
+import InputPlainText from "../../../input/inputPlainText";
+import {
+  Warehouse,
+  WarehouseType,
+  updateWarehouse,
+} from "../../../../redux/features/warehouse";
 
 interface Props {
   setAction: Function;
-  trueName: string;
-  id: string;
+  warehouse: WarehouseType | null;
 }
 
-const DeleteModal = ({ setAction, trueName, id }: Props) => {
-  const [name, setName] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
+const UpdateWarehouseModal = ({ setAction, warehouse }: Props) => {
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [nameError, setNameError] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.category.isLoad);
-  const isError = useSelector((state: RootState) => state.category.isError);
+  const isLoad = useSelector((state: RootState) => state.warehouse.isLoad);
+  const isError = useSelector((state: RootState) => state.warehouse.isError);
 
   useEffect(() => {
-    if (name && nameError) {
+    if (nameError && name) {
       setNameError("");
     }
-  }, [name]);
+  }, [nameError]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!name) {
-      return setNameError("Le champ est vide");
-    }
 
-    if (name !== trueName) {
-      return setNameError("Le nom inséré est invalide");
+    if (!name && !description) {
+      return setError(true);
     }
+    if (warehouse) {
+      const form: Warehouse = {
+        name: name && name,
+        description: description && description,
+      };
 
-    if (name === trueName) {
-      deleteCategory(id, (exit: boolean) => {
+      updateWarehouse(warehouse.id, form, (exit: boolean) => {
         if (exit) {
-          return setAction(false);
+          setAction(false);
         }
       })(dispatch);
-
-      return;
     }
   };
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer une categorie</ModalHeaderTitle>
+          <ModalHeaderTitle>Modifier un entrepôt</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer la catégorie ''{trueName}''.</p>
-        <p>Inserer le nom de la catégorie que vous voulez supprimer.</p>
         <ModalForm>
           <InputText
-            name=""
+            name="Nom"
             id="name"
-            defaultValue={name}
+            defaultValue={
+              name ? name : warehouse && warehouse.name ? warehouse.name : ""
+            }
             setValue={setName}
             error={nameError}
           />
+          <InputPlainText
+            name="Description"
+            id="desc"
+            defaultValue={
+              description
+                ? description
+                : warehouse && warehouse.description
+                ? warehouse.description
+                : ""
+            }
+            setValue={setDescription}
+            error={""}
+          />
         </ModalForm>
         {isError && <ModalMessageError>La requête a été</ModalMessageError>}
+        {error && (
+          <ModalMessageError>
+            Veuillez remplir au moins un champ à modifier
+          </ModalMessageError>
+        )}
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
@@ -123,4 +148,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default DeleteModal;
+export default UpdateWarehouseModal;

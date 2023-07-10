@@ -17,9 +17,12 @@ import InputText from "../../../input/InputText";
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
 import {
+  Category,
   CategoryType,
   updateCategory,
 } from "../../../../redux/features/category";
+
+import InputPlainText from "../../../input/inputPlainText";
 
 interface Props {
   setAction: Function;
@@ -28,6 +31,8 @@ interface Props {
 
 const UpdateCategoryModal = ({ setAction, category }: Props) => {
   const [name, setName] = useState<string>("");
+  const [reference, setReference] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
 
@@ -44,13 +49,16 @@ const UpdateCategoryModal = ({ setAction, category }: Props) => {
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    if (!name) {
+    if (!name && !reference && !description) {
       return setError(true);
     }
     if (category) {
-      const form = {
-        name: name,
+      const form: Category = {
+        name: name && name,
+        reference: reference && reference,
+        description: description && description,
       };
+
       updateCategory(category.id, form, (exit: boolean) => {
         if (exit) {
           setAction(false);
@@ -69,13 +77,39 @@ const UpdateCategoryModal = ({ setAction, category }: Props) => {
         </ModalHeader>
         <ModalForm>
           <InputText
-            name="Nom *"
+            name="Nom"
             id="name"
             defaultValue={
               name ? name : category && category.name ? category.name : ""
             }
             setValue={setName}
             error={nameError}
+          />
+          <InputText
+            name="Référence"
+            id="reference"
+            defaultValue={
+              reference
+                ? reference
+                : category && category.reference
+                ? category.reference
+                : ""
+            }
+            setValue={setReference}
+            error={""}
+          />
+          <InputPlainText
+            name="Description"
+            id="desc"
+            defaultValue={
+              description
+                ? description
+                : category && category.description
+                ? category.description
+                : ""
+            }
+            setValue={setDescription}
+            error={""}
           />
         </ModalForm>
         {isError && <ModalMessageError>La requête a été</ModalMessageError>}
@@ -86,13 +120,13 @@ const UpdateCategoryModal = ({ setAction, category }: Props) => {
         )}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>

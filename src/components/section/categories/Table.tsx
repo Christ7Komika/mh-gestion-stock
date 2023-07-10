@@ -1,4 +1,4 @@
-import { IoCreate } from "react-icons/io5";
+import { IoCreate, IoEye } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import {
   OptionGroup,
@@ -14,23 +14,27 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useEffect, useState } from "react";
-import { CategoryType, getCategories } from "../../../redux/features/category";
+import {
+  CategoryType,
+  getCategories,
+  getCategoryId,
+} from "../../../redux/features/category";
 import DeleteModal from "./modal/DeleteModal";
-import UpdateCategoryModal from "./modal/updateCategoryModal";
+import UpdateCategoryModal from "./modal/UpdateCategoryModal";
 
 const Table = () => {
   const dispatch = useDispatch();
-  const categories = useSelector((state: RootState) => state.supplier.datas);
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalUpdate, setModalUpdate] = useState<boolean>(false);
-  const [categoryDate, setCategoryData] = useState<CategoryType | null>(null);
+  const [categoryData, setCategoryData] = useState<CategoryType | null>(null);
 
   useEffect(() => {
     getCategories()(dispatch);
   }, []);
 
+  const categories = useSelector((state: RootState) => state.category.datas);
   const handleDelete = (name: string, id: string) => {
     setName(name);
     setId(id);
@@ -42,6 +46,17 @@ const Table = () => {
     setModalUpdate(true);
   };
 
+  const handleSee = (id: string) => {
+    getCategoryId(id)(dispatch);
+  };
+
+  const ShortCutText = (value: string): string => {
+    if (value?.length >= 20) {
+      return value.substring(0, 20) + "...";
+    }
+    return value;
+  };
+
   return (
     <>
       {modalDelete && (
@@ -50,7 +65,7 @@ const Table = () => {
       {modalUpdate && (
         <UpdateCategoryModal
           setAction={setModalUpdate}
-          category={categoryDate}
+          category={categoryData}
         />
       )}
       <TableContainer>
@@ -59,6 +74,8 @@ const Table = () => {
             <THRow>
               <THead>ID</THead>
               <THead>Nom</THead>
+              <THead>Référence</THead>
+              <THead>Description</THead>
               <THead>Ajouté le</THead>
               <THead>Action</THead>
             </THRow>
@@ -68,11 +85,16 @@ const Table = () => {
               <TRow key={`category-table-${id}`}>
                 <TData>{id + 1}</TData>
                 <TData>{category.name}</TData>
+                <TData>{category.reference}</TData>
+                <TData>{ShortCutText(category.description as string)}</TData>
                 <TData>
                   {new Date(category.createdAt).toLocaleDateString()}
                 </TData>
                 <TData>
                   <OptionGroup>
+                    <Option action="add" onClick={() => handleSee(category.id)}>
+                      <IoEye size={15} />
+                    </Option>
                     <Option
                       action="update"
                       onClick={() => handleUpdate(category)}
