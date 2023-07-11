@@ -14,32 +14,23 @@ import {
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import InputText from "../../../input/InputText";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+// import InputImage from "../../../input/InputImage";
+import InputSelect from "../../../input/InputSelect";
 import InputPlainText from "../../../input/inputPlainText";
-import { useDispatch, useSelector } from "react-redux";
-import { getStore } from "../../../../redux/features/stores";
-import { RootState } from "../../../../redux/store";
-import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
-  currentId?: string;
 }
 
-const AddToStockModal = ({ setAction, currentId }: Props) => {
+const WithdrawToStockModal = ({ setAction }: Props) => {
   const [code, setCode] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<string | null>(null);
+  const [reference, setReference] = useState<string | null>(null);
+  const [length, setLength] = useState<string | null>(null);
+  const [supplier, setSupplier] = useState<string | null>(null);
+  const [wareHouse, setWarehouse] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
-
-  const dispatch = useDispatch();
-  const store = useSelector((state: RootState) => state.store.data);
-  const isLoad = useSelector((state: RootState) => state.store.isLoad);
-
-  useEffect(() => {
-    if (currentId) {
-      getStore(currentId)(dispatch);
-    }
-  }, [currentId]);
 
   return (
     <ModalContainer>
@@ -51,50 +42,59 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
           </ModalHeaderExit>
         </ModalHeader>
         <ModalStockInfos>
-          {isLoad && <Loader />}
-          {store?.hasLength ? (
-            <>
-              <ModalStockInfosData>
-                Longueur totale : {store.quantity} mètre(s)
-              </ModalStockInfosData>
-              <ModalStockInfosData>
-                Stockage : {store?.Warehouse?.name}
-              </ModalStockInfosData>
-            </>
-          ) : (
-            <>
-              <ModalStockInfosData>
-                Quantité total: {store?.quantity}
-              </ModalStockInfosData>
-              <ModalStockInfosData>
-                Stockage : {store?.Warehouse.name}
-              </ModalStockInfosData>
-            </>
-          )}
+          <ModalStockInfosData>Total article: 120</ModalStockInfosData>
+          <ModalStockInfosData>Total longueur: 16m</ModalStockInfosData>
         </ModalStockInfos>
         <ModalForm style={{ width: "100%" }}>
-          {store?.hasLength ? (
-            <InputText
-              name="Longueur *"
-              id="length"
-              defaultValue={quantity}
-              setValue={setQuantity}
-              error={""}
-              placeholder="La valeur inserer doit être en mètre"
-            />
-          ) : (
-            <InputText
-              name="Quantité *"
-              id="quantity"
-              defaultValue={quantity}
-              setValue={setQuantity}
-              error={""}
-              placeholder="Veuillez inserer la qunatité á ajouter"
-            />
-          )}
+          <InputText
+            name="Code *"
+            id="code"
+            defaultValue={code}
+            setValue={setCode}
+            error={""}
+          />
         </ModalForm>
-
+        <ModalDoubleFormGroup style={{ width: "100%" }}>
+          <InputText
+            name="Quantité *"
+            id="quantity"
+            defaultValue={quantity}
+            setValue={setQuantity}
+            error={""}
+          />
+          <InputText
+            name="Longueur *"
+            id="length"
+            defaultValue={length}
+            setValue={setLength}
+            error={""}
+          />
+        </ModalDoubleFormGroup>
         <ModalForm style={{ width: "100%" }}>
+          {/* <InputSelect
+            name="Fournisseur *"
+            id="supplier"
+            defaultValue={supplier}
+            setValue={setSupplier}
+            error={""}
+            placeholder="Sélectionner un fournisseur"
+          />
+          <InputSelect
+            name="Réference *"
+            id="reference"
+            defaultValue={reference}
+            setValue={setReference}
+            error={""}
+            placeholder="Sélectionner un fournisseur"
+          />
+          <InputSelect
+            name="Entrepôt dans lequel vous l'ajoutez *"
+            id="warehouse"
+            defaultValue={wareHouse}
+            setValue={setWarehouse}
+            error={""}
+            placeholder="Sélectionner un entrepôt"
+          /> */}
           <InputPlainText
             name="Commentaire"
             id="comment"
@@ -103,6 +103,7 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
             error={""}
           />
         </ModalForm>
+
         <ModalGroupButton>
           <ModalValidButton>Valider</ModalValidButton>
           <ModalCancelButton onClick={() => setAction(false)}>
@@ -138,4 +139,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default AddToStockModal;
+export default WithdrawToStockModal;

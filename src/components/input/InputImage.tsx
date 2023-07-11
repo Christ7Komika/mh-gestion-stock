@@ -31,9 +31,11 @@ const InputImage = ({ setValue, id, defaultImage }: Props) => {
 
   return (
     <Container>
-      <LabelDelete onClick={() => setImage(null)}>
-        <RxCross2 size={10} />
-      </LabelDelete>
+      {previewImage && (
+        <LabelDelete onClick={() => setImage(null)}>
+          <RxCross2 size={10} />
+        </LabelDelete>
+      )}
 
       <Label htmlFor={id}>
         {previewImage ? (

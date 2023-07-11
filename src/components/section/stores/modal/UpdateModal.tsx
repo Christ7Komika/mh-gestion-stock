@@ -29,7 +29,7 @@ interface Props {
   setAction: Function;
 }
 
-const StockModal = ({ setAction }: Props) => {
+const UpdateModal = ({ setAction }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string>("");
@@ -331,4 +331,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default StockModal;
+export default UpdateModal;

@@ -4,13 +4,25 @@ import { AppDispatch } from "../store";
 import axios from "axios";
 import { host } from "../host";
 
-export interface CommentType {}
+export interface CommentType {
+  id: string;
+  message: string;
+}
 
-export interface SupplierType {}
+export interface SupplierType {
+  id: string;
+  name: string;
+}
 
-export interface WarehouseType {}
+export interface WarehouseType {
+  id: string;
+  name: string;
+}
 
-export interface CategoryType {}
+export interface CategoryType {
+  id: string;
+  name: string;
+}
 
 export interface GroupArticleType {}
 
@@ -120,7 +132,7 @@ export const getStores = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/store",
+    url: host + "/articles",
   };
 
   axios<StoreType[]>(config)
@@ -134,11 +146,12 @@ export const getStores = () => (dispatch: AppDispatch) => {
       dispatch(isLoad(false));
     });
 };
+
 export const searchStores = (data: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "post",
-    url: host + "/store/find",
+    url: host + "/articles/find",
     data: { search: data },
   };
 
@@ -158,7 +171,7 @@ export const getStore = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/store/" + id,
+    url: host + "/articles/" + id,
   };
 
   axios<StoreType>(config)
@@ -172,11 +185,12 @@ export const getStore = (id: string) => (dispatch: AppDispatch) => {
       dispatch(isLoad(false));
     });
 };
+
 export const getHistory = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/store/history/add",
+    url: host + "/articles/history/add",
   };
 
   axios<History[]>(config)
@@ -197,7 +211,7 @@ export const filterHistory =
     dispatch(isLoad(true));
     const config = {
       method: "post",
-      url: host + "/store/history/filter",
+      url: host + "/articles/history/filter",
       data: data,
     };
 
@@ -222,7 +236,8 @@ export const createStore =
     dispatch(isLoad(true));
     const config = {
       method: "post",
-      url: host + "/store/",
+      url: host + "/articles/",
+      maxBodyLength: Infinity,
       data: data,
     };
 
@@ -244,7 +259,7 @@ export const updateStore =
     dispatch(isLoad(true));
     const config = {
       method: "put",
-      url: host + "/store/" + id,
+      url: host + "/articles/" + id,
       data: data,
     };
 
@@ -266,7 +281,7 @@ export const deleteStore =
     dispatch(isLoad(true));
     const config = {
       method: "delete",
-      url: host + "/store/" + id,
+      url: host + "/articles/" + id,
     };
     axios<StoreType[]>(config)
       .then(({ data }) => {

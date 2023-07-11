@@ -2,14 +2,19 @@ import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import { useEffect, useRef, useState } from "react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { SupplierType } from "../../redux/features/supplier";
+import { CategoryType } from "../../redux/features/category";
+import { WarehouseType } from "../../redux/features/warehouse";
 
 interface Props {
-  setValue: Function;
+  setValue?: Function;
+  setId: Function;
   name: string;
   id: string;
   defaultValue: string | null;
   error: string | null;
   placeholder: string;
+  data: SupplierType[] | CategoryType[] | WarehouseType[] | null;
 }
 
 const InputSelect = ({
@@ -19,16 +24,18 @@ const InputSelect = ({
   setValue,
   error,
   placeholder,
+  data,
+  setId,
 }: Props) => {
   const [text, setText] = useState<string | null>(null);
-  const [selectId, setSelectId] = useState<number | null>(null);
+  const [selectId, setSelectId] = useState<string | null>(null);
   const [focus, setFocus] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const selectRef = useRef<HTMLDivElement>(null);
 
   const filterSelect = () => {
-    const filter = data.filter(
+    const filter = data?.filter(
       (option) =>
         option.name.toLowerCase().search(search.toLocaleLowerCase()) !== -1
     );
@@ -57,7 +64,10 @@ const InputSelect = ({
   }, []);
 
   useEffect(() => {
-    setValue(text);
+    if (setValue) {
+      setValue(text);
+    }
+    setId(selectId);
   }, [text]);
   return (
     <Container ref={selectRef}>
@@ -80,9 +90,15 @@ const InputSelect = ({
             value={text ? text : defaultValue ? defaultValue : ""}
           />
           <SelectIcon>
-            <span onClick={() => setOpen(!open)}>
-              <IoChevronDown size={12} />
-            </span>
+            {open ? (
+              <span onClick={() => setOpen(!open)}>
+                <IoChevronUp size={12} />
+              </span>
+            ) : (
+              <span onClick={() => setOpen(!open)}>
+                <IoChevronDown size={12} />
+              </span>
+            )}
           </SelectIcon>
         </Select>
         {open && (
@@ -228,28 +244,5 @@ const Empty = styled.p`
   text-align: center;
   color: ${color.darkBlue};
 `;
-
-const data = [
-  {
-    id: 1,
-    name: "Reference 1",
-  },
-  {
-    id: 2,
-    name: "Reference 2",
-  },
-  {
-    id: 3,
-    name: "Reference 3",
-  },
-  {
-    id: 4,
-    name: "Reference 4",
-  },
-  {
-    id: 5,
-    name: "Reference 5",
-  },
-];
 
 export default InputSelect;
