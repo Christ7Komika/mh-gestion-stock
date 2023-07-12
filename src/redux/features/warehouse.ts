@@ -53,7 +53,7 @@ export const warehouseSlice = createSlice({
       state.isSuccess = action.payload;
     },
     isError: (state, action: PayloadAction<boolean>) => {
-      state.isLoad = action.payload;
+      state.isError = action.payload;
     },
     warehouseId: (state, action: PayloadAction<string>) => {
       state.currentId = action.payload;

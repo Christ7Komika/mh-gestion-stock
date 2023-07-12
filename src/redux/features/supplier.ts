@@ -78,10 +78,10 @@ export const supplierSlice = createSlice({
       state.isLoad = action.payload;
     },
     isSuccess: (state, action: PayloadAction<boolean>) => {
-      state.isLoad = action.payload;
+      state.isSuccess = action.payload;
     },
     isError: (state, action: PayloadAction<boolean>) => {
-      state.isLoad = action.payload;
+      state.isError = action.payload;
     },
     supplierId: (state, action: PayloadAction<string>) => {
       state.currentId = action.payload;

@@ -69,6 +69,20 @@ const InputSelect = ({
     }
     setId(selectId);
   }, [text]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      const item = data?.filter((value) => value.id === defaultValue);
+
+      if (item && item.length === 1) {
+        setText(item[0].name);
+        setSelectId(item[0].id);
+        if (setValue) {
+          setValue(text);
+        }
+      }
+    }
+  }, [defaultValue]);
   return (
     <Container ref={selectRef}>
       <Label htmlFor={id}>
@@ -87,7 +101,7 @@ const InputSelect = ({
               setText(e.target.value);
             }}
             placeholder={placeholder}
-            value={text ? text : defaultValue ? defaultValue : ""}
+            value={text ? text : ""}
           />
           <SelectIcon>
             {open ? (

@@ -66,7 +66,7 @@ const OptionModal = ({
               setAction(false);
             }}
           >
-            <CardText>Mettre a jour</CardText>
+            <CardText>Mettre à jour</CardText>
             <LuEdit3 size={30} />
           </CardContainer>
           <CardContainer
@@ -125,7 +125,7 @@ const Modal = styled.div`
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 150px);
+  grid-template-columns: repeat(3, 160px);
   gap: 1rem;
 `;
 

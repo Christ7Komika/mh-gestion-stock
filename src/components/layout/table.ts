@@ -74,7 +74,7 @@ export const TDImg = styled.div`
 
 export const TData = styled.td`
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   position: relative;
 `;
 
@@ -119,4 +119,9 @@ export const Option = styled.div<OptionProps>`
       : action === "add"
       ? color.darkGreen
       : color.darkOrange};
+  transition: linear 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;

@@ -39,6 +39,7 @@ const StockModal = ({ setAction }: Props) => {
   const [quantity, setQuantity] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [designation, setDesignation] = useState<string | null>(null);
+  const [designationError, setDesignationError] = useState<string | null>(null);
   const [unitPrice, setUnitPrice] = useState<string | null>(null);
   const [priceError, setPriceError] = useState<string | null>(null);
   const [sellingPrice, setSellingPrice] = useState<string | null>(null);
@@ -68,6 +69,12 @@ const StockModal = ({ setAction }: Props) => {
     e.preventDefault();
     if (!name) {
       return setNameError("Veuillez inserer le nom de l'article");
+    }
+
+    if (!designation) {
+      return setDesignationError(
+        "Veuillez inserer la désignation de l'article"
+      );
     }
 
     if (!quantity) {
@@ -211,7 +218,7 @@ const StockModal = ({ setAction }: Props) => {
               id="designation"
               defaultValue={designation}
               setValue={setDesignation}
-              error={""}
+              error={designationError}
             />
             <ModalDoubleFormGroup>
               <SwitchData
@@ -288,7 +295,7 @@ const StockModal = ({ setAction }: Props) => {
 
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>

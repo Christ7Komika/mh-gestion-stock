@@ -12,7 +12,7 @@ import {
   TableContainer,
   TableHeader,
 } from "../../layout/table";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import OptionModal from "./modal/OptionModal";
 import AddToStockModal from "./modal/AddToStockModal";
 import WithdrawToStockModal from "./modal/WithdrawToStockModal";
@@ -36,8 +36,15 @@ const Table = () => {
       {addModal && (
         <AddToStockModal setAction={setAddModal} currentId={currentId} />
       )}
-      {withdrawModal && <WithdrawToStockModal setAction={setWithdrawModal} />}
-      {updateModal && <UpdateModal setAction={setUpdateModal} />}
+      {withdrawModal && (
+        <WithdrawToStockModal
+          setAction={setWithdrawModal}
+          currentId={currentId}
+        />
+      )}
+      {updateModal && (
+        <UpdateModal setAction={setUpdateModal} currentId={currentId} />
+      )}
       {changeStoreModal && (
         <ChangeStoreModal setAction={setChangeStoreModal} trueName="" id="" />
       )}
@@ -79,8 +86,8 @@ const Table = () => {
                   store.hasLength ? "mètre(s)" : "qté(s)"
                 }`}</TData>
                 <TData>{store.purchasePrice + " FCFA"}</TData>
-                <TData>{store.unitPrice + "FCFA"}</TData>
-                <TData>{store.sellingPrice + "FCFA"}</TData>
+                <TData>{store.unitPrice + " FCFA"}</TData>
+                <TData>{store.sellingPrice + " FCFA"}</TData>
                 <TData>{new Date(store.createdAt).toLocaleDateString()}</TData>
                 <TData>
                   <OptionGroup>

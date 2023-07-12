@@ -2,7 +2,6 @@ import { styled } from "styled-components";
 import { color } from "../../../../utils/color";
 import {
   ModalCancelButton,
-  ModalDoubleFormGroup,
   ModalForm,
   ModalGroupButton,
   ModalHeader,
@@ -14,10 +13,13 @@ import {
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import InputText from "../../../input/InputText";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputPlainText from "../../../input/inputPlainText";
 import { useDispatch, useSelector } from "react-redux";
-import { getStore } from "../../../../redux/features/stores";
+import {
+  addQuantityToStore,
+  getStore,
+} from "../../../../redux/features/stores";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 
@@ -27,19 +29,50 @@ interface Props {
 }
 
 const AddToStockModal = ({ setAction, currentId }: Props) => {
-  const [code, setCode] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<string | null>(null);
+  const [quantityError, setQuantityError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const store = useSelector((state: RootState) => state.store.data);
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
+  const isLoadChange = useSelector(
+    (state: RootState) => state.store.isLoadChange
+  );
+
+  const initData = () => {
+    setQuantity(null);
+    setQuantityError(null);
+    setComment(null);
+  };
 
   useEffect(() => {
     if (currentId) {
       getStore(currentId)(dispatch);
     }
   }, [currentId]);
+
+  const submit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (!quantity) {
+      return setQuantityError("Champ vide");
+    }
+    if (currentId) {
+      addQuantityToStore(
+        currentId,
+        {
+          quantity: quantity,
+          comment: comment || "",
+        },
+        (exit: boolean) => {
+          if (exit) {
+            initData();
+            setAction(false);
+          }
+        }
+      )(dispatch);
+    }
+  };
 
   return (
     <ModalContainer>
@@ -51,8 +84,9 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
           </ModalHeaderExit>
         </ModalHeader>
         <ModalStockInfos>
-          {isLoad && <Loader />}
-          {store?.hasLength ? (
+          {isLoad ? (
+            <Loader />
+          ) : store?.hasLength ? (
             <>
               <ModalStockInfosData>
                 Longueur totale : {store.quantity} mètre(s)
@@ -79,7 +113,7 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
               id="length"
               defaultValue={quantity}
               setValue={setQuantity}
-              error={""}
+              error={quantityError}
               placeholder="La valeur inserer doit être en mètre"
             />
           ) : (
@@ -88,7 +122,7 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
               id="quantity"
               defaultValue={quantity}
               setValue={setQuantity}
-              error={""}
+              error={quantityError}
               placeholder="Veuillez inserer la qunatité á ajouter"
             />
           )}
@@ -103,12 +137,22 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
             error={""}
           />
         </ModalForm>
-        <ModalGroupButton>
-          <ModalValidButton>Valider</ModalValidButton>
-          <ModalCancelButton onClick={() => setAction(false)}>
-            Annuler
-          </ModalCancelButton>
-        </ModalGroupButton>
+        {isLoadChange ? (
+          <ModalGroupButton>
+            <ModalValidButton>
+              <Loader />
+            </ModalValidButton>
+          </ModalGroupButton>
+        ) : (
+          <ModalGroupButton>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+              Valider
+            </ModalValidButton>
+            <ModalCancelButton onClick={() => setAction(false)}>
+              Annuler
+            </ModalCancelButton>
+          </ModalGroupButton>
+        )}
       </Modal>
     </ModalContainer>
   );

@@ -55,7 +55,7 @@ export const categorySlice = createSlice({
       state.isSuccess = action.payload;
     },
     isError: (state, action: PayloadAction<boolean>) => {
-      state.isLoad = action.payload;
+      state.isError = action.payload;
     },
     categoryId: (state, action: PayloadAction<string>) => {
       state.currentId = action.payload;

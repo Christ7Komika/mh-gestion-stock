@@ -32,6 +32,7 @@ export interface StoreType {
   id: string;
   image: string;
   name: string;
+  code: string;
   type: string;
   designation: string;
   length: string;
@@ -79,6 +80,7 @@ interface storeState {
   currentId: string | null;
   history: History[] | null;
   isLoad: boolean;
+  isLoadChange: boolean;
   isError: Boolean;
   isSuccess: Boolean;
 }
@@ -88,6 +90,7 @@ const initialState: storeState = {
   datas: null,
   data: null,
   isLoad: false,
+  isLoadChange: false,
   isError: false,
   history: null,
   isSuccess: false,
@@ -112,10 +115,14 @@ export const storeSlice = createSlice({
       state.isLoad = action.payload;
     },
     isSuccess: (state, action: PayloadAction<boolean>) => {
-      state.isLoad = action.payload;
+      state.isSuccess = action.payload;
     },
     isError: (state, action: PayloadAction<boolean>) => {
-      state.isLoad = action.payload;
+      state.isError = action.payload;
+    },
+
+    isLoadChange: (state, action: PayloadAction<boolean>) => {
+      state.isLoadChange = action.payload;
     },
     storeId: (state, action: PayloadAction<string>) => {
       state.currentId = action.payload;
@@ -123,8 +130,16 @@ export const storeSlice = createSlice({
   },
 });
 
-export const { store, stores, isLoad, isSuccess, isError, storeId, history } =
-  storeSlice.actions;
+export const {
+  store,
+  stores,
+  isLoad,
+  isLoadChange,
+  isSuccess,
+  isError,
+  storeId,
+  history,
+} = storeSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 
@@ -267,12 +282,63 @@ export const updateStore =
       .then(({ data }) => {
         dispatch(stores(data));
         dispatch(isSuccess(true));
-        dispatch(isLoad(false));
+        dispatch(isLoadChange(false));
         exit(true);
       })
       .catch(() => {
         dispatch(isError(true));
-        dispatch(isLoad(false));
+        dispatch(isLoadChange(false));
+      });
+  };
+
+export const addQuantityToStore =
+  (id: string, data: { quantity: string; comment: string }, exit: Function) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoadChange(true));
+
+    const config = {
+      method: "put",
+      url: host + "/articles/add/" + id,
+      data: data,
+    };
+
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadChange(false));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadChange(false));
+      });
+  };
+export const removeQuantityToStore =
+  (
+    id: string,
+    data: { currentQuantity: string; quantity: string; comment: string },
+    exit: Function
+  ) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoadChange(true));
+
+    const config = {
+      method: "put",
+      url: host + "/articles/remove/" + id,
+      data: data,
+    };
+
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadChange(false));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadChange(false));
       });
   };
 
