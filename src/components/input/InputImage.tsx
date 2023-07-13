@@ -16,18 +16,18 @@ const InputImage = ({ setValue, id, defaultImage }: Props) => {
   );
 
   useEffect(() => {
-    setValue(image ? image : defaultImage ? defaultImage : null);
-
+    setValue(image ? image : null);
     if (image) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
       };
       reader.readAsDataURL(image);
-    } else {
+    } else if (defaultImage && !image) [setValue(null)];
+    else {
       setPreviewImage(undefined);
     }
-  }, [image]);
+  }, [image, defaultImage]);
 
   return (
     <Container>

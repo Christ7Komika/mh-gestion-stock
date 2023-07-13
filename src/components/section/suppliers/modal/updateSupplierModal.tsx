@@ -40,7 +40,6 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
-  const isError = useSelector((state: RootState) => state.supplier.isError);
 
   useEffect(() => {
     if (nameError && name) {
@@ -117,7 +116,6 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
             error={emailError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {error && (
           <ModalMessageError>
             Veuillez remplir au moins un champ à modifier

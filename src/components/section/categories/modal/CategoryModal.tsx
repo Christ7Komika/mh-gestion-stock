@@ -17,7 +17,7 @@ import InputText from "../../../input/InputText";
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
 import { createCategory, Category } from "../../../../redux/features/category";
-import InputPlainText from "../../../input/inputPlainText";
+import InputPlainText from "../../../input/InputPlainText";
 
 interface Props {
   setAction: Function;

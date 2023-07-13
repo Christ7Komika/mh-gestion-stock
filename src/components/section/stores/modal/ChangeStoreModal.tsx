@@ -7,79 +7,87 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
-  ModalMessageError,
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import InputText from "../../../input/InputText";
-import { deleteClient, getHistory } from "../../../../redux/features/client";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
+import InputPlainText from "../../../input/InputPlainText";
+import InputSelect from "../../../input/InputSelect";
+import { changeStorage, getStore } from "../../../../redux/features/stores";
 
 interface Props {
   setAction: Function;
-  trueName: string;
-  id: string;
 }
 
-const ChangeStoreModal = ({ setAction, trueName, id }: Props) => {
-  const [name, setName] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
+const ChangeStoreModal = ({ setAction }: Props) => {
+  const [warehouse, setWarehouse] = useState<string | null>(null);
+  const [warehouseError, setWarehouseError] = useState<string | null>(null);
+  const [comment, setComment] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.client.isLoad);
-  const isError = useSelector((state: RootState) => state.client.isError);
+  const isLoadChange = useSelector(
+    (state: RootState) => state.store.isLoadChange
+  );
+  const warehouses = useSelector((state: RootState) => state.warehouse.datas);
+  const currentId = useSelector((state: RootState) => state.store.currentId);
+  const store = useSelector((state: RootState) => state.store.data);
 
   useEffect(() => {
-    if (name && nameError) {
-      setNameError("");
+    if (currentId) {
+      getStore(currentId)(dispatch);
     }
-  }, [name]);
+  }, [currentId]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!name) {
-      return setNameError("Le champ est vide");
+    if (!warehouse) {
+      return setWarehouseError("Le champ est vide");
     }
-
-    if (name !== trueName) {
-      return setNameError("Le nom inséré est invalide");
-    }
-
-    if (name === trueName) {
-      deleteClient(id, (exit: boolean) => {
-        if (exit) {
-          getHistory()(dispatch);
-          return setAction(false);
+    if (currentId) {
+      changeStorage(
+        currentId,
+        {
+          warehouse: warehouse,
+          comment: comment || "",
+        },
+        (exit: boolean) => {
+          if (exit) {
+            return setAction(false);
+          }
         }
-      })(dispatch);
-
-      return;
+      )(dispatch);
     }
   };
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer un client</ModalHeaderTitle>
+          <ModalHeaderTitle>Changer de stockage</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer le client ''{trueName}''.</p>
-        <p>Inserer le nom du client que vous voulez supprimer.</p>
         <ModalForm>
-          <InputText
+          <InputSelect
+            name="Entrepôt *"
+            id="warehouse"
+            defaultValue={store?.Warehouse.id || warehouse}
+            setId={setWarehouse}
+            placeholder="Sélectionner l'entrepôt"
+            error={warehouseError}
+            data={warehouses}
+          />
+          <InputPlainText
             name=""
-            id="name"
-            defaultValue={name}
-            setValue={setName}
-            error={nameError}
+            id="Commentaire"
+            defaultValue={comment}
+            setValue={setComment}
+            error={""}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
-        {isLoad ? (
+        {isLoadChange ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               <Loader />

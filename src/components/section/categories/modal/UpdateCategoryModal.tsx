@@ -22,7 +22,7 @@ import {
   updateCategory,
 } from "../../../../redux/features/category";
 
-import InputPlainText from "../../../input/inputPlainText";
+import InputPlainText from "../../../input/InputPlainText";
 
 interface Props {
   setAction: Function;

@@ -116,7 +116,6 @@ const ClientModal = ({ setAction }: Props) => {
             error={emailError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>

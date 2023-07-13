@@ -12,7 +12,7 @@ import {
 import { IoExit } from "react-icons/io5";
 import InputText from "../input/InputText";
 import { useEffect, useState } from "react";
-import InputPlainText from "../input/inputPlainText";
+import InputPlainText from "../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import { Category, createCategory } from "../../redux/features/category";
 

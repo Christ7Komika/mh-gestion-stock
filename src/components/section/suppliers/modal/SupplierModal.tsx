@@ -7,7 +7,6 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
-  ModalMessageError,
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
@@ -33,11 +32,8 @@ const SupplierModal = ({ setAction }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
-  const [phoneError, setPhoneError] = useState<string>("");
 
   const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
-  const isError = useSelector((state: RootState) => state.supplier.isError);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -89,7 +85,7 @@ const SupplierModal = ({ setAction }: Props) => {
             id="tel"
             defaultValue={phone}
             setValue={setPhone}
-            error={phoneError}
+            error={""}
           />
           <InputText
             name="Email *"
@@ -99,10 +95,9 @@ const SupplierModal = ({ setAction }: Props) => {
             error={emailError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>

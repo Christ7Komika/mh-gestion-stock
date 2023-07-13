@@ -18,7 +18,7 @@ import InputText, { LabelError } from "../../../input/InputText";
 import { useState } from "react";
 import InputImage from "../../../input/InputImage";
 import InputSelect from "../../../input/InputSelect";
-import InputPlainText from "../../../input/inputPlainText";
+import InputPlainText from "../../../input/InputPlainText";
 import SwitchData from "../../../input/SwitchData";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { host } from "../host";
 
 export interface CommentType {
@@ -107,6 +107,10 @@ export const storeSlice = createSlice({
     store: (state, action: PayloadAction<StoreType>) => {
       state.data = action.payload;
     },
+    emptyStore: (state, action: PayloadAction<null>) => {
+      state.data = action.payload;
+    },
+
     history: (state, action: PayloadAction<History[]>) => {
       state.history = action.payload;
     },
@@ -139,6 +143,7 @@ export const {
   isError,
   storeId,
   history,
+  emptyStore,
 } = storeSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -184,10 +189,20 @@ export const searchStores = (data: string) => (dispatch: AppDispatch) => {
 
 export const getStore = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
-  const config = {
+  const abortController = new AbortController();
+  let cancelSignal: AbortSignal;
+  const config: AxiosRequestConfig = {
     method: "get",
     url: host + "/articles/" + id,
+    onUploadProgress: () => {
+      if (cancelSignal.aborted) {
+        cancelTokenSource.cancel("Annulation de la requête");
+      }
+    },
   };
+  cancelSignal = abortController.signal;
+  const cancelTokenSource = axios.CancelToken.source();
+  config.cancelToken = cancelTokenSource.token;
 
   axios<StoreType>(config)
     .then(({ data }) => {
@@ -198,6 +213,7 @@ export const getStore = (id: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
+      abortController.abort();
     });
 };
 
@@ -271,23 +287,34 @@ export const createStore =
 
 export const updateStore =
   (id: string, data: FormData, exit: Function) => (dispatch: AppDispatch) => {
-    dispatch(isLoad(true));
-    const config = {
+    dispatch(isLoadChange(true));
+    const abortController = new AbortController();
+    let cancelSignal: AbortSignal;
+    const config: AxiosRequestConfig = {
       method: "put",
       url: host + "/articles/" + id,
       data: data,
+      onUploadProgress: () => {
+        if (cancelSignal.aborted) {
+          cancelTokenSource.cancel("Annulation de la requête");
+        }
+      },
     };
-
+    cancelSignal = abortController.signal;
+    const cancelTokenSource = axios.CancelToken.source();
+    config.cancelToken = cancelTokenSource.token;
     axios<StoreType[]>(config)
       .then(({ data }) => {
         dispatch(stores(data));
         dispatch(isSuccess(true));
         dispatch(isLoadChange(false));
+        dispatch(emptyStore(null));
         exit(true);
       })
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoadChange(false));
+        abortController.abort();
       });
   };
 
@@ -314,6 +341,7 @@ export const addQuantityToStore =
         dispatch(isLoadChange(false));
       });
   };
+
 export const removeQuantityToStore =
   (
     id: string,
@@ -334,6 +362,80 @@ export const removeQuantityToStore =
         dispatch(stores(data));
         dispatch(isSuccess(true));
         dispatch(isLoadChange(false));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadChange(false));
+      });
+  };
+
+export const changeStorage =
+  (id: string, data: { warehouse: string; comment: string }, exit: Function) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoadChange(true));
+
+    const config = {
+      method: "put",
+      url: host + "/articles/change/storage/" + id,
+      data: data,
+    };
+
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadChange(false));
+        dispatch(emptyStore(null));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadChange(false));
+      });
+  };
+
+export const changeSupplier =
+  (id: string, data: { supplier: string; comment: string }, exit: Function) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoadChange(true));
+
+    const config = {
+      method: "put",
+      url: host + "/articles/change/supplier/" + id,
+      data: data,
+    };
+
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadChange(false));
+        dispatch(emptyStore(null));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadChange(false));
+      });
+  };
+export const changeCategory =
+  (id: string, data: { category: string; comment: string }, exit: Function) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoadChange(true));
+
+    const config = {
+      method: "put",
+      url: host + "/articles/change/category/" + id,
+      data: data,
+    };
+
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadChange(false));
+        dispatch(emptyStore(null));
         exit(true);
       })
       .catch(() => {

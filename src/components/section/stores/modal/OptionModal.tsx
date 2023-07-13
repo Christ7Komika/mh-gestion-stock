@@ -11,6 +11,8 @@ import { HiMinusSm } from "react-icons/hi";
 import { LuEdit3 } from "react-icons/lu";
 import { TiDelete } from "react-icons/ti";
 import { GrTransaction } from "react-icons/gr";
+import { TbCategory2, TbCubeSend } from "react-icons/tb";
+import { CgMoveTask } from "react-icons/cg";
 
 interface Props {
   setAction: Function;
@@ -18,6 +20,9 @@ interface Props {
   setWithdrawModal: Function;
   setUpdateModal: Function;
   setChangeStoreModal: Function;
+  setChangeSupplier: Function;
+  setChangeCategory: Function;
+  setMoveStock: Function;
   setDeleteModal: Function;
 }
 
@@ -28,6 +33,9 @@ const OptionModal = ({
   setChangeStoreModal,
   setDeleteModal,
   setUpdateModal,
+  setChangeCategory,
+  setChangeSupplier,
+  setMoveStock,
 }: Props) => {
   return (
     <ModalContainer>
@@ -80,6 +88,36 @@ const OptionModal = ({
             <GrTransaction size={30} />
           </CardContainer>
           <CardContainer
+            bg="change-category"
+            onClick={() => {
+              setChangeCategory(true);
+              setAction(false);
+            }}
+          >
+            <CardText>Modifier la catégorie</CardText>
+            <TbCategory2 size={30} />
+          </CardContainer>
+          <CardContainer
+            bg="change-supplier"
+            onClick={() => {
+              setChangeSupplier(true);
+              setAction(false);
+            }}
+          >
+            <CardText>Modifier le fournisseur</CardText>
+            <TbCubeSend size={30} />
+          </CardContainer>
+          <CardContainer
+            bg="move-stock"
+            onClick={() => {
+              setMoveStock(true);
+              setAction(false);
+            }}
+          >
+            <CardText>Déplacer le stock</CardText>
+            <CgMoveTask size={30} />
+          </CardContainer>
+          <CardContainer
             bg="delete"
             onClick={() => {
               setDeleteModal(true);
@@ -96,7 +134,16 @@ const OptionModal = ({
 };
 
 interface Color {
-  bg: "add" | "withdraw" | "update" | "transaction" | "delete";
+  bg:
+    | "add"
+    | "withdraw"
+    | "update"
+    | "transaction"
+    | "change-stock"
+    | "change-supplier"
+    | "change-category"
+    | "move-stock"
+    | "delete";
 }
 
 const ModalContainer = styled.div`
@@ -125,13 +172,13 @@ const Modal = styled.div`
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 160px);
+  grid-template-columns: repeat(3, 200px);
   gap: 1rem;
 `;
 
 const CardContainer = styled.div<Color>`
   width: 100%;
-  height: 70px;
+  height: 80px;
   border-radius: 5px;
   border: 1px solid ${color.darkBlue};
   display: flex;
@@ -155,6 +202,14 @@ const CardContainer = styled.div<Color>`
         ? color.lightSkyBlue
         : bg === "delete"
         ? color.lightRed
+        : bg === "change-stock"
+        ? "#A1C2F1"
+        : bg === "change-category"
+        ? "#FFE7CE"
+        : bg === "change-supplier"
+        ? "#F7FFE5"
+        : bg === "move-stock"
+        ? "#D2E9E9"
         : null};
   }
 `;

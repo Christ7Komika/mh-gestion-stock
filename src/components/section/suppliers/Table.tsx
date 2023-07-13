@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHeader,
   Option,
-  TDImg,
 } from "../../layout/table";
 import { IoCreate, IoEye } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";

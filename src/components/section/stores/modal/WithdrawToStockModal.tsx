@@ -14,7 +14,7 @@ import {
 import { IoExit } from "react-icons/io5";
 import InputText, { LabelError } from "../../../input/InputText";
 import React, { useEffect, useState } from "react";
-import InputPlainText from "../../../input/inputPlainText";
+import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getStore,
@@ -25,10 +25,9 @@ import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
-  currentId?: string;
 }
 
-const WithdrawToStockModal = ({ setAction, currentId }: Props) => {
+const WithdrawToStockModal = ({ setAction }: Props) => {
   const [quantity, setQuantity] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
@@ -40,6 +39,7 @@ const WithdrawToStockModal = ({ setAction, currentId }: Props) => {
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
   );
+  const currentId = useSelector((state: RootState) => state.store.currentId);
 
   const initData = () => {
     setQuantity(null);

@@ -1,6 +1,6 @@
 import { BiGridAlt } from "react-icons/bi";
 import { RootState } from "../../../redux/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Option,
   OptionGroup,
@@ -12,13 +12,16 @@ import {
   TableContainer,
   TableHeader,
 } from "../../layout/table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OptionModal from "./modal/OptionModal";
 import AddToStockModal from "./modal/AddToStockModal";
 import WithdrawToStockModal from "./modal/WithdrawToStockModal";
 import UpdateModal from "./modal/UpdateModal";
 import ChangeStoreModal from "./modal/ChangeStoreModal";
 import DeleteModal from "./modal/DeleteModal";
+import { getStoreId, getStores } from "../../../redux/features/stores";
+import ChangeCategoryModal from "./modal/changeCategoryModal";
+import ChangeSupplierModal from "./modal/changeSupplierModal";
 
 const Table = () => {
   const [open, setOpen] = useState(false);
@@ -27,27 +30,26 @@ const Table = () => {
   const [updateModal, setUpdateModal] = useState(false);
   const [changeStoreModal, setChangeStoreModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [currentId, setCurrentId] = useState<string>("");
+  const [changeCategory, setChangeCategory] = useState(false);
+  const [changeSupplier, setChangeSupplier] = useState(false);
+  const [moveStock, setMoveStock] = useState(false);
 
+  const dispatch = useDispatch();
   const stores = useSelector((state: RootState) => state.store.datas);
+
+  useEffect(() => {
+    getStores()(dispatch);
+  }, []);
 
   return (
     <>
-      {addModal && (
-        <AddToStockModal setAction={setAddModal} currentId={currentId} />
-      )}
-      {withdrawModal && (
-        <WithdrawToStockModal
-          setAction={setWithdrawModal}
-          currentId={currentId}
-        />
-      )}
-      {updateModal && (
-        <UpdateModal setAction={setUpdateModal} currentId={currentId} />
-      )}
-      {changeStoreModal && (
-        <ChangeStoreModal setAction={setChangeStoreModal} trueName="" id="" />
-      )}
+      {addModal && <AddToStockModal setAction={setAddModal} />}
+      {withdrawModal && <WithdrawToStockModal setAction={setWithdrawModal} />}
+      {changeCategory && <ChangeCategoryModal setAction={setChangeCategory} />}
+      {changeSupplier && <ChangeSupplierModal setAction={setChangeSupplier} />}
+      {/* {moveStock && <WithdrawToStockModal setAction={setMoveStock} />} */}
+      {updateModal && <UpdateModal setAction={setUpdateModal} />}
+      {changeStoreModal && <ChangeStoreModal setAction={setChangeStoreModal} />}
       {deleteModal && (
         <DeleteModal setAction={setDeleteModal} trueName="" id="" />
       )}
@@ -59,6 +61,9 @@ const Table = () => {
           setChangeStoreModal={setChangeStoreModal}
           setDeleteModal={setDeleteModal}
           setUpdateModal={setUpdateModal}
+          setChangeCategory={setChangeCategory}
+          setChangeSupplier={setChangeSupplier}
+          setMoveStock={setMoveStock}
         />
       )}
       <TableContainer>
@@ -94,7 +99,7 @@ const Table = () => {
                     <Option
                       action="update"
                       onClick={() => {
-                        setCurrentId(store.id);
+                        getStoreId(store.id)(dispatch);
                         setOpen(true);
                       }}
                     >

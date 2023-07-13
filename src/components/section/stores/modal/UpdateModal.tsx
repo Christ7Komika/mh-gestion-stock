@@ -16,24 +16,18 @@ import { IoExit } from "react-icons/io5";
 import InputText, { LabelError } from "../../../input/InputText";
 import { useEffect, useState } from "react";
 import InputImage from "../../../input/InputImage";
-import InputSelect from "../../../input/InputSelect";
-import InputPlainText from "../../../input/inputPlainText";
+import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
-import {
-  createStore,
-  getStore,
-  updateStore,
-} from "../../../../redux/features/stores";
+import { getStore, updateStore } from "../../../../redux/features/stores";
 import { host } from "../../../../redux/host";
 
 interface Props {
   setAction: Function;
-  currentId?: string;
 }
 
-const UpdateModal = ({ setAction, currentId }: Props) => {
+const UpdateModal = ({ setAction }: Props) => {
   const [image, setImage] = useState<File | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
@@ -50,18 +44,14 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
   const [diameter, setDiameter] = useState<string | null>(null);
   const [fluid, setFluid] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
-  const [category, setCategory] = useState<string | null>(null);
-  const [supplier, setSupplier] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.store.isLoad);
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
   );
-  const categories = useSelector((state: RootState) => state.category.datas);
-  const suppliers = useSelector((state: RootState) => state.supplier.datas);
   const store = useSelector((state: RootState) => state.store.data);
+  const currentId = useSelector((state: RootState) => state.store.currentId);
 
   const getImagePath = (image: string | undefined) => {
     if (image) {
@@ -69,6 +59,30 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
       return `${host}/image/${split[split.length - 1]}`;
     }
     return "";
+  };
+
+  const init = () => {
+    setImage(null);
+    setName(null);
+    setReference(null);
+    setCode(null);
+    setType(null);
+    setDesignation(null);
+    setUnitPrice(null);
+    setSellingPrice(null);
+    setPurchasePrice(null);
+    setLotNumber(null);
+    setOperatingPressure(null);
+    setDiameter(null);
+    setFluid(null);
+    setComment(null);
+    setError(null);
+    return true;
+  };
+
+  const exit = () => {
+    init();
+    setAction(false);
   };
 
   useEffect(() => {
@@ -91,36 +105,35 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
       !lotNumber &&
       !operatingPressure &&
       !diameter &&
-      !fluid &&
-      !supplier &&
-      !category
+      !fluid
     ) {
-      return setError("Veuillez remplir au moins un des champs du formulaire.");
+      return setError(
+        "Veuillez remplir au modifier un des champs du formulaire."
+      );
     }
-
-    const form = new FormData();
-    form.append("logo", image || "");
-    form.append("name", name || "");
-    form.append("reference", reference || "");
-    form.append("code", code || "");
-    form.append("type", type || "");
-    form.append("designation", designation || "");
-    form.append("purchasePrice", purchasePrice || "");
-    form.append("sellingPrice", sellingPrice || "");
-    form.append("unitPrice", unitPrice || "");
-    form.append("lotNumber", lotNumber || "");
-    form.append("operatingPressure", operatingPressure || "");
-    form.append("diameter", diameter || "");
-    form.append("fluid", fluid || "");
-    form.append("comment", comment || "");
-    form.append("supplier", supplier || "");
-    form.append("category", category || "");
-    if (currentId) {
-      updateStore(currentId, form, (exit: boolean) => {
-        if (exit) {
-          setAction(false);
-        }
-      })(dispatch);
+    if (store) {
+      const form = new FormData();
+      form.append("logo", image || "");
+      form.append("name", name || "");
+      form.append("reference", reference || "");
+      form.append("code", code || "");
+      form.append("type", type || "");
+      form.append("designation", designation || "");
+      form.append("purchasePrice", purchasePrice || "");
+      form.append("sellingPrice", sellingPrice || "");
+      form.append("unitPrice", unitPrice || "");
+      form.append("lotNumber", lotNumber || "");
+      form.append("operatingPressure", operatingPressure || "");
+      form.append("diameter", diameter || "");
+      form.append("fluid", fluid || "");
+      form.append("comment", comment || "");
+      if (currentId) {
+        updateStore(currentId, form, (exit: boolean) => {
+          if (exit && init()) {
+            setAction(false);
+          }
+        })(dispatch);
+      }
     }
   };
   return (
@@ -128,7 +141,7 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
       <Modal>
         <ModalHeader>
           <ModalHeaderTitle>Modification des articles</ModalHeaderTitle>
-          <ModalHeaderExit onClick={() => setAction(false)}>
+          <ModalHeaderExit onClick={() => exit()}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
@@ -163,7 +176,8 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
               error={""}
               placeholder="Le type d'article"
             />
-
+          </ModalForm>
+          <ModalForm>
             <InputText
               name="Référence"
               id="length"
@@ -172,26 +186,6 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
               error={""}
               suffix=""
               placeholder="La référence de l'article (voir fabriquant)"
-            />
-          </ModalForm>
-          <ModalForm>
-            <InputSelect
-              placeholder="Sélectionner le fournisseur"
-              name="Fournisseur"
-              id="supplier"
-              defaultValue={store?.Supplier.id || supplier}
-              setId={setSupplier}
-              error={""}
-              data={suppliers}
-            />
-            <InputSelect
-              name="Catégorie "
-              id="category"
-              defaultValue={store?.Category.id || category}
-              setId={setCategory}
-              placeholder="Sélectionner une catégorie"
-              error={""}
-              data={categories}
             />
             <InputPlainText
               name="Désignation "
@@ -266,7 +260,6 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
           </ModalForm>
         </ModalSection3>
         {error && <LabelError>{error}</LabelError>}
-
         {isLoadChange ? (
           <ModalGroupButton>
             <ModalValidButton>
@@ -278,7 +271,7 @@ const UpdateModal = ({ setAction, currentId }: Props) => {
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Valider
             </ModalValidButton>
-            <ModalCancelButton onClick={() => setAction(false)}>
+            <ModalCancelButton onClick={() => exit()}>
               Annuler
             </ModalCancelButton>
           </ModalGroupButton>

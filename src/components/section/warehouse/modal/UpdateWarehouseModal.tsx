@@ -17,12 +17,12 @@ import InputText from "../../../input/InputText";
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
 
-import InputPlainText from "../../../input/inputPlainText";
 import {
   Warehouse,
   WarehouseType,
   updateWarehouse,
 } from "../../../../redux/features/warehouse";
+import InputPlainText from "../../../input/InputPlainText";
 
 interface Props {
   setAction: Function;

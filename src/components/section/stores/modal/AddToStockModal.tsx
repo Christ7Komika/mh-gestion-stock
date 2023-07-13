@@ -14,21 +14,21 @@ import {
 import { IoExit } from "react-icons/io5";
 import InputText from "../../../input/InputText";
 import React, { useEffect, useState } from "react";
-import InputPlainText from "../../../input/inputPlainText";
+import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addQuantityToStore,
   getStore,
+  getStoreId,
 } from "../../../../redux/features/stores";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 
 interface Props {
   setAction: Function;
-  currentId?: string;
 }
 
-const AddToStockModal = ({ setAction, currentId }: Props) => {
+const AddToStockModal = ({ setAction }: Props) => {
   const [quantity, setQuantity] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
@@ -36,6 +36,7 @@ const AddToStockModal = ({ setAction, currentId }: Props) => {
   const dispatch = useDispatch();
   const store = useSelector((state: RootState) => state.store.data);
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
+  const currentId = useSelector((state: RootState) => state.store.currentId);
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
   );

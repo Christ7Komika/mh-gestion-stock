@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { color } from "../../../../utils/color";
 import {
   ModalCancelButton,
   ModalForm,
@@ -6,85 +7,87 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
-  ModalMessageError,
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import InputText from "../../../input/InputText";
-import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
 import InputPlainText from "../../../input/InputPlainText";
-import {
-  createWarehouse,
-  Warehouse,
-} from "../../../../redux/features/warehouse";
+import InputSelect from "../../../input/InputSelect";
+import { changeCategory, getStore } from "../../../../redux/features/stores";
 
 interface Props {
   setAction: Function;
 }
 
-const WarehouseModal = ({ setAction }: Props) => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [nameError, setNameError] = useState<string>("");
-
+const ChangeCategoryModal = ({ setAction }: Props) => {
+  const [category, setCategory] = useState<string | null>(null);
+  const [categoryError, setCategoryError] = useState<string | null>(null);
+  const [comment, setComment] = useState<string | null>(null);
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.warehouse.isLoad);
-  const isError = useSelector((state: RootState) => state.warehouse.isError);
+  const isLoadChange = useSelector(
+    (state: RootState) => state.store.isLoadChange
+  );
+  const categories = useSelector((state: RootState) => state.category.datas);
+  const currentId = useSelector((state: RootState) => state.store.currentId);
+  const store = useSelector((state: RootState) => state.store.data);
 
   useEffect(() => {
-    if (nameError && name) {
-      setNameError("");
+    if (currentId) {
+      getStore(currentId)(dispatch);
     }
-  }, [nameError]);
+  }, [currentId]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!name) {
-      return setNameError("Champ vide");
+    if (!category) {
+      return setCategoryError("Le champ est vide");
     }
-
-    const data: Warehouse = {
-      name: name,
-      description: description,
-    };
-
-    createWarehouse(data, (exit: boolean) => {
-      if (exit) {
-        setAction(false);
-      }
-    })(dispatch);
+    if (currentId) {
+      changeCategory(
+        currentId,
+        {
+          category: category,
+          comment: comment || "",
+        },
+        (exit: boolean) => {
+          if (exit) {
+            return setAction(false);
+          }
+        }
+      )(dispatch);
+    }
   };
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Ajouter un entrepôt</ModalHeaderTitle>
+          <ModalHeaderTitle>Modifier la catégorie</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
         <ModalForm>
-          <InputText
-            name="Nom *"
-            id="name"
-            defaultValue={name}
-            setValue={setName}
-            error={nameError}
+          <InputSelect
+            name="Catégorie *"
+            id="category"
+            defaultValue={store?.Category.id || category}
+            setId={setCategory}
+            placeholder="Sélectionner la catégorie"
+            error={categoryError}
+            data={categories}
           />
           <InputPlainText
-            name="Description"
-            id="description"
-            defaultValue={description}
-            setValue={setDescription}
+            name=""
+            id="Commentaire"
+            defaultValue={comment}
+            setValue={setComment}
             error={""}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
-        {isLoad ? (
+        {isLoadChange ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               <Loader />
@@ -129,4 +132,4 @@ const Modal = styled.div`
   row-gap: 0.5rem;
 `;
 
-export default WarehouseModal;
+export default ChangeCategoryModal;
