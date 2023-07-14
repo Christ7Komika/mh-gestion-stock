@@ -7,29 +7,36 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
-  ModalMessageError,
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../input/InputText";
-import { deleteClient, getHistory } from "../../../../redux/features/client";
+// import {  getHistory } from "../../../../redux/features/client";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
+import {getStore, deleteStore} from "../../../../redux/features/stores.ts";
 
 interface Props {
   setAction: Function;
-  trueName: string;
-  id: string;
 }
 
-const DeleteModal = ({ setAction, trueName, id }: Props) => {
+const DeleteModal = ({ setAction }: Props) => {
   const [name, setName] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
+
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.client.isLoad);
-  const isError = useSelector((state: RootState) => state.client.isError);
+
+  const isLoad = useSelector((state: RootState) => state.store.isLoad);
+  const store = useSelector((state:RootState) => state.store.data)
+  const currentId = useSelector((state: RootState) => state.store.currentId)
+
+  useEffect(()=> {
+    if(currentId) {
+      getStore(currentId)(dispatch)
+    }
+  }, [currentId])
 
   useEffect(() => {
     if (name && nameError) {
@@ -43,14 +50,14 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
       return setNameError("Le champ est vide");
     }
 
-    if (name !== trueName) {
+    if (name !== store.name) {
       return setNameError("Le nom inséré est invalide");
     }
 
-    if (name === trueName) {
-      deleteClient(id, (exit: boolean) => {
+    if (name === store.name) {
+      deleteStore(store.id, (exit: boolean) => {
         if (exit) {
-          getHistory()(dispatch);
+          // getHistory()(dispatch);
           return setAction(false);
         }
       })(dispatch);
@@ -62,13 +69,13 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Retirer un client</ModalHeaderTitle>
+          <ModalHeaderTitle>Suppression article</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>Êtes vous sur de vouloir supprimer le client ''{trueName}''.</p>
-        <p>Inserer le nom du client que vous voulez supprimer.</p>
+        <p>Êtes vous sur de vouloir supprimer l'article ''{store?.name}''.</p>
+        <p>Inserer le nom de l'article que vous souhaitez supprimer.</p>
         <ModalForm>
           <InputText
             name=""
@@ -78,7 +85,6 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
             error={nameError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>

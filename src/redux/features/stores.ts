@@ -9,6 +9,14 @@ export interface CommentType {
   message: string;
 }
 
+export interface MoveToAnotherStoreDataType {
+  warehouse: string;
+  quantity: string;
+  currentQuantity: string;
+  hasLength: string;
+  comment: string;
+}
+
 export interface SupplierType {
   id: string;
   name: string;
@@ -419,6 +427,7 @@ export const changeSupplier =
         dispatch(isLoadChange(false));
       });
   };
+
 export const changeCategory =
   (id: string, data: { category: string; comment: string }, exit: Function) =>
   (dispatch: AppDispatch) => {
@@ -427,6 +436,31 @@ export const changeCategory =
     const config = {
       method: "put",
       url: host + "/articles/change/category/" + id,
+      data: data,
+    };
+
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadChange(false));
+        dispatch(emptyStore(null));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadChange(false));
+      });
+  };
+
+export const moveToStore =
+  (id: string, data: MoveToAnotherStoreDataType, exit: Function) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoadChange(true));
+
+    const config = {
+      method: "put",
+      url: host + "/articles/move/store/" + id,
       data: data,
     };
 

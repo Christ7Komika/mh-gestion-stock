@@ -20,8 +20,9 @@ import UpdateModal from "./modal/UpdateModal";
 import ChangeStoreModal from "./modal/ChangeStoreModal";
 import DeleteModal from "./modal/DeleteModal";
 import { getStoreId, getStores } from "../../../redux/features/stores";
-import ChangeCategoryModal from "./modal/changeCategoryModal";
-import ChangeSupplierModal from "./modal/changeSupplierModal";
+import MoveToModal from "./modal/MoveToModal";
+import ChangeCategoryModal from "./modal/ChangeCategoryModal";
+import ChangeSupplierModal from "./modal/ChangeSupplierModal";
 
 const Table = () => {
   const [open, setOpen] = useState(false);
@@ -37,6 +38,7 @@ const Table = () => {
   const dispatch = useDispatch();
   const stores = useSelector((state: RootState) => state.store.datas);
 
+
   useEffect(() => {
     getStores()(dispatch);
   }, []);
@@ -47,11 +49,11 @@ const Table = () => {
       {withdrawModal && <WithdrawToStockModal setAction={setWithdrawModal} />}
       {changeCategory && <ChangeCategoryModal setAction={setChangeCategory} />}
       {changeSupplier && <ChangeSupplierModal setAction={setChangeSupplier} />}
-      {/* {moveStock && <WithdrawToStockModal setAction={setMoveStock} />} */}
+      {moveStock && <MoveToModal setAction={setMoveStock} />}
       {updateModal && <UpdateModal setAction={setUpdateModal} />}
       {changeStoreModal && <ChangeStoreModal setAction={setChangeStoreModal} />}
       {deleteModal && (
-        <DeleteModal setAction={setDeleteModal} trueName="" id="" />
+        <DeleteModal setAction={setDeleteModal} />
       )}
       {open && (
         <OptionModal

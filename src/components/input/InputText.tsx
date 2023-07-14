@@ -63,6 +63,9 @@ const Label = styled.label`
 export const LabelError = styled.small`
   color: ${color.red};
   font-size: 0.75rem;
+  width: fit-content;
+  text-align: center;
+  height: auto;
 `;
 
 const Input = styled.input`

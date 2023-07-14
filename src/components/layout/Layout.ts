@@ -75,10 +75,11 @@ export const ModalForm = styled.div`
 `;
 
 export const ModalMessageError = styled.p`
-  padding: 1rem;
+  padding: .4rem;
   border-radius: 5px;
   background: ${color.lightRed};
   color: ${color.darkBlue};
+  font-size: .75rem;
 `;
 
 export const ModalDoubleFormGroup = styled.div`
