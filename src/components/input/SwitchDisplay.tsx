@@ -63,9 +63,13 @@ export const Container = styled.div`
   align-items: center;
   column-gap: 1rem;
   padding-inline: 0.5rem;
-  cursor: pointer;
   transition: linear 0.2s;
   position: relative;
+  cursor: pointer;
+  transition: linear 0.4s;
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 export const BoxIcon = styled.div<Box>`

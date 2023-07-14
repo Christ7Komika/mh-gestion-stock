@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
-import { History } from "../../redux/features/client";
+import { History } from "../../redux/features/stores";
 
 interface Props {
   status: "add" | "update" | "delete";
@@ -29,12 +29,12 @@ const HistoricalStock = ({ status, history }: Props) => {
         <HistoricalStockText>{history.message}</HistoricalStockText>
       </HistoricalStockTextGroup>
       <HistoricalStockTextGroup>
-        {history.comment && (
+        {history.Comment && (
           <>
             <HistoricalStockRapportTitle>
               Commentaire
             </HistoricalStockRapportTitle>
-            <HistoricalStockText>{history.comment}</HistoricalStockText>
+            <HistoricalStockText>{history.Comment.message}</HistoricalStockText>
           </>
         )}
       </HistoricalStockTextGroup>

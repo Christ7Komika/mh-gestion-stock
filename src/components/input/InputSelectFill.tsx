@@ -16,17 +16,16 @@ interface Props {
   error: string | null;
   placeholder: string;
   data: SupplierType[] | CategoryType[] | WarehouseType[] | null;
+  init?: boolean;
 }
 
-const InputSelect = ({
-  name,
+const InputSelectFill = ({
   defaultValue,
-  id,
   setValue,
-  error,
   placeholder,
   data,
   setId,
+  init,
 }: Props) => {
   const [text, setText] = useState<string | null>(null);
   const [selectId, setSelectId] = useState<string | null>(null);
@@ -37,15 +36,26 @@ const InputSelect = ({
 
   const filterSelect = () => {
     const filter = data?.filter(
-      (option) =>
+      (option: SupplierType | CategoryType | WarehouseType) =>
         option.name.toLowerCase().search(search.toLocaleLowerCase()) !== -1
     );
+
     if (filter) {
       return filter;
     } else {
       return null;
     }
   };
+
+  useEffect(() => {
+    if (init) {
+      setText(null);
+      setId("");
+      if (setValue) {
+        setValue("");
+      }
+    }
+  }, [init]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,7 +83,10 @@ const InputSelect = ({
 
   useEffect(() => {
     if (defaultValue) {
-      const item = data?.filter((value) => value.id === defaultValue);
+      const item = data?.filter(
+        (value: SupplierType | CategoryType | WarehouseType) =>
+          value.id === defaultValue
+      );
 
       if (item && item.length === 1) {
         setText(item[0].name);
@@ -84,12 +97,9 @@ const InputSelect = ({
       }
     }
   }, [defaultValue]);
+
   return (
     <Container ref={selectRef}>
-      <Label htmlFor={id}>
-        {name}
-        {error && <LabelError>{error}</LabelError>}
-      </Label>
       <SelectContainer>
         <Select focus={focus}>
           <Input
@@ -97,12 +107,12 @@ const InputSelect = ({
               setFocus(true);
               setOpen(true);
             }}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange={(e: any) => {
               setSearch(e.target.value);
               setText(e.target.value);
             }}
             placeholder={placeholder}
-            value={text ? limitWord(text, 35) : ""}
+            value={text ? limitWord(text, 10) : ""}
           />
           <SelectIcon>
             {open ? (
@@ -119,19 +129,24 @@ const InputSelect = ({
         {open && (
           <Options>
             {filterSelect() && filterSelect()?.length ? (
-              filterSelect()?.map((option, i) => (
-                <Option
-                  onClick={() => {
-                    setSearch("");
-                    setText(option.name);
-                    setSelectId(option.id);
-                    setOpen(false);
-                  }}
-                  key={"select-" + i}
-                >
-                  {option.name}
-                </Option>
-              ))
+              filterSelect()?.map(
+                (
+                  option: SupplierType | CategoryType | WarehouseType,
+                  i: number
+                ) => (
+                  <Option
+                    onClick={() => {
+                      setSearch("");
+                      setText(option.name);
+                      setSelectId(option.id);
+                      setOpen(false);
+                    }}
+                    key={"select-" + i}
+                  >
+                    {option.name}
+                  </Option>
+                )
+              )
             ) : (
               <Empty>Aucune référence trouvé</Empty>
             )}
@@ -152,36 +167,23 @@ const Container = styled.div`
   row-gap: 0.2rem;
 `;
 
-const Label = styled.label`
-  width: 100%;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: ${color.darkBlue};
-  display: flex;
-  justify-content: space-between;
-`;
-
-const LabelError = styled.small`
-  color: ${color.red};
-  font-size: 0.75rem;
-`;
-
 const SelectContainer = styled.div`
   width: 100%;
   position: relative;
 `;
 
 const Select = styled.div<SelectProps>`
-  width: 100%;
-  height: 35px;
-  border-radius: 5px;
-  border: 1px solid ${color.border};
+  width: 125px;
+  max-height: 40px;
+  height: 100%;
+  border-radius: 40px;
+  border: 1px solid ${color.darkBlue};
   display: flex;
   align-items: center;
   overflow: hidden;
   position: relative;
-
-  outline: ${({ focus }) => (focus ? `1.5px solid ${color.border}` : "none")};
+  background: ${color.darkBlue};
+  outline: ${({ focus }) => (focus ? `1.5px solid ${color.darkBlue}` : "none")};
 `;
 
 const SelectIcon = styled.span`
@@ -207,8 +209,12 @@ const Input = styled.input`
   padding-inline: 0.5rem;
   width: 100%;
   height: 100%;
-  border: none;
-
+  border: 1px solid ${color.darkBlue};
+  background: ${color.darkBlue};
+  color: #fff;
+  &::placeholder {
+    color: #fff;
+  }
   &:focus {
     outline: none;
   }
@@ -224,7 +230,7 @@ const Options = styled.div`
   border-radius: 5px;
   padding-block: 0.5rem;
   overflow-y: auto;
-  box-shadow: 0.5px 0.5px 9px rgba(0, 0, 0, 0.4);
+  box-shadow: 0.5px 0.5px 9px rgba(88, 42, 42, 0.4);
   z-index: 3;
 
   &::-webkit-scrollbar {
@@ -263,4 +269,4 @@ const Empty = styled.p`
   color: ${color.darkBlue};
 `;
 
-export default InputSelect;
+export default InputSelectFill;

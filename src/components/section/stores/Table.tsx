@@ -23,6 +23,7 @@ import { getStoreId, getStores } from "../../../redux/features/stores";
 import MoveToModal from "./modal/MoveToModal";
 import ChangeCategoryModal from "./modal/ChangeCategoryModal";
 import ChangeSupplierModal from "./modal/ChangeSupplierModal";
+import { IoEye } from "react-icons/io5";
 
 const Table = () => {
   const [open, setOpen] = useState(false);
@@ -38,7 +39,6 @@ const Table = () => {
   const dispatch = useDispatch();
   const stores = useSelector((state: RootState) => state.store.datas);
 
-
   useEffect(() => {
     getStores()(dispatch);
   }, []);
@@ -52,9 +52,7 @@ const Table = () => {
       {moveStock && <MoveToModal setAction={setMoveStock} />}
       {updateModal && <UpdateModal setAction={setUpdateModal} />}
       {changeStoreModal && <ChangeStoreModal setAction={setChangeStoreModal} />}
-      {deleteModal && (
-        <DeleteModal setAction={setDeleteModal} />
-      )}
+      {deleteModal && <DeleteModal setAction={setDeleteModal} />}
       {open && (
         <OptionModal
           setAction={setOpen}
@@ -98,6 +96,12 @@ const Table = () => {
                 <TData>{new Date(store.createdAt).toLocaleDateString()}</TData>
                 <TData>
                   <OptionGroup>
+                    <Option
+                      action="add"
+                      onClick={() => getStoreId(store.id)(dispatch)}
+                    >
+                      <IoEye size={15} />
+                    </Option>
                     <Option
                       action="update"
                       onClick={() => {

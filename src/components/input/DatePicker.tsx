@@ -193,7 +193,7 @@ const CalendarIcon = styled.div`
 const DateLabel = styled.p`
   width: 100%;
   height: 30px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: ${color.darkBlue};
   line-height: 30px;
 `;

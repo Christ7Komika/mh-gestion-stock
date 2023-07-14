@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { color } from "../../../../utils/color";
 import { SupplierType } from "../../../../redux/features/supplier";
+import { getImagePath } from "../../../../utils/image";
 
 interface Props {
   supplier: SupplierType | null;
@@ -11,7 +12,7 @@ const InfosContent = ({ supplier }: Props) => {
     <Container>
       {supplier?.logo && (
         <InfosContentImageContainer>
-          <InfosContentImage src={supplier?.logo} />
+          <InfosContentImage src={getImagePath(supplier?.logo)} />
         </InfosContentImageContainer>
       )}
       {supplier?.name && (

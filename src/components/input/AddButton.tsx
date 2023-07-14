@@ -26,8 +26,9 @@ const Container = styled.button`
   border: 1px solid ${color.darkBlue};
   display: flex;
   align-items: center;
-  column-gap: 0.5rem;
+  column-gap: 0.4rem;
   padding-inline: 0.4rem;
+
   cursor: pointer;
   transition: linear 0.2s;
   &:hover {
@@ -47,7 +48,7 @@ const ButtonIcon = styled.span`
 `;
 
 const ButtonText = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #fff;
 `;
 

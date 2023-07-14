@@ -2,14 +2,21 @@ import GroupCard from "../components/card/GroupCard";
 import Header from "../components/header/Header";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/stores/TableData";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCategories } from "../redux/features/category";
 import { getSuppliers } from "../redux/features/supplier";
 import { getWarehouses } from "../redux/features/warehouse";
-import { getStores } from "../redux/features/stores";
+import { getStore, getStores } from "../redux/features/stores";
+import InfosHistoricalHeader from "../components/section/stores/infos/InfosHistoricalHeader";
+import { RootState } from "../redux/store";
+import InfosHeader from "../components/section/stores/infos/InfosHeader";
+import InfosContent from "../components/section/stores/infos/InfosContent";
+import InfosHistoricalContent from "../components/section/stores/infos/InfosHistoricalContent";
 
 const Stores = () => {
+  const store = useSelector((state: RootState) => state.store.data);
+  const id = useSelector((state: RootState) => state.store.currentId);
   const dispatch = useDispatch();
   useEffect(() => {
     getCategories()(dispatch);
@@ -17,16 +24,32 @@ const Stores = () => {
     getWarehouses()(dispatch);
     getStores()(dispatch);
   }, []);
+
+  useEffect(() => {
+    if (id) {
+      getStore(id)(dispatch);
+    }
+  }, [id]);
   return (
     <>
       <Header />
       <SectionX3>
-        <Section></Section>
+        <Section>
+          <InfosHistoricalHeader />
+          <InfosHistoricalContent />
+        </Section>
         <Section>
           <GroupCard />
           <TableData />
         </Section>
-        <Section></Section>
+        <Section>
+          {store && (
+            <>
+              <InfosHeader store={store} />
+              <InfosContent store={store} />
+            </>
+          )}
+        </Section>
       </SectionX3>
     </>
   );

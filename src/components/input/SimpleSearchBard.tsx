@@ -26,7 +26,12 @@ const SimpleSearchBard = ({ setSearch, isValid }: Props) => {
       <SearchIcon onClick={submit}>
         {isLoad ? <Loader /> : <IoSearch size={25} />}
       </SearchIcon>
-      <SearchText type="text" onChange={(e) => setText(e.target.value)} />
+      <SearchText
+        type="text"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setText(e.target.value)
+        }
+      />
     </Container>
   );
 };
@@ -60,6 +65,7 @@ export const SearchText = styled.input`
   background: ${color.lightBlue};
   border: 1px solid ${color.lightBlue};
   color: ${color.darkBlue};
+  border-radius: 30px;
   padding-right: 0.5rem;
   &:focus {
     outline: none;

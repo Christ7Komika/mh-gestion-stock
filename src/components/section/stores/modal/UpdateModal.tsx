@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import { getStore, updateStore } from "../../../../redux/features/stores";
-import { host } from "../../../../redux/host";
+import { getImagePath } from "../../../../utils/image";
 
 interface Props {
   setAction: Function;
@@ -52,14 +52,6 @@ const UpdateModal = ({ setAction }: Props) => {
   );
   const store = useSelector((state: RootState) => state.store.data);
   const currentId = useSelector((state: RootState) => state.store.currentId);
-
-  const getImagePath = (image: string | undefined) => {
-    if (image) {
-      const split = image.split("\\");
-      return `${host}/image/${split[split.length - 1]}`;
-    }
-    return "";
-  };
 
   const init = () => {
     setImage(null);

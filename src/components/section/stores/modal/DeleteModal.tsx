@@ -13,10 +13,13 @@ import { IoExit } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../input/InputText";
-// import {  getHistory } from "../../../../redux/features/client";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
-import {getStore, deleteStore} from "../../../../redux/features/stores.ts";
+import {
+  getStore,
+  deleteStore,
+  getHistory,
+} from "../../../../redux/features/stores.ts";
 
 interface Props {
   setAction: Function;
@@ -29,14 +32,14 @@ const DeleteModal = ({ setAction }: Props) => {
   const dispatch = useDispatch();
 
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
-  const store = useSelector((state:RootState) => state.store.data)
-  const currentId = useSelector((state: RootState) => state.store.currentId)
+  const store = useSelector((state: RootState) => state.store.data);
+  const currentId = useSelector((state: RootState) => state.store.currentId);
 
-  useEffect(()=> {
-    if(currentId) {
-      getStore(currentId)(dispatch)
+  useEffect(() => {
+    if (currentId) {
+      getStore(currentId)(dispatch);
     }
-  }, [currentId])
+  }, [currentId]);
 
   useEffect(() => {
     if (name && nameError) {
@@ -50,14 +53,14 @@ const DeleteModal = ({ setAction }: Props) => {
       return setNameError("Le champ est vide");
     }
 
-    if (name !== store.name) {
+    if (name !== store?.name) {
       return setNameError("Le nom inséré est invalide");
     }
 
-    if (name === store.name) {
-      deleteStore(store.id, (exit: boolean) => {
+    if (name === store?.name) {
+      deleteStore(store?.id, (exit: boolean) => {
         if (exit) {
-          // getHistory()(dispatch);
+          getHistory()(dispatch);
           return setAction(false);
         }
       })(dispatch);

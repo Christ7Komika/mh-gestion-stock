@@ -1,13 +1,24 @@
 import styled from "styled-components";
 import { color } from "../../../../utils/color";
+import { StoreType } from "../../../../redux/features/stores";
 
-const InfosHeader = () => {
+interface Props {
+  store: StoreType | null;
+}
+
+const InfosHeader = ({ store }: Props) => {
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Aperçu fournisseur</InfosHeaderTitle>
-        <InfosHeaderDate>18/06/2023</InfosHeaderDate>
+        <InfosHeaderTitle>Aperçu de l'article</InfosHeaderTitle>
+        {store && store.createdAt ? (
+          <InfosHeaderDate>
+            {new Date(store.createdAt).toLocaleDateString()}
+          </InfosHeaderDate>
+        ) : (
+          "..."
+        )}
       </InfosHeaderColumnContent>
     </Container>
   );

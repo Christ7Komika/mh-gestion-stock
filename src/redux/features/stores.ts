@@ -71,7 +71,9 @@ export interface History {
   message: string;
   updatedAt: Date;
   createdAt: Date;
-  comment: string | null;
+  Comment: {
+    message: string;
+  };
 }
 
 export interface Store {
@@ -173,6 +175,12 @@ export const getStores = () => (dispatch: AppDispatch) => {
       dispatch(isError(true));
       dispatch(isLoad(false));
     });
+};
+
+export const setStores = (data: StoreType[]) => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  dispatch(stores(data));
+  dispatch(isLoad(false));
 };
 
 export const searchStores = (data: string) => (dispatch: AppDispatch) => {
