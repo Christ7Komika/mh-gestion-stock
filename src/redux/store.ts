@@ -4,6 +4,7 @@ import supplierReducer from "./features/supplier";
 import categoryReducer from "./features/category";
 import storeReducer from "./features/stores";
 import warehouseReducer from "./features/warehouse";
+import actionReducer from "./features/action";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     category: categoryReducer,
     store: storeReducer,
     warehouse: warehouseReducer,
+    action: actionReducer,
   },
 });
 

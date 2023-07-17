@@ -7,6 +7,11 @@ import { CategoryType } from "../../redux/features/category";
 import { WarehouseType } from "../../redux/features/warehouse";
 import { limitWord } from "../../utils/text";
 
+type Data = {
+  id: string;
+  name: string;
+};
+
 interface Props {
   setValue?: Function;
   setId: Function;
@@ -15,11 +20,11 @@ interface Props {
   defaultValue: string | null;
   error: string | null;
   placeholder: string;
-  data: SupplierType[] | CategoryType[] | WarehouseType[] | null;
+  data: Data[];
   init?: boolean;
 }
 
-const InputSelectFill = ({
+const GroupBy = ({
   defaultValue,
   setValue,
   placeholder,
@@ -36,7 +41,7 @@ const InputSelectFill = ({
 
   const filterSelect = () => {
     const filter = data?.filter(
-      (option: SupplierType | CategoryType | WarehouseType) =>
+      (option: Data) =>
         option.name.toLowerCase().search(search.toLocaleLowerCase()) !== -1
     );
 
@@ -88,10 +93,7 @@ const InputSelectFill = ({
 
   useEffect(() => {
     if (defaultValue) {
-      const item = data?.filter(
-        (value: SupplierType | CategoryType | WarehouseType) =>
-          value.id === defaultValue
-      );
+      const item = data?.filter((value: Data) => value.id === defaultValue);
 
       if (item && item.length === 1) {
         setText(item[0].name);
@@ -135,24 +137,19 @@ const InputSelectFill = ({
         {open && (
           <Options>
             {filterSelect() && filterSelect()?.length ? (
-              filterSelect()?.map(
-                (
-                  option: SupplierType | CategoryType | WarehouseType,
-                  i: number
-                ) => (
-                  <Option
-                    onClick={() => {
-                      setSearch("");
-                      setText(option.name);
-                      setSelectId(option.id);
-                      setOpen(false);
-                    }}
-                    key={"select-" + i}
-                  >
-                    {option.name}
-                  </Option>
-                )
-              )
+              filterSelect()?.map((option: Data, i: number) => (
+                <Option
+                  onClick={() => {
+                    setSearch("");
+                    setText(option.name);
+                    setSelectId(option.id);
+                    setOpen(false);
+                  }}
+                  key={"select-" + i}
+                >
+                  {option.name}
+                </Option>
+              ))
             ) : (
               <Empty>Aucune référence trouvé</Empty>
             )}
@@ -179,7 +176,7 @@ const SelectContainer = styled.div`
 `;
 
 const Select = styled.div<SelectProps>`
-  width: 125px;
+  width: 135px;
   max-height: 40px;
   height: 100%;
   border-radius: 40px;
@@ -276,4 +273,4 @@ const Empty = styled.p`
   color: ${color.darkBlue};
 `;
 
-export default InputSelectFill;
+export default GroupBy;

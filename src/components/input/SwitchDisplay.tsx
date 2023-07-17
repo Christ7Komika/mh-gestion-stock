@@ -3,6 +3,8 @@ import { color } from "../../utils/color";
 import { RiFileList2Fill } from "react-icons/ri";
 import { CgMenuGridR } from "react-icons/cg";
 import { useEffect, useState } from "react";
+import { setCardViewMode } from "../../redux/features/action";
+import { useDispatch } from "react-redux";
 
 interface Props {
   isDisplay: Function;
@@ -12,6 +14,8 @@ const SwitchDisplay = ({ isDisplay }: Props) => {
   const [switchTo, setSwitchTo] = useState(false);
   const [listView, setListView] = useState(false);
   const [cardView, setCardView] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (switchTo) {
@@ -31,6 +35,7 @@ const SwitchDisplay = ({ isDisplay }: Props) => {
     <Container
       onClick={() => {
         setSwitchTo(!switchTo);
+        setCardViewMode(!switchTo)(dispatch);
       }}
     >
       <BoxIcon isActive={listView}>

@@ -3,20 +3,23 @@ import Card from "./Card";
 import { color } from "../../utils/color";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { getClients } from "../../redux/features/client";
 import { useEffect } from "react";
+import { getStores } from "../../redux/features/stores";
 
 const GroupCard = () => {
   const dispatch = useDispatch();
-  const clients = useSelector((state: RootState) => state.client.datas);
+  const articles = useSelector((state: RootState) => state.store.datas);
 
   useEffect(() => {
-    getClients()(dispatch);
+    getStores()(dispatch);
   }, []);
 
   return (
     <Container>
-      <Card title="Client enregistré" value={clients?.length || 0} />
+      <Card title="Articles en stock" value={articles?.length || 0} />
+      <Card title="Articles en fin de stock" value={articles?.length || 0} />
+      <Card title="Articles vendus" value={articles?.length || 0} />
+      <Card title="Articles non vendus" value={articles?.length || 0} />
     </Container>
   );
 };

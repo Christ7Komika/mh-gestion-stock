@@ -5,3 +5,5 @@ Voir la page categorie, corriger l'auto chargement des categories apres creation
 Rajouter la class AbortController dans chaque requette
 
 FAIRE DES VERIFICATIONS AU NIVEAU DES MAILS
+
+Mettre une image par defaut
