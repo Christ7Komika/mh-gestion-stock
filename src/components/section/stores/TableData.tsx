@@ -12,16 +12,14 @@ import InputSelectFill from "../../input/InputSelectFill";
 import { IoFilterSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { Loader } from "../../loader/Loader";
-import SimpleSearchBard from "../../input/SimpleSearchBard";
 import {
-  StoreType,
   getStores,
-  setStores,
+   filter,
 } from "../../../redux/features/stores";
+import SearchBar from "../../input/SearchBar.tsx";
 
 const TableData = () => {
   const [search, setSearch] = useState("");
-  const [isValid, setIsValid] = useState(false);
   const [open, setOpen] = useState(false);
   const [changeDisplay, setChangeDisplay] = useState(false);
   const [warehouse, setWarehouse] = useState("");
@@ -36,6 +34,9 @@ const TableData = () => {
   const stores = useSelector((state: RootState) => state.store.datas);
   const [reset, setReset] = useState(false);
   const [isFilter, setIsFilter] = useState(false);
+  const isLoad = useSelector((state:RootState) => state.store.isLoad)
+  const [reload, setReload] = useState<boolean>(false)
+
   useEffect(() => {
     getStores()(dispatch);
   }, []);
@@ -46,41 +47,37 @@ const TableData = () => {
     }
   }, [isFilter]);
 
-  function filterStoreBySelect(
-    storesDatas: StoreType[],
-    categoryId: string | null,
-    supplierId: string | null,
-    warehouseId: string | null
-  ): StoreType[] {
-    return storesDatas.filter((storeData: StoreType) => {
-      const filterCategory = category
-        ? storeData.Category.id === categoryId
-        : true;
-      const filterSupplier = supplier
-        ? storeData.Supplier.id === supplierId
-        : true;
-      const filterWarehouse = warehouse
-        ? storeData.Warehouse.id === warehouseId
-        : true;
-      return filterCategory && filterSupplier && filterWarehouse;
-    });
-  }
+
 
   const cancelFilter = () => {
-    setWarehouse("");
-    setSearch("");
-    setSupplier("");
-    setCategory("");
-    setIsFilter(false);
-    setReset(false);
-    getStores()(dispatch);
+    console.log("reload before : ", reload)
+    setReload(true)
+    if(reload) {
+      setWarehouse("");
+      setSearch("");
+      setSupplier("");
+      setCategory("");
+      setIsFilter(false);
+      getStores()(dispatch);
+      setReload(false)
+      setReset(false)
+    }
+    console.log("reload after : ", reload)
   };
 
   const filterBySelect = () => {
     if (stores) {
-      const filter = filterStoreBySelect(stores, category, supplier, warehouse);
-      setStores(filter)(dispatch);
-      setIsFilter(true);
+      filter({
+        warehouse: warehouse,
+        supplier: supplier,
+        category: category,
+        search: search
+      }, (exit:boolean) => {
+      if(exit) {
+        setIsFilter(true)
+      }
+      }
+      )(dispatch)
     }
   };
 
@@ -90,7 +87,7 @@ const TableData = () => {
       <Container>
         <HeaderTitle>
           ARTICLE
-          <Loader />
+
         </HeaderTitle>
 
         <GroupButton>
@@ -103,6 +100,7 @@ const TableData = () => {
               placeholder="Entrepôt"
               error={""}
               data={warehouses}
+              init={reload}
             />
             <InputSelectFill
               name=""
@@ -112,6 +110,7 @@ const TableData = () => {
               placeholder="Catégorie"
               error={""}
               data={categories}
+              init={reload}
             />
             <InputSelectFill
               name=""
@@ -121,12 +120,13 @@ const TableData = () => {
               placeholder="Fournisseur"
               error={""}
               data={suppliers}
+              init={reload}
             />
+            <SearchBar setSearch={setSearch}  />
             <Reset onClick={() => filterBySelect()}>
-              <IoFilterSharp size={15} />
+              {isLoad ? <Loader color={"#fff"} /> : <IoFilterSharp size={15} />}
             </Reset>
           </GroupSelectFilter>
-          <SimpleSearchBard setSearch={setSearch} isValid={setIsValid} />
           <SwitchDisplay isDisplay={setChangeDisplay} />
           <AddButton setOpen={setOpen} text="article" />
           {reset && (
@@ -185,15 +185,16 @@ const Reset = styled.div`
   height: 40px;
   border-radius: 40px;
   border: 1px solid ${color.darkBlue};
-  color: ${color.darkBlue};
+  background: ${color.darkBlue};
+  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: linear 0.4s;
   cursor: pointer;
   &:hover {
-    background: ${color.darkBlue};
-    color: #fff;
+
+opacity: .8;
   }
 `;
 

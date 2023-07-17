@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
 import axios, { AxiosRequestConfig } from "axios";
 import { host } from "../host";
+import supplier from "./supplier.ts";
 
 export interface CommentType {
   id: string;
@@ -30,6 +31,13 @@ export interface WarehouseType {
 export interface CategoryType {
   id: string;
   name: string;
+}
+
+interface FilterType {
+    warehouse:string;
+    supplier: string;
+    category:string;
+    search: string;
 }
 
 export interface GroupArticleType {}
@@ -274,6 +282,42 @@ export const filterHistory =
       });
   };
 
+export const filter =
+    (data: { data:FilterType }, exit:Function) =>
+        (dispatch: AppDispatch) => {
+            dispatch(isLoad(true));
+
+            const abortController = new AbortController();
+            let cancelSignal: AbortSignal;
+            const config: AxiosRequestConfig = {
+                method: "post",
+                url: host + "/articles/filter/data",
+                data: data,
+                onUploadProgress: () => {
+                    if (cancelSignal.aborted) {
+                        cancelTokenSource.cancel("Annulation de la requête");
+                    }
+                },
+            };
+            cancelSignal = abortController.signal;
+            const cancelTokenSource = axios.CancelToken.source();
+            config.cancelToken = cancelTokenSource.token;
+
+            axios<StoreType[]>(config)
+                .then(({ data }) => {
+                    dispatch(stores(data));
+                    dispatch(isSuccess(true));
+                    dispatch(isLoad(false));
+                    exit(true)
+                })
+                .catch(() => {
+                    dispatch(isError(true));
+                    dispatch(isLoad(false));
+                });
+        };
+
+
+
 export const getStoreId = (id: string) => (dispatch: AppDispatch) => {
   dispatch(storeId(id));
 };
@@ -281,12 +325,23 @@ export const getStoreId = (id: string) => (dispatch: AppDispatch) => {
 export const createStore =
   (data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
-    const config = {
+      const abortController = new AbortController();
+      let cancelSignal: AbortSignal;
+    const config: AxiosRequestConfig = {
       method: "post",
       url: host + "/articles/",
       maxBodyLength: Infinity,
       data: data,
+        onUploadProgress: () => {
+            if (cancelSignal.aborted) {
+                cancelTokenSource.cancel("Annulation de la requête");
+            }
+        },
     };
+
+      cancelSignal = abortController.signal;
+      const cancelTokenSource = axios.CancelToken.source();
+      config.cancelToken = cancelTokenSource.token;
 
     axios<StoreType[]>(config)
       .then(({ data }) => {

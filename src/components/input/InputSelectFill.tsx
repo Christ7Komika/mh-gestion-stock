@@ -17,6 +17,7 @@ interface Props {
   placeholder: string;
   data: SupplierType[] | CategoryType[] | WarehouseType[] | null;
   init?: boolean;
+  setInit?: Function
 }
 
 const InputSelectFill = ({
@@ -26,6 +27,7 @@ const InputSelectFill = ({
   data,
   setId,
   init,
+    setInit
 }: Props) => {
   const [text, setText] = useState<string | null>(null);
   const [selectId, setSelectId] = useState<string | null>(null);
@@ -33,6 +35,7 @@ const InputSelectFill = ({
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const selectRef = useRef<HTMLDivElement>(null);
+
 
   const filterSelect = () => {
     const filter = data?.filter(
@@ -49,7 +52,9 @@ const InputSelectFill = ({
 
   useEffect(() => {
     if (init) {
+      console.log("INITIALISER")
       setText(null);
+      setSearch("")
       setId("");
       if (setValue) {
         setValue("");
