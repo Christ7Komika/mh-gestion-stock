@@ -11,9 +11,10 @@ const Table = () => {
           <THRow>
             <THead>ID</THead>
             <THead>Nom</THead>
-            <THead>Référence</THead>
-            <THead>Téléphone</THead>
-            <THead>Email</THead>
+            <THead>Numéro de commande</THead>
+            <THead>Status</THead>
+            <THead>Client</THead>
+            <THead>Somme</THead>
             <THead>Ajouté le</THead>
             <THead>Action</THead>
           </THRow>
@@ -24,7 +25,8 @@ const Table = () => {
             <TData>Christ Komika</TData>
             <TData>WB56DED</TData>
             <TData>+242 05 564 32 95</TData>
-            <TData>christkomika7@gmail.com</TData>
+            <TData>christkomika</TData>
+            <TData>christkomika</TData>
             <TData>21/06/2023</TData>
             <TData>
               <OptionGroup>

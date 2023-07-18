@@ -136,13 +136,11 @@ const StockModal = ({ setAction }: Props) => {
     })(dispatch);
   };
 
-  console.log(categories);
-
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Ajouter un fournisseur</ModalHeaderTitle>
+          <ModalHeaderTitle>Ajouter un article</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>

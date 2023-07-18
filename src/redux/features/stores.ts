@@ -3,7 +3,40 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
 import axios, { AxiosRequestConfig } from "axios";
 import { host } from "../host";
-import supplier from "./supplier.ts";
+
+export interface SimpleGroup {
+  name?: string;
+  code?: string;
+  designation?: string;
+  type?: string;
+  reference?: string;
+  _count: number;
+}
+
+interface Data {
+  id: string;
+  logo: string | null;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  updatedAt: Date;
+  createdAt: Date;
+}
+
+export interface SupplierGroup {
+  supplier: Data;
+  count: number;
+}
+
+export interface WarehouseGroup {
+  warehouse: Data;
+  count: number;
+}
+
+export interface CategoryGroup {
+  article: Data;
+  count: number;
+}
 
 export interface CommentType {
   id: string;
@@ -33,11 +66,11 @@ export interface CategoryType {
   name: string;
 }
 
-interface FilterType {
-    warehouse:string;
-    supplier: string;
-    category:string;
-    search: string;
+export interface FilterType {
+  warehouse: string;
+  supplier: string;
+  category: string;
+  search: string;
 }
 
 export interface GroupArticleType {}
@@ -92,13 +125,27 @@ export interface Store {
   phone?: string;
 }
 
+export type Group =
+  | SimpleGroup
+  | CategoryGroup
+  | WarehouseGroup
+  | SupplierGroup;
+
+export type GroupBy =
+  | SimpleGroup[]
+  | CategoryGroup[]
+  | WarehouseGroup[]
+  | SupplierGroup[];
+
 interface storeState {
   datas: null | StoreType[];
   data: null | StoreType;
   currentId: string | null;
+  group: null | GroupBy;
   history: History[] | null;
   isLoad: boolean;
   isLoadChange: boolean;
+  isLoadGroup: boolean;
   isError: Boolean;
   isSuccess: Boolean;
 }
@@ -107,12 +154,14 @@ interface storeState {
 const initialState: storeState = {
   datas: null,
   data: null,
+  group: null,
   isLoad: false,
   isLoadChange: false,
   isError: false,
   history: null,
   isSuccess: false,
   currentId: null,
+  isLoadGroup: false,
 };
 
 export const storeSlice = createSlice({
@@ -132,9 +181,15 @@ export const storeSlice = createSlice({
     history: (state, action: PayloadAction<History[]>) => {
       state.history = action.payload;
     },
+    groupBy: (state, action: PayloadAction<GroupBy>) => {
+      state.group = action.payload;
+    },
 
     isLoad: (state, action: PayloadAction<boolean>) => {
       state.isLoad = action.payload;
+    },
+    isLoadGroup: (state, action: PayloadAction<boolean>) => {
+      state.isLoadGroup = action.payload;
     },
     isSuccess: (state, action: PayloadAction<boolean>) => {
       state.isSuccess = action.payload;
@@ -162,6 +217,8 @@ export const {
   storeId,
   history,
   emptyStore,
+  groupBy,
+  isLoadGroup,
 } = storeSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -283,40 +340,37 @@ export const filterHistory =
   };
 
 export const filter =
-    (data: { data:FilterType }, exit:Function) =>
-        (dispatch: AppDispatch) => {
-            dispatch(isLoad(true));
+  (data: { data: FilterType }, exit: Function) => (dispatch: AppDispatch) => {
+    dispatch(isLoad(true));
 
-            const abortController = new AbortController();
-            let cancelSignal: AbortSignal;
-            const config: AxiosRequestConfig = {
-                method: "post",
-                url: host + "/articles/filter/data",
-                data: data,
-                onUploadProgress: () => {
-                    if (cancelSignal.aborted) {
-                        cancelTokenSource.cancel("Annulation de la requête");
-                    }
-                },
-            };
-            cancelSignal = abortController.signal;
-            const cancelTokenSource = axios.CancelToken.source();
-            config.cancelToken = cancelTokenSource.token;
+    const abortController = new AbortController();
+    let cancelSignal: AbortSignal;
+    const config: AxiosRequestConfig = {
+      method: "post",
+      url: host + "/articles/filter/data",
+      data: data,
+      onUploadProgress: () => {
+        if (cancelSignal.aborted) {
+          cancelTokenSource.cancel("Annulation de la requête");
+        }
+      },
+    };
+    cancelSignal = abortController.signal;
+    const cancelTokenSource = axios.CancelToken.source();
+    config.cancelToken = cancelTokenSource.token;
 
-            axios<StoreType[]>(config)
-                .then(({ data }) => {
-                    dispatch(stores(data));
-                    dispatch(isSuccess(true));
-                    dispatch(isLoad(false));
-                    exit(true)
-                })
-                .catch(() => {
-                    dispatch(isError(true));
-                    dispatch(isLoad(false));
-                });
-        };
-
-
+    axios<StoreType[]>(config)
+      .then(({ data }) => {
+        dispatch(stores(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoad(false));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoad(false));
+      });
+  };
 
 export const getStoreId = (id: string) => (dispatch: AppDispatch) => {
   dispatch(storeId(id));
@@ -325,23 +379,23 @@ export const getStoreId = (id: string) => (dispatch: AppDispatch) => {
 export const createStore =
   (data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
-      const abortController = new AbortController();
-      let cancelSignal: AbortSignal;
+    const abortController = new AbortController();
+    let cancelSignal: AbortSignal;
     const config: AxiosRequestConfig = {
       method: "post",
       url: host + "/articles/",
       maxBodyLength: Infinity,
       data: data,
-        onUploadProgress: () => {
-            if (cancelSignal.aborted) {
-                cancelTokenSource.cancel("Annulation de la requête");
-            }
-        },
+      onUploadProgress: () => {
+        if (cancelSignal.aborted) {
+          cancelTokenSource.cancel("Annulation de la requête");
+        }
+      },
     };
 
-      cancelSignal = abortController.signal;
-      const cancelTokenSource = axios.CancelToken.source();
-      config.cancelToken = cancelTokenSource.token;
+    cancelSignal = abortController.signal;
+    const cancelTokenSource = axios.CancelToken.source();
+    config.cancelToken = cancelTokenSource.token;
 
     axios<StoreType[]>(config)
       .then(({ data }) => {
@@ -558,6 +612,29 @@ export const deleteStore =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
+      });
+  };
+
+export const filtersByGroup =
+  (search: string, group: string) => (dispatch: AppDispatch) => {
+    dispatch(isLoadGroup(true));
+    const config = {
+      method: "post",
+      url: host + "/articles/group",
+      data: {
+        group: group,
+        search: search,
+      },
+    };
+    axios<GroupBy>(config)
+      .then(({ data }) => {
+        dispatch(groupBy(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoadGroup(false));
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoadGroup(false));
       });
   };
 

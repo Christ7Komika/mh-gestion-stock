@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { color } from "../../../utils/color";
 import AddButton from "../../input/AddButton";
 import Table from "./Table";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SwitchDisplay from "../../input/SwitchDisplay";
 import CardView from "../suppliers/card/CardView.tsx";
 import StockModal from "./modal/StockModal";
@@ -12,7 +12,12 @@ import InputSelectFill from "../../input/InputSelectFill";
 import { IoFilterSharp } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import { Loader } from "../../loader/Loader";
-import { getStores, filter } from "../../../redux/features/stores";
+import {
+  getStores,
+  filter,
+  filtersByGroup,
+  FilterType,
+} from "../../../redux/features/stores";
 import SearchBar from "../../input/SearchBar.tsx";
 import GroupBy from "../../input/GroupBy.tsx";
 
@@ -23,6 +28,7 @@ const TableData = () => {
   const [warehouse, setWarehouse] = useState("");
   const [category, setCategory] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [searchGroup, setSearchGroup] = useState("");
 
   const dispatch = useDispatch();
 
@@ -36,6 +42,9 @@ const TableData = () => {
   const [groupBy, setGroupBy] = useState<string>("");
 
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
+  const isLoadGroup = useSelector(
+    (state: RootState) => state.store.isLoadGroup
+  );
   const isCardViewMode = useSelector(
     (state: RootState) => state.action.cardModeView
   );
@@ -74,22 +83,32 @@ const TableData = () => {
     }
   };
 
-  const filterBySelect = () => {
+  const filterBySelect = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    const data: FilterType = {
+      warehouse: warehouse,
+      supplier: supplier,
+      category: category,
+      search: search,
+    };
     if (stores) {
-      filter(
-        {
-          warehouse: warehouse,
-          supplier: supplier,
-          category: category,
-          search: search,
-        },
-        (exit: boolean) => {
-          if (exit) {
-            setIsFilter(true);
-          }
+      filter(data, (exit: boolean) => {
+        if (exit) {
+          setIsFilter(true);
         }
-      )(dispatch);
+      })(dispatch);
     }
+  };
+
+  const filterByGroup = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    if (!groupBy) {
+      return;
+    }
+    if (!groupBy && !searchGroup) {
+      return;
+    }
+    filtersByGroup(searchGroup, groupBy)(dispatch);
   };
 
   return (
@@ -116,9 +135,9 @@ const TableData = () => {
                 data={data}
                 init={reload}
               />
-              <SearchBar setSearch={setSearch} />
-              <Reset onClick={() => filterBySelect()}>
-                {isLoad ? (
+              <SearchBar setSearch={setSearchGroup} />
+              <Reset onClick={(e: React.SyntheticEvent) => filterByGroup(e)}>
+                {isLoadGroup ? (
                   <Loader color={"#fff"} />
                 ) : (
                   <IoFilterSharp size={15} />
@@ -158,7 +177,7 @@ const TableData = () => {
                 init={reload}
               />
               <SearchBar setSearch={setSearch} />
-              <Reset onClick={() => filterBySelect()}>
+              <Reset onClick={(e: React.SyntheticEvent) => filterBySelect(e)}>
                 {isLoad ? (
                   <Loader color={"#fff"} />
                 ) : (
@@ -271,31 +290,15 @@ const data = [
     name: "Référence",
   },
   {
-    id: "lotNumber",
-    name: "Numéro lot",
-  },
-  {
-    id: "operatingPressure",
-    name: "Préssion de service",
-  },
-  {
-    id: "diameter",
-    name: "Diamètre",
-  },
-  {
-    id: "fluid",
-    name: "Fluide",
-  },
-  {
-    id: "Supplier",
+    id: "supplierId",
     name: "Fournisseur",
   },
   {
-    id: "Category",
+    id: "categoryId",
     name: "Catégorie",
   },
   {
-    id: "Warehouse",
+    id: "warehouseId",
     name: "Entrepôt",
   },
 ];

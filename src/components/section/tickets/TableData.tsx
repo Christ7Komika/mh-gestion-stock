@@ -4,16 +4,16 @@ import AddButton from "../../input/AddButton";
 // import SimpleSearchBard from "../../input/SimpleSearchBard";
 import Table from "./Table";
 import { useState } from "react";
-import SupplierModal from "../suppliers/modal/SupplierModal";
+import TicketModal from "./modal/TicketModal";
 
 const TableData = () => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {open && <SupplierModal setAction={setOpen} />}
+      {open && <TicketModal setAction={setOpen} />}
       <Container>
-        <HeaderTitle>FOURNISSEURS</HeaderTitle>
+        <HeaderTitle>Ticket</HeaderTitle>
         <GroupButton>
           {/* <SimpleSearchBard /> */}
           <AddButton setOpen={setOpen} text="ticket" />

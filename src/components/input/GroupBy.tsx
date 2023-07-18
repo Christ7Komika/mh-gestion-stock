@@ -2,9 +2,6 @@ import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import { useEffect, useRef, useState } from "react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-import { SupplierType } from "../../redux/features/supplier";
-import { CategoryType } from "../../redux/features/category";
-import { WarehouseType } from "../../redux/features/warehouse";
 import { limitWord } from "../../utils/text";
 
 type Data = {

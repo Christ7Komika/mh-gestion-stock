@@ -75,11 +75,11 @@ export const ModalForm = styled.div`
 `;
 
 export const ModalMessageError = styled.p`
-  padding: .4rem;
+  padding: 0.4rem;
   border-radius: 5px;
   background: ${color.lightRed};
   color: ${color.darkBlue};
-  font-size: .75rem;
+  font-size: 0.75rem;
 `;
 
 export const ModalDoubleFormGroup = styled.div`
@@ -111,6 +111,18 @@ export const ModalInfosTitle = styled.h2`
   font-weight: 600;
   line-height: 60px;
   text-align: center;
+`;
+
+export const ModalInfosContent = styled.p`
+  width: 100%;
+  border-radius: 5px;
+  height: auto;
+  background: ${color.lightBlue};
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const ModalButton = styled.button`
