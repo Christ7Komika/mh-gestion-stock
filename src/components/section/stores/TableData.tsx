@@ -246,7 +246,7 @@ export const GroupButton = styled.div`
   column-gap: 0.25rem;
 `;
 
-const Reset = styled.div`
+export const Reset = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 40px;

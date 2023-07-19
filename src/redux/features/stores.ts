@@ -139,6 +139,7 @@ export type GroupBy =
 
 interface storeState {
   datas: null | StoreType[];
+  dataSearch: null | StoreType[];
   data: null | StoreType;
   currentId: string | null;
   group: null | GroupBy;
@@ -153,6 +154,7 @@ interface storeState {
 // Define the initial state using that type
 const initialState: storeState = {
   datas: null,
+  dataSearch: null,
   data: null,
   group: null,
   isLoad: false,
@@ -171,9 +173,13 @@ export const storeSlice = createSlice({
     stores: (state, action: PayloadAction<StoreType[]>) => {
       state.datas = [...action.payload];
     },
+    search: (state, action: PayloadAction<StoreType[] | null>) => {
+      state.dataSearch = action.payload;
+    },
     store: (state, action: PayloadAction<StoreType>) => {
       state.data = action.payload;
     },
+
     emptyStore: (state, action: PayloadAction<null>) => {
       state.data = action.payload;
     },
@@ -219,6 +225,7 @@ export const {
   emptyStore,
   groupBy,
   isLoadGroup,
+  search,
 } = storeSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -266,6 +273,29 @@ export const searchStores = (data: string) => (dispatch: AppDispatch) => {
       dispatch(isError(true));
       dispatch(isLoad(false));
     });
+};
+export const searchDatasStores = (data: string) => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  const config = {
+    method: "post",
+    url: host + "/articles/search",
+    data: { search: data },
+  };
+
+  axios<StoreType[]>(config)
+    .then(({ data }) => {
+      dispatch(search(data));
+      dispatch(isSuccess(true));
+      dispatch(isLoad(false));
+    })
+    .catch(() => {
+      dispatch(isError(true));
+      dispatch(isLoad(false));
+    });
+};
+export const emptyDatasStores = () => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  dispatch(search(null));
 };
 
 export const getStore = (id: string) => (dispatch: AppDispatch) => {
