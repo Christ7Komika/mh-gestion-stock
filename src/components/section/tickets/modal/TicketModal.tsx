@@ -46,6 +46,7 @@ import {
   emptyDatasStores,
   searchDatasStores,
 } from "../../../../redux/features/stores";
+import ModalDataContentSection from "../../../split/ModalDataContentSection";
 
 interface Props {
   setAction: Function;
@@ -63,14 +64,15 @@ const TicketModal = ({ setAction }: Props) => {
   const [search, setSearch] = useState<string>("");
   const [article, setArticle] = useState<StoreType | null>(null);
   const [searchData, setSearchData] = useState<StoreType[] | null>(null);
+  const [rest, setRest] = useState<string>("");
 
   const dispatch = useDispatch();
   const clients = useSelector((state: RootState) => state.client.datas);
   const isLoad = useSelector((state: RootState) => state.client.isLoad);
+
   const searchArticles = useSelector(
     (state: RootState) => state.store.dataSearch
   );
-  const [articleNumber, setArticleNumber] = useState<string>("");
   const [articleNumberError, setArticleNumberError] = useState<string>("");
 
   useEffect(() => {
@@ -78,17 +80,9 @@ const TicketModal = ({ setAction }: Props) => {
   }, [searchArticles]);
 
   useEffect(() => {
-    if (searchData && articleNumber) {
-      if (
-        article &&
-        parseFloat(articleNumber) > parseFloat(article?.quantity as string)
-      ) {
-        setArticleNumberError("La valeur superieur a la quantité en stock");
-      } else {
-        setArticleNumberError("");
-      }
+    if (rest) {
     }
-  }, [articleNumber, article]);
+  }, [rest]);
 
   useEffect(() => {
     getClients()(dispatch);
@@ -116,12 +110,6 @@ const TicketModal = ({ setAction }: Props) => {
     if (search) {
       searchDatasStores(search)(dispatch);
     }
-  };
-
-  const add = () => {
-    const data = {
-      articleNumber: articleNumber,
-    };
   };
 
   const close = () => {
@@ -207,72 +195,6 @@ const TicketModal = ({ setAction }: Props) => {
                   </ModalDataInfosArticleRemove>
                 </ModalDataInfosArticleRemoveContainer>
               </ModalDataAddArticle>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
             </ModalAddArticleContainer>
           </ModalForm>
           <ModalForm>
@@ -293,41 +215,11 @@ const TicketModal = ({ setAction }: Props) => {
                 </ModalTableHead>
                 <ModalDataContainer>
                   {searchData.map((articleData) => (
-                    <ModalDataContent key={`search--${articleData.id}`}>
-                      <ModalDataInfos>
-                        <p>{articleData.designation}</p>
-                        <p>
-                          {articleData.quantity}{" "}
-                          {articleData.hasLength ? "mètre(s)" : ""}{" "}
-                        </p>
-                      </ModalDataInfos>
-                      <ModalDataForm>
-                        <ModalDataInput
-                          type="number"
-                          min={0}
-                          max={articleData.quantity}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setArticleNumber(e.target.value)
-                          }
-                        />
-                        <ModalDataInputAdd
-                          onClick={() => {
-                            setArticle(articleData);
-                            add();
-                          }}
-                        >
-                          <IoAdd size={20} />
-                        </ModalDataInputAdd>
-                        <ModalDataInputReset
-                          onClick={() => setArticle(articleData)}
-                        >
-                          <IoEye size={20} />
-                        </ModalDataInputReset>
-                        <ModalDataInputReset onClick={() => setArticle(null)}>
-                          <IoRefresh size={20} />
-                        </ModalDataInputReset>
-                      </ModalDataForm>
-                    </ModalDataContent>
+                    <ModalDataContentSection
+                      articleData={articleData}
+                      searchData={searchData}
+                      setArticleNumberError={setArticleNumberError}
+                    />
                   ))}
                 </ModalDataContainer>
               </ModalTableContainer>

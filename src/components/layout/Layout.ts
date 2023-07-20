@@ -300,9 +300,11 @@ export const ModalDataInputButton = styled.div`
   align-items: center;
 `;
 
-export const ModalDataInputAdd = styled(ModalDataInputButton)`
-  background: ${color.lightGreen};
-  cursor: pointer;
+export const ModalDataInputAdd = styled(ModalDataInputButton)<{
+  disabled?: boolean;
+}>`
+  background: ${({ disabled }) => (disabled ? color.grey : color.lightGreen)};
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 
   &:hover {
     opacity: 0.8;
