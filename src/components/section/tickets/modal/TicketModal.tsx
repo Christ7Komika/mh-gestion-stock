@@ -18,23 +18,13 @@ import {
   ModalDataInfosArticleRemove,
   SearchButton,
   ModalTableContainer,
-  ModalArticleInfos,
-  ModalArticleInfosHead,
-  ModalArticleData,
-  ModalArticleInfosDataContainer,
   ModalTableHead,
   ModalDataContainer,
-  ModalDataContent,
-  ModalDataInfos,
-  ModalDataForm,
-  ModalDataInput,
-  ModalDataInputAdd,
-  ModalDataInputReset,
 } from "../../../layout/Layout";
-import { IoExit, IoSearch, IoRefresh, IoAdd, IoEye } from "react-icons/io5";
+import { IoExit, IoSearch } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import InputText, { LabelError } from "../../../input/InputText";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import InputSelect from "../../../input/InputSelect";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
@@ -47,10 +37,17 @@ import {
   searchDatasStores,
 } from "../../../../redux/features/stores";
 import ModalDataContentSection from "../../../split/ModalDataContentSection";
+import ModalArticleInfosSection from "../../../split/ModalArticleInfosSection";
+import {
+  TicketTypeData,
+  createTicket,
+} from "../../../../redux/features/ticket";
 
 interface Props {
   setAction: Function;
 }
+
+export type UpdateStoreType = StoreType & { withdraw: number };
 
 const TicketModal = ({ setAction }: Props) => {
   const [name, setName] = useState<string | null>(null);
@@ -59,12 +56,17 @@ const TicketModal = ({ setAction }: Props) => {
   const [orderNumberError, setOrderNumberError] = useState<string>("");
   const [client, setClient] = useState<string>("");
   const [clientError, setClientError] = useState<string>("");
-  const [selectedArticles, setSelectedArticles] = useState<number>(0);
-  const [sumArticle, setSumArticle] = useState<number>(0);
   const [search, setSearch] = useState<string>("");
   const [article, setArticle] = useState<StoreType | null>(null);
   const [searchData, setSearchData] = useState<StoreType[] | null>(null);
-  const [rest, setRest] = useState<string>("");
+  const [selectedArticle, setSelectedArticle] = useState<
+    UpdateStoreType[] | []
+  >([]);
+  const [sumArticle, setSumArticle] = useState<UpdateStoreType[] | []>([]);
+  const [removed, setRemoved] = useState<boolean>(false);
+  const [removedId, setRemovedId] = useState<string>("");
+  const [articleError, setArticleError] = useState<string>("");
+  const sumRef = useRef<HTMLSpanElement>(null);
 
   const dispatch = useDispatch();
   const clients = useSelector((state: RootState) => state.client.datas);
@@ -73,16 +75,14 @@ const TicketModal = ({ setAction }: Props) => {
   const searchArticles = useSelector(
     (state: RootState) => state.store.dataSearch
   );
+  const isLoadCreate = useSelector(
+    (state: RootState) => state.ticket.isLoadCreate
+  );
   const [articleNumberError, setArticleNumberError] = useState<string>("");
 
   useEffect(() => {
     setSearchData(searchArticles);
   }, [searchArticles]);
-
-  useEffect(() => {
-    if (rest) {
-    }
-  }, [rest]);
 
   useEffect(() => {
     getClients()(dispatch);
@@ -105,9 +105,26 @@ const TicketModal = ({ setAction }: Props) => {
       setClientError("");
     }
   }, [client, clientError]);
+  useEffect(() => {
+    if (sumArticle && sumArticle.length > 0 && articleError) {
+      setArticleError("");
+    }
+  }, [sumArticle, articleError]);
+
+  useEffect(() => {
+    setSumArticle([...sumValuesAndRemoveDuplicates(selectedArticle)]);
+  }, [selectedArticle]);
+
+  function formatNumberWithSpaces(quantity: number, sellingPrice: string) {
+    const value = quantity * parseFloat(sellingPrice.replace(" ", ""));
+    let str = value.toString();
+    return str.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  }
 
   const searchArticle = () => {
+    emptyDatasStores()(dispatch);
     if (search) {
+      setArticle(null);
       searchDatasStores(search)(dispatch);
     }
   };
@@ -117,6 +134,40 @@ const TicketModal = ({ setAction }: Props) => {
     setArticle(null);
     setAction(false);
   };
+
+  const sumValuesAndRemoveDuplicates = (
+    elements: UpdateStoreType[]
+  ): UpdateStoreType[] => {
+    const elementMap: Map<string, UpdateStoreType> = new Map();
+    elements.forEach((element) => {
+      const { id, withdraw } = element;
+      if (elementMap.has(id)) {
+        const existingElement = elementMap.get(id) as UpdateStoreType;
+        existingElement.withdraw += withdraw;
+      } else {
+        elementMap.set(id, { ...element });
+      }
+    });
+
+    return Array.from(elementMap.values());
+  };
+
+  const sum = (data: UpdateStoreType[] | []) => {
+    if (data && data.length > 0) {
+      const value = data
+        .reduce(
+          (total, article) =>
+            total +
+            article.withdraw * parseFloat(article.unitPrice.replace(" ", "")),
+          0
+        )
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+      return value;
+    }
+  };
+
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!name) {
@@ -129,13 +180,18 @@ const TicketModal = ({ setAction }: Props) => {
       setClientError("Champ vide");
     }
 
-    const data = {
-      name: name,
+    if (sumArticle.length === 0) {
+      setArticleError("Aucun article n' a été ajouté");
+    }
+
+    const data: TicketTypeData = {
+      name: name as string,
       orderNumber: orderNumber,
       client: client,
+      articles: sumArticle,
+      sum: sumRef.current?.textContent as string,
     };
-
-    console.log(data);
+    createTicket(data)(dispatch);
   };
 
   return (
@@ -175,26 +231,49 @@ const TicketModal = ({ setAction }: Props) => {
               error={clientError}
               data={clients}
             />
+            {articleError && (
+              <LabelError
+                onClick={() => setArticleError("")}
+                style={{ cursor: "pointer" }}
+              >
+                {articleError}
+              </LabelError>
+            )}
             <ModalInfosContent>
               <span>Nombre article(s)</span>
-              <span>{selectedArticles}</span>
+              <span>{sumArticle.length}</span>
             </ModalInfosContent>
             <ModalInfosContent>
               <span>Somme</span>
-              <span>{sumArticle} FCFA</span>
+              <span ref={sumRef}>{sum(sumArticle)} FCFA</span>
             </ModalInfosContent>
             <ModalAddArticleContainer>
-              <ModalDataAddArticle>
-                <ModalDataInfosArticleContent>
-                  <p>2</p>
-                  <p>Lorem, ipsum.</p>
-                </ModalDataInfosArticleContent>
-                <ModalDataInfosArticleRemoveContainer>
-                  <ModalDataInfosArticleRemove>
-                    <RxCross2 size={10} />
-                  </ModalDataInfosArticleRemove>
-                </ModalDataInfosArticleRemoveContainer>
-              </ModalDataAddArticle>
+              {sumArticle.length > 0 &&
+                sumArticle.map((selected) => (
+                  <ModalDataAddArticle>
+                    <ModalDataInfosArticleContent>
+                      <p>
+                        {selected?.withdraw} * {selected.unitPrice} ={" "}
+                        {formatNumberWithSpaces(
+                          selected.withdraw,
+                          selected.unitPrice
+                        )}{" "}
+                        FCFA
+                      </p>
+                      <p>{selected.designation}</p>
+                    </ModalDataInfosArticleContent>
+                    <ModalDataInfosArticleRemoveContainer>
+                      <ModalDataInfosArticleRemove
+                        onClick={() => {
+                          setRemovedId(selected.id);
+                          setRemoved(true);
+                        }}
+                      >
+                        <RxCross2 size={10} />
+                      </ModalDataInfosArticleRemove>
+                    </ModalDataInfosArticleRemoveContainer>
+                  </ModalDataAddArticle>
+                ))}
             </ModalAddArticleContainer>
           </ModalForm>
           <ModalForm>
@@ -205,7 +284,12 @@ const TicketModal = ({ setAction }: Props) => {
               </SearchButton>
             </ModalInputGroup>
             {articleNumberError && (
-              <LabelError>{articleNumberError}</LabelError>
+              <LabelError
+                onClick={() => setArticleNumberError("")}
+                style={{ cursor: "pointer" }}
+              >
+                {articleNumberError}
+              </LabelError>
             )}
             {searchData && (
               <ModalTableContainer>
@@ -218,95 +302,26 @@ const TicketModal = ({ setAction }: Props) => {
                     <ModalDataContentSection
                       articleData={articleData}
                       searchData={searchData}
+                      setArticle={setArticle}
                       setArticleNumberError={setArticleNumberError}
+                      setSelectedArticle={setSelectedArticle}
+                      selectedArticle={selectedArticle}
+                      sumArticle={sumArticle}
+                      setSumArticle={setSumArticle}
+                      setRemoved={setRemoved}
+                      removed={removed}
+                      removedId={removedId}
+                      setRemovedId={setRemovedId}
                     />
                   ))}
                 </ModalDataContainer>
               </ModalTableContainer>
             )}
-            {article && (
-              <ModalArticleInfos>
-                <ModalArticleInfosHead>
-                  <p>Infos</p>
-                  <p>
-                    Total restant {article.quantity}{" "}
-                    {article.hasLength ? " mètre(s)" : ""}{" "}
-                  </p>
-                </ModalArticleInfosHead>
-                <ModalArticleInfosDataContainer>
-                  {article.name && (
-                    <ModalArticleData>
-                      <p>Nom</p>
-                      <p>{article.name}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.designation && (
-                    <ModalArticleData>
-                      <p>Désignation</p>
-                      <p>{article.designation}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.reference && (
-                    <ModalArticleData>
-                      <p>Reference</p>
-                      <p>{article.reference}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.code && (
-                    <ModalArticleData>
-                      <p>Code</p>
-                      <p>{article.code}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.lotNumber && (
-                    <ModalArticleData>
-                      <p>Numéro lot</p>
-                      <p>{article.lotNumber}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.diameter && (
-                    <ModalArticleData>
-                      <p>Diamètre</p>
-                      <p>{article.diameter}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.fluid && (
-                    <ModalArticleData>
-                      <p>Fluide</p>
-                      <p>{article.fluid}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.operatingPressure && (
-                    <ModalArticleData>
-                      <p>Pression de service</p>
-                      <p>{article.operatingPressure}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.Supplier && (
-                    <ModalArticleData>
-                      <p>Fournisseur</p>
-                      <p>{article.Supplier.name}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.Category && (
-                    <ModalArticleData>
-                      <p>Catégorie</p>
-                      <p>{article.Category.name}</p>
-                    </ModalArticleData>
-                  )}
-                  {article.Warehouse && (
-                    <ModalArticleData>
-                      <p>Entrepôt</p>
-                      <p>{article.Warehouse.name}</p>
-                    </ModalArticleData>
-                  )}
-                </ModalArticleInfosDataContainer>
-              </ModalArticleInfos>
-            )}
+            {article && <ModalArticleInfosSection article={article} />}
           </ModalForm>
         </ModalSection3x2>
 
-        {isLoad ? (
+        {isLoadCreate ? (
           <ModalGroupButton>
             <ModalValidButton>
               <Loader />

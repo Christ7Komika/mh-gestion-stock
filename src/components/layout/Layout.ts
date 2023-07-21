@@ -235,8 +235,10 @@ export const ModalTableContainer = styled.div`
 
 export const ModalTableHead = styled.div`
   display: grid;
-  grid-template-columns: 1fr 50px;
-  text-align: left;
+  grid-template-columns: 1fr 150px;
+  & p:last-child {
+    text-align: center;
+  }
 `;
 
 export const ModalDataContainer = styled.div`
@@ -269,8 +271,13 @@ export const ModalDataContent = styled.div`
 
 export const ModalDataInfos = styled.div`
   display: grid;
-  grid-template-columns: 1fr 50px;
+  grid-template-columns: 1fr 150px;
   column-gap: 0.5rem;
+  align-items: center;
+
+  & p:last-child {
+    text-align: center;
+  }
 `;
 
 export const ModalDataForm = styled.div`
@@ -427,4 +434,10 @@ export const ModalDataInfosArticleRemove = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  transition: linear 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
