@@ -2,14 +2,26 @@ import styled from "styled-components";
 import { color } from "../../../utils/color";
 import { IoAdd, IoCreate } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import { TicketType, getTickets } from "../../../redux/features/ticket";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { useEffect } from "react";
 
 const Table = () => {
+  const dispatch = useDispatch();
+  const tickets = useSelector((state: RootState) => state.ticket.datas);
+
+  console.log(tickets);
+
+  useEffect(() => {
+    getTickets()(dispatch);
+  }, []);
+
   return (
     <TableContainer>
       <table>
         <TableHeader>
           <THRow>
-            <THead>ID</THead>
             <THead>Nom</THead>
             <THead>Numéro de commande</THead>
             <THead>Status</THead>
@@ -20,30 +32,31 @@ const Table = () => {
           </THRow>
         </TableHeader>
         <TableBody>
-          <TRow>
-            <TData>1</TData>
-            <TData>Christ Komika</TData>
-            <TData>WB56DED</TData>
-            <TData>+242 05 564 32 95</TData>
-            <TData>christkomika</TData>
-            <TData>christkomika</TData>
-            <TData>21/06/2023</TData>
-            <TData>
-              <OptionGroup>
-                <Option action="add">
-                  <IoAdd size={15} />
-                </Option>
+          {tickets?.map((ticket) => (
+            <TRow>
+              <TData>{ticket.name}</TData>
+              <TData>{ticket.purchaseOrder}</TData>
+              <TData>{ticket.status}</TData>
+              <TData>{ticket.Client.name}</TData>
+              <TData>{ticket.sum}</TData>
+              <TData>{ticket.createdAt.toLocaleDateString()}</TData>
+              <TData>
+                <OptionGroup>
+                  <Option action="add">
+                    <IoAdd size={15} />
+                  </Option>
 
-                <Option action="update">
-                  <IoCreate size={15} />
-                </Option>
+                  <Option action="update">
+                    <IoCreate size={15} />
+                  </Option>
 
-                <Option action="delete">
-                  <MdDelete size={15} />
-                </Option>
-              </OptionGroup>
-            </TData>
-          </TRow>
+                  <Option action="delete">
+                    <MdDelete size={15} />
+                  </Option>
+                </OptionGroup>
+              </TData>
+            </TRow>
+          ))}
         </TableBody>
       </table>
     </TableContainer>

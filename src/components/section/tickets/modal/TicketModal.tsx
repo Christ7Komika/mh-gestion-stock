@@ -191,7 +191,13 @@ const TicketModal = ({ setAction }: Props) => {
       articles: sumArticle,
       sum: sumRef.current?.textContent as string,
     };
-    createTicket(data)(dispatch);
+    createTicket(data, (exit: boolean) => {
+      if (exit) {
+        emptyDatasStores()(dispatch);
+        setArticle(null);
+        setAction(false);
+      }
+    })(dispatch);
   };
 
   return (

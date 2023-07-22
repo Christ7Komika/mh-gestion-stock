@@ -7,6 +7,12 @@ import { UpdateStoreType } from "../../components/section/tickets/modal/TicketMo
 import { StoreType } from "./stores";
 import { ClientType } from "./client";
 
+export interface ItemType {
+  id: string;
+  quantity: string;
+  article: StoreType[];
+}
+
 export interface TicketType {
   id: string;
   name: string;
@@ -14,6 +20,7 @@ export interface TicketType {
   status: string;
   sum: string;
   articles: StoreType[];
+  item: ItemType;
   updatedAt: Date;
   createdAt: Date;
   Client: ClientType;
@@ -136,7 +143,7 @@ export const createTicket =
     dispatch(isLoadCreate(true));
     const config = {
       method: "post",
-      url: host + "/ticket/",
+      url: host + "/ticket",
       data: {
         ...data,
       },
