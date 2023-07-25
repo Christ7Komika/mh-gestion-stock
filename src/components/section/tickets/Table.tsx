@@ -1,70 +1,92 @@
 import styled from "styled-components";
 import { color } from "../../../utils/color";
-import { IoAdd, IoCreate } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
-import { TicketType, getTickets } from "../../../redux/features/ticket";
+import { getTicketId, getTickets } from "../../../redux/features/ticket";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { BiSolidPrinter, BiShow, BiGridAlt } from "react-icons/bi";
+import OptionModal from "./modal/OptionModal";
 
 const Table = () => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [validateModal, setValidateModal] = useState(false);
+  const [cancelModal, setCancelModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const dispatch = useDispatch();
   const tickets = useSelector((state: RootState) => state.ticket.datas);
-
-  console.log(tickets);
 
   useEffect(() => {
     getTickets()(dispatch);
   }, []);
 
   return (
-    <TableContainer>
-      <table>
-        <TableHeader>
-          <THRow>
-            <THead>Nom</THead>
-            <THead>Numéro de commande</THead>
-            <THead>Status</THead>
-            <THead>Client</THead>
-            <THead>Somme</THead>
-            <THead>Ajouté le</THead>
-            <THead>Action</THead>
-          </THRow>
-        </TableHeader>
-        <TableBody>
-          {tickets?.map((ticket) => (
-            <TRow>
-              <TData>{ticket.name}</TData>
-              <TData>{ticket.purchaseOrder}</TData>
-              <TData>{ticket.status}</TData>
-              <TData>{ticket.Client.name}</TData>
-              <TData>{ticket.sum}</TData>
-              <TData>{ticket.createdAt.toLocaleDateString()}</TData>
-              <TData>
-                <OptionGroup>
-                  <Option action="add">
-                    <IoAdd size={15} />
-                  </Option>
-
-                  <Option action="update">
-                    <IoCreate size={15} />
-                  </Option>
-
-                  <Option action="delete">
-                    <MdDelete size={15} />
-                  </Option>
-                </OptionGroup>
-              </TData>
-            </TRow>
-          ))}
-        </TableBody>
-      </table>
-    </TableContainer>
+    <>
+      {open && (
+        <OptionModal
+          setAction={setOpen}
+          setCancelModal={setCancelModal}
+          setValidateModal={setValidateModal}
+          setDeleteModal={setDeleteModal}
+        />
+      )}
+      <TableContainer>
+        <table>
+          <TableHeader>
+            <THRow>
+              <THead>Nom</THead>
+              <THead>Nº/ Commande</THead>
+              <THead>Status</THead>
+              <THead>Client</THead>
+              <THead>Somme</THead>
+              <THead>Ajouté le</THead>
+              <THead>Action</THead>
+            </THRow>
+          </TableHeader>
+          <TableBody>
+            {tickets?.map((ticket) => (
+              <TRow key={ticket.id}>
+                <TData>{ticket.name}</TData>
+                <TData>{ticket.purchaseOrder}</TData>
+                <TData>{ticket.status}</TData>
+                <TData>{ticket.Client.name}</TData>
+                <TData>{ticket.sum}</TData>
+                <TData>{new Date(ticket.createdAt).toLocaleDateString()}</TData>
+                <TData>
+                  <OptionGroup>
+                    <Option
+                      action="add"
+                      onClick={() => getTicketId(ticket.id)(dispatch)}
+                    >
+                      <BiShow size={15} />
+                    </Option>
+                    <Option
+                      action="remove"
+                      onClick={() => getTicketId(ticket.id)(dispatch)}
+                    >
+                      <BiSolidPrinter size={15} />
+                    </Option>
+                    <Option
+                      action="update"
+                      onClick={() => {
+                        getTicketId(ticket.id)(dispatch);
+                        setOpen(true);
+                      }}
+                    >
+                      <BiGridAlt size={15} />
+                    </Option>
+                  </OptionGroup>
+                </TData>
+              </TRow>
+            ))}
+          </TableBody>
+        </table>
+      </TableContainer>
+    </>
   );
 };
 
 interface OptionProps {
-  action: "delete" | "update" | "add" | "remove";
+  action: "delete" | "update" | "add" | "remove" | "cancel";
 }
 
 interface TRowProps {
@@ -142,7 +164,6 @@ const Option = styled.div<OptionProps>`
   width: 25px;
   height: 25px;
   border-radius: 25px;
-  background-color: red;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,6 +175,8 @@ const Option = styled.div<OptionProps>`
       ? color.blue
       : action === "add"
       ? color.green
+      : action === "cancel"
+      ? color.cancel
       : color.orange};
   color: ${({ action }) =>
     action === "delete"

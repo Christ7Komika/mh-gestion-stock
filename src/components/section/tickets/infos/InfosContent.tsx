@@ -1,71 +1,69 @@
 import { styled } from "styled-components";
 import { color } from "../../../../utils/color";
+import { TicketType } from "../../../../redux/features/ticket";
 
-const InfosContent = () => {
+interface Props {
+  ticket: TicketType | null;
+}
+
+const InfosContent = ({ ticket }: Props) => {
   return (
     <Container>
-      <InfosContentImageContainer>
-        <InfosContentImage />
-      </InfosContentImageContainer>
-      <InfosContentCardRounded>
-        <span>QUANTITÉ</span>
-        <span>200</span>
-      </InfosContentCardRounded>
-      <InfosContentCardRounded>
-        <span>Total</span>
-        <span>2</span>
-      </InfosContentCardRounded>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
-      <InfosContentCard>
-        <InfosContentCardTitle>NOM</InfosContentCardTitle>
-        <InfosContentCardText>
-          RACCORD A CAMES MALE TYPE E DN 100 ANNELEE 4" LAITON
-        </InfosContentCardText>
-      </InfosContentCard>
+      {ticket && (
+        <InfosContentCard>
+          <InfosContentCardTitle>NOM</InfosContentCardTitle>
+          <InfosContentCardText>{ticket.name}</InfosContentCardText>
+        </InfosContentCard>
+      )}
+      {ticket && (
+        <InfosContentCard>
+          <InfosContentCardTitle>NUMÉRO BON DE COMMANDE</InfosContentCardTitle>
+          <InfosContentCardText>{ticket.purchaseOrder}</InfosContentCardText>
+        </InfosContentCard>
+      )}
+      {ticket && (
+        <InfosContentCard>
+          <InfosContentCardTitle>PRIX</InfosContentCardTitle>
+          <InfosContentCardText>{ticket.sum}</InfosContentCardText>
+        </InfosContentCard>
+      )}
+      {ticket && (
+        <InfosContentCard>
+          <InfosContentCardTitle>CLIENT</InfosContentCardTitle>
+          <InfosContentCardText>{ticket.Client.name}</InfosContentCardText>
+        </InfosContentCard>
+      )}
+      {ticket && (
+        <InfosContentCardContainer>
+          {ticket.item.map((item, index) => (
+            <InfosContentCardSecond key={item.id}>
+              <InfosContentCardText key={item.article?.id}>
+                <span>{index + 1}.</span> {item.article?.designation}
+              </InfosContentCardText>
+              <InfosContentCardInfos>
+                {item.hasLength
+                  ? `Quantité: ${item.quantity} article(s)`
+                  : `Longueur: ${item.quantity} mètre(s)`}
+              </InfosContentCardInfos>
+              <InfosContentCardInfos>
+                Somme: {item.sumValue} XAF
+              </InfosContentCardInfos>
+            </InfosContentCardSecond>
+          ))}
+        </InfosContentCardContainer>
+      )}
     </Container>
   );
 };
+
+const InfosContentCardContainer = styled.div`
+  padding: 0.5rem;
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.2rem;
+  border-radius: 5px;
+`;
 
 const Container = styled.div`
   & > div {
@@ -73,61 +71,56 @@ const Container = styled.div`
   }
 `;
 
-const InfosContentImageContainer = styled.div`
-  width: 100%;
-  height: 150px;
-  border: 1px solid ${color.border};
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const InfosContentImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-`;
-
 const InfosContentCard = styled.div`
-  padding: 1rem;
+  padding: 0.4rem;
   background: ${color.fadeBlue};
   display: flex;
   flex-direction: column;
   row-gap: 0.2rem;
   border-radius: 5px;
 `;
-
-const InfosContentCardRounded = styled.div`
-  display: inline-block;
-  padding: 0.5rem;
-  border-radius: 40px;
-  margin-right: 1rem;
-  background: ${color.blue2};
-  color: ${color.darkBlue};
-  & > span:first-child {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-right: 10px;
-  }
-  & > span:last-child {
-    font-weight: 500;
-    font-size: 0.9rem;
-    margin-right: 10px;
-  }
+const InfosContentCardSecond = styled.div`
+  padding: 0.4rem;
+  background: #dde6ed;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.2rem;
+  border-radius: 5px;
 `;
+
 const InfosContentCardTitle = styled.h2`
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: ${color.darkBlue};
   text-transform: uppercase;
+  background-color: ${color.grey};
+  border-radius: 5px;
+  padding: 5px;
 `;
+
 const InfosContentCardText = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: ${color.darkBlue};
   text-transform: uppercase;
+  padding: 5px;
+
+  span {
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #91c8e4;
+  }
+`;
+
+const InfosContentCardInfos = styled.p`
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: ${color.darkBlue};
+  text-transform: uppercase;
+  padding: 5px 1rem;
+  background: #8cc0de;
+  border-radius: 5px;
 `;
 
 export default InfosContent;

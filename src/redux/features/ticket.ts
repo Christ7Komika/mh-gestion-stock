@@ -5,12 +5,19 @@ import axios from "axios";
 import { host } from "../host";
 import { UpdateStoreType } from "../../components/section/tickets/modal/TicketModal";
 import { StoreType } from "./stores";
-import { ClientType } from "./client";
+
+export interface ArticleType {
+  id: string;
+  designation: string;
+  _count: number;
+}
 
 export interface ItemType {
   id: string;
   quantity: string;
-  article: StoreType[];
+  sumValue: string;
+  hasLength: boolean;
+  article: ArticleType;
 }
 
 export interface TicketType {
@@ -20,10 +27,13 @@ export interface TicketType {
   status: string;
   sum: string;
   articles: StoreType[];
-  item: ItemType;
+  item: ItemType[];
   updatedAt: Date;
   createdAt: Date;
-  Client: ClientType;
+  Client: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface TicketTypeData {
@@ -32,6 +42,8 @@ export interface TicketTypeData {
   client: string;
   articles: UpdateStoreType[];
   sum: string;
+  applicant?: string;
+  discount?: string;
 }
 
 export interface Ticket {

@@ -13,7 +13,7 @@ const TableData = () => {
     <>
       {open && <TicketModal setAction={setOpen} />}
       <Container>
-        <HeaderTitle>Ticket</HeaderTitle>
+        <HeaderTitle>BON DE SORTIE</HeaderTitle>
         <GroupButton>
           {/* <SimpleSearchBard /> */}
           <AddButton setOpen={setOpen} text="ticket" />

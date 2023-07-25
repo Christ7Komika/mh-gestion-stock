@@ -20,6 +20,7 @@ import {
   ModalTableContainer,
   ModalTableHead,
   ModalDataContainer,
+  ModalDataInput,
 } from "../../../layout/Layout";
 import { IoExit, IoSearch } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
@@ -65,7 +66,11 @@ const TicketModal = ({ setAction }: Props) => {
   const [sumArticle, setSumArticle] = useState<UpdateStoreType[] | []>([]);
   const [removed, setRemoved] = useState<boolean>(false);
   const [removedId, setRemovedId] = useState<string>("");
+  const [discount, setDiscount] = useState<string>("");
+  const [applicant, setApplicant] = useState<string>("");
   const [articleError, setArticleError] = useState<string>("");
+  const [discountError, setDiscountError] = useState<string>("");
+
   const sumRef = useRef<HTMLSpanElement>(null);
 
   const dispatch = useDispatch();
@@ -115,8 +120,15 @@ const TicketModal = ({ setAction }: Props) => {
     setSumArticle([...sumValuesAndRemoveDuplicates(selectedArticle)]);
   }, [selectedArticle]);
 
+  useEffect(() => {
+    if (sumArticle || discount) {
+      sum(sumArticle);
+    }
+  }, [sumArticle, discount]);
+
   function formatNumberWithSpaces(quantity: number, sellingPrice: string) {
-    const value = quantity * parseFloat(sellingPrice.replace(" ", ""));
+    let value = quantity * parseFloat(sellingPrice.replace(" ", ""));
+
     let str = value.toString();
     return str.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
@@ -153,18 +165,35 @@ const TicketModal = ({ setAction }: Props) => {
   };
 
   const sum = (data: UpdateStoreType[] | []) => {
+    if (data.length === 0) {
+      return 0;
+    }
     if (data && data.length > 0) {
-      const value = data
-        .reduce(
-          (total, article) =>
-            total +
-            article.withdraw * parseFloat(article.unitPrice.replace(" ", "")),
-          0
-        )
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      let value = data.reduce(
+        (total, article) =>
+          total +
+          article.withdraw * parseFloat(article.unitPrice.replace(" ", "")),
+        0
+      );
 
-      return value;
+      let remise: number = 0;
+      let resultRest: string = "";
+
+      if (discount) {
+        const purcent = parseInt(discount) / 100;
+        const rest = value * purcent;
+        remise = value - rest;
+        resultRest = remise.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      }
+
+      const result = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      if (resultRest && result) {
+        return [result, resultRest];
+      } else if (result) {
+        return result;
+      } else {
+        return 0;
+      }
     }
   };
 
@@ -184,11 +213,17 @@ const TicketModal = ({ setAction }: Props) => {
       setArticleError("Aucun article n' a été ajouté");
     }
 
+    if (discount && typeof discount !== "number") {
+      setDiscountError("La valeur doit être un nom");
+    }
+
     const data: TicketTypeData = {
       name: name as string,
       orderNumber: orderNumber,
       client: client,
       articles: sumArticle,
+      applicant: applicant,
+      discount: discount,
       sum: sumRef.current?.textContent as string,
     };
     createTicket(data, (exit: boolean) => {
@@ -227,7 +262,14 @@ const TicketModal = ({ setAction }: Props) => {
               error={orderNumberError}
               placeholder="Inserer le numéro de commande"
             />
-
+            <InputText
+              name="Demandeur"
+              id="applicant"
+              defaultValue={applicant}
+              setValue={setApplicant}
+              error={""}
+              placeholder="Le nom du demandeur"
+            />
             <InputSelect
               placeholder="Sélectionner le client"
               name="Client *"
@@ -236,6 +278,14 @@ const TicketModal = ({ setAction }: Props) => {
               setId={setClient}
               error={clientError}
               data={clients}
+            />
+            <InputText
+              name="Remise"
+              id="applicant"
+              defaultValue={discount}
+              setValue={setDiscount}
+              error={discountError}
+              placeholder=""
             />
             {articleError && (
               <LabelError
@@ -251,7 +301,15 @@ const TicketModal = ({ setAction }: Props) => {
             </ModalInfosContent>
             <ModalInfosContent>
               <span>Somme</span>
-              <span ref={sumRef}>{sum(sumArticle)} FCFA</span>
+              <span ref={sumRef}>
+                {sumArticle && Array.isArray(sum(sumArticle))
+                  ? `${sum(sumArticle)[0]} FCFA - ${discount}% -> ${
+                      sum(sumArticle)[1]
+                    } FCFA`
+                  : sumArticle && discount && !Array.isArray(sum(sumArticle))
+                  ? `${sum(sumArticle)}`
+                  : ""}
+              </span>
             </ModalInfosContent>
             <ModalAddArticleContainer>
               {sumArticle.length > 0 &&

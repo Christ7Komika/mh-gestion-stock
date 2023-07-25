@@ -297,6 +297,17 @@ export const ModalDataInput = styled.input`
     outline: none;
   }
 `;
+export const ModalDataInputDefault = styled.input`
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  background: ${color.lightBlue};
+  padding-inline: 5px;
+  border: none;
+  &:focus {
+    outline: none;
+  }
+`;
 
 export const ModalDataInputButton = styled.div`
   width: 30px;
@@ -381,7 +392,7 @@ export const ModalArticleData = styled.div`
 
 export const ModalAddArticleContainer = styled.div`
   width: 100%;
-  height: 245px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   gap: 5px;

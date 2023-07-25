@@ -18,4 +18,5 @@ export const color = {
   lightSkyBlue: "#c0e2ff",
   lightOrange: "#ffd3a0",
   lightGreen: "#aee4c3",
+  cancel: "#EF6262",
 };
