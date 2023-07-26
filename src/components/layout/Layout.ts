@@ -12,6 +12,14 @@ export const SectionX3 = styled.main`
   column-gap: 1rem;
 `;
 
+export const SectionX2 = styled.main`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: calc(100vh - 115px);
+  column-gap: 1rem;
+  
+`;
+
 export const Section = styled.section<SectionProps>`
   background: ${({ empty }) => (empty ? "#F3F5F7" : "#fff")};
   width: 100%;

@@ -6,7 +6,7 @@ import Stores from "../pages/Stores";
 import Categories from "../pages/Categories";
 import Suppliers from "../pages/Suppliers";
 import Clients from "../pages/Clients";
-import Historical from "../pages/Historical";
+import StockManagement from "../pages/StockManagement.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
     element: <Clients />,
   },
   {
-    path: "/historique",
-    element: <Historical />,
+    path: "//stock-management",
+    element: <StockManagement />,
   },
 ]);

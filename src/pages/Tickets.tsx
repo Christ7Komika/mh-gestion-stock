@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import GroupCard from "../components/card/GroupCard";
-import Header from "../components/header/Header";
 import InfosHistoricalContent from "../components/historical/InfosHistoricalContent";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/tickets/TableData";
@@ -10,6 +9,7 @@ import { RootState } from "../redux/store";
 import InfosContent from "../components/section/tickets/infos/InfosContent";
 import { useEffect } from "react";
 import { getTicket } from "../redux/features/ticket";
+import NavBar from "../components/navbar/NavBar.tsx";
 
 const Tickets = () => {
   const ticket = useSelector((state: RootState) => state.ticket.data);
@@ -27,7 +27,7 @@ const Tickets = () => {
 
   return (
     <>
-      <Header />
+      <NavBar />
       <SectionX3>
         <Section>
           <InfosHistoricalHeader />

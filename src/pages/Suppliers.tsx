@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import Header from "../components/header/Header";
+import NavBar from "../components/navbar/NavBar.tsx";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/suppliers/TableData";
 import InfosContent from "../components/section/suppliers/infos/InfosContent";
@@ -23,7 +23,7 @@ const Suppliers = () => {
   }, [id]);
   return (
     <>
-      <Header />
+      <NavBar />
       <SectionX3>
         <Section>
           <InfosHistoricalHeader />

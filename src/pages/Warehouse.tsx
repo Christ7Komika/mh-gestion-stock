@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import Header from "../components/header/Header";
+import NavBar from "../components/navbar/NavBar.tsx";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/warehouse/TableData";
 import InfosContent from "../components/section/warehouse/infos/InfosContent";
@@ -21,7 +21,7 @@ const Warehouse = () => {
   }, [id]);
   return (
     <>
-      <Header />
+      <NavBar />
       <SectionX3>
         <Section empty></Section>
         <Section>

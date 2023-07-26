@@ -1,4 +1,3 @@
-import Header from "../components/header/Header";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/clients/TableData";
 import InfosContent from "../components/section/clients/infos/InfosContent";
@@ -10,6 +9,7 @@ import { getClient } from "../redux/features/client";
 import InfosHistoricalHeader from "../components/section/clients/infos/InfosHistoricalHeader";
 import GroupCard from "../components/section/clients/card/GroupCard";
 import InfosHistoricalContent from "../components/section/clients/infos/InfosHistoricalContent";
+import NavBar from "../components/navbar/NavBar.tsx";
 
 const Clients = () => {
   const client = useSelector((state: RootState) => state.client.data);
@@ -23,7 +23,7 @@ const Clients = () => {
   }, [id]);
   return (
     <>
-      <Header />
+      <NavBar />
       <SectionX3>
         <Section>
           <InfosHistoricalHeader />

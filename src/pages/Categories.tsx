@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import Header from "../components/header/Header";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/categories/TableData";
 import GroupCard from "../components/section/categories/card/GroupCard";
@@ -8,6 +7,7 @@ import InfosHeader from "../components/section/categories/infos/InfosHeader";
 import { RootState } from "../redux/store";
 import { useEffect } from "react";
 import { getCategory } from "../redux/features/category";
+import NavBar from "../components/navbar/NavBar.tsx";
 
 const Categories = () => {
   const category = useSelector((state: RootState) => state.category.data);
@@ -21,7 +21,7 @@ const Categories = () => {
   }, [id]);
   return (
     <>
-      <Header />
+      <NavBar />
       <SectionX3>
         <Section empty></Section>
         <Section>
