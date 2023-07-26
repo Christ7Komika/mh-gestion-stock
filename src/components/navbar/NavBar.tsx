@@ -1,9 +1,16 @@
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getPass } from "../../redux/features/configuration";
 
 const NavBar = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getPass()(dispatch);
+  }, []);
 
   const isActive = (url: string) => {
     return location.pathname === url ? "true" : "false";
@@ -34,7 +41,10 @@ const NavBar = () => {
         <CustomLink active={isActive("/clients")} to="/clients">
           CLIENT
         </CustomLink>
-        <CustomLink active={isActive("/stock-management")} to="/stock-management">
+        <CustomLink
+          active={isActive("/stock-management")}
+          to="/stock-management"
+        >
           GESTION DE STOCK
         </CustomLink>
       </GroupLink>
@@ -82,6 +92,5 @@ const Logo = styled.h1`
   font-size: 2rem;
   color: #122d8c;
 `;
-
 
 export default NavBar;

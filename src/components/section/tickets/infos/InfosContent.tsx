@@ -42,11 +42,15 @@ const InfosContent = ({ ticket }: Props) => {
               </InfosContentCardText>
               <InfosContentCardInfos>
                 {item.hasLength
-                  ? `Quantité: ${item.quantity} article(s)`
-                  : `Longueur: ${item.quantity} mètre(s)`}
+                  ? `Longueur: ${item.withdraw} mètre(s)`
+                  : `Quantité: ${item.withdraw} article(s)`}
               </InfosContentCardInfos>
               <InfosContentCardInfos>
-                Somme: {item.sumValue} XAF
+                Somme:{" "}
+                {item.sumValue
+                  ?.toString()
+                  ?.replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
+                FCFA
               </InfosContentCardInfos>
             </InfosContentCardSecond>
           ))}

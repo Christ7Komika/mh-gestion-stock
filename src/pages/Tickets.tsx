@@ -23,8 +23,6 @@ const Tickets = () => {
     }
   }, [id]);
 
-  console.log(ticket);
-
   return (
     <>
       <NavBar />
@@ -38,7 +36,7 @@ const Tickets = () => {
           <TableData />
         </Section>
         <Section>
-          <InfosHeader />
+          <InfosHeader ticket={ticket} />
           <InfosContent ticket={ticket} />
         </Section>
       </SectionX3>

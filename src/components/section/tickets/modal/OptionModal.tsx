@@ -9,6 +9,10 @@ import { color } from "../../../../utils/color";
 import { TiDelete } from "react-icons/ti";
 import { TiCancel } from "react-icons/ti";
 import { GrValidate } from "react-icons/gr";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { getTicket } from "../../../../redux/features/ticket";
+import { useEffect } from "react";
 interface Props {
   setAction: Function;
   setCancelModal: Function;
@@ -22,6 +26,17 @@ const OptionModal = ({
   setValidateModal,
   setDeleteModal,
 }: Props) => {
+  const id = useSelector((state: RootState) => state.ticket.currentId);
+  const ticket = useSelector((state: RootState) => state.ticket.data);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (id) {
+      getTicket(id)(dispatch);
+    }
+  }, [id]);
+
   return (
     <ModalContainer>
       <Modal>
@@ -31,28 +46,41 @@ const OptionModal = ({
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <GridContainer>
-          <CardContainer
-            bg="add"
-            onClick={() => {
-              setValidateModal(true);
-              setAction(false);
-            }}
-          >
-            <CardText>Valider le bon de sortie</CardText>
-            <GrValidate size={30} />
-          </CardContainer>
-          <CardContainer
-            bg="withdraw"
-            onClick={() => {
-              setCancelModal(true);
-              setAction(false);
-            }}
-          >
-            <CardText>Annuler le bon de sortie</CardText>
-            <TiCancel size={30} />
-          </CardContainer>
+        {ticket?.status === "En cour" ? (
+          <GridContainer>
+            <CardContainer
+              bg="add"
+              onClick={() => {
+                setValidateModal(true);
+                setAction(false);
+              }}
+            >
+              <CardText>Valider le bon de sortie</CardText>
+              <GrValidate size={30} />
+            </CardContainer>
+            <CardContainer
+              bg="withdraw"
+              onClick={() => {
+                setCancelModal(true);
+                setAction(false);
+              }}
+            >
+              <CardText>Annuler le bon de sortie</CardText>
+              <TiCancel size={30} />
+            </CardContainer>
 
+            <CardContainer
+              bg="delete"
+              onClick={() => {
+                setDeleteModal(true);
+                setAction(false);
+              }}
+            >
+              <CardText>Supprimer</CardText>
+              <TiDelete size={30} />
+            </CardContainer>
+          </GridContainer>
+        ) : (
           <CardContainer
             bg="delete"
             onClick={() => {
@@ -63,7 +91,7 @@ const OptionModal = ({
             <CardText>Supprimer</CardText>
             <TiDelete size={30} />
           </CardContainer>
-        </GridContainer>
+        )}
       </Modal>
     </ModalContainer>
   );

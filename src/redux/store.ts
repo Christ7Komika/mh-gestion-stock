@@ -6,6 +6,7 @@ import storeReducer from "./features/stores";
 import warehouseReducer from "./features/warehouse";
 import actionReducer from "./features/action";
 import ticketReducer from "./features/ticket";
+import configurationReducer from "./features/configuration";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     warehouse: warehouseReducer,
     action: actionReducer,
     ticket: ticketReducer,
+    configuration: configurationReducer,
   },
 });
 

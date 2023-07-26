@@ -58,7 +58,6 @@ const InfosHistoricalHeader = () => {
             year: "numeric",
           }),
         ]);
-        console.log("format 2: ", format);
       }
     }
   }, [dates]);
@@ -66,7 +65,7 @@ const InfosHistoricalHeader = () => {
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Historique fournisseur</InfosHeaderTitle>
+        <InfosHeaderTitle>Historique Bon de Cmde</InfosHeaderTitle>
         <DatePicker
           setDates={setDates}
           dates={format}

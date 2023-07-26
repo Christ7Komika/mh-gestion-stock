@@ -6,6 +6,9 @@ import { RootState } from "../../../redux/store";
 import { useEffect, useState } from "react";
 import { BiSolidPrinter, BiShow, BiGridAlt } from "react-icons/bi";
 import OptionModal from "./modal/OptionModal";
+import ValidateModal from "./modal/ValidateModal";
+import CancelModal from "./modal/CancelModal";
+import DeleteModal from "./modal/DeleteModal";
 
 const Table = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -21,6 +24,9 @@ const Table = () => {
 
   return (
     <>
+      {deleteModal && <DeleteModal setAction={setDeleteModal} />}
+      {validateModal && <ValidateModal setAction={setValidateModal} />}
+      {cancelModal && <CancelModal setAction={setCancelModal} />}
       {open && (
         <OptionModal
           setAction={setOpen}

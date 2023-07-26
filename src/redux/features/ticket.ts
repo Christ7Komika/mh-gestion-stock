@@ -15,6 +15,7 @@ export interface ArticleType {
 export interface ItemType {
   id: string;
   quantity: string;
+  withdraw: string;
   sumValue: string;
   hasLength: boolean;
   article: ArticleType;
@@ -149,6 +150,46 @@ export const getTicket = (id: string) => (dispatch: AppDispatch) => {
       dispatch(isLoad(false));
     });
 };
+export const validateTicket =
+  (id: string, exit: Function) => (dispatch: AppDispatch) => {
+    dispatch(isLoad(true));
+    const config = {
+      method: "get",
+      url: host + "/ticket/valid/" + id,
+    };
+
+    axios<TicketType[]>(config)
+      .then(({ data }) => {
+        dispatch(tickets(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoad(false));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoad(false));
+      });
+  };
+export const cancelTicket =
+  (id: string, exit: Function) => (dispatch: AppDispatch) => {
+    dispatch(isLoad(true));
+    const config = {
+      method: "get",
+      url: host + "/ticket/cancel/" + id,
+    };
+
+    axios<TicketType[]>(config)
+      .then(({ data }) => {
+        dispatch(tickets(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoad(false));
+        exit(true);
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoad(false));
+      });
+  };
 
 export const createTicket =
   (data: TicketTypeData, exit?: Function) => (dispatch: AppDispatch) => {

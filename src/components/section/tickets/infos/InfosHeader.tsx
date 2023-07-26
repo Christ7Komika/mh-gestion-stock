@@ -1,13 +1,26 @@
 import styled from "styled-components";
 import { color } from "../../../../utils/color";
+import { TicketType } from "../../../../redux/features/ticket";
 
-const InfosHeader = () => {
+interface Props {
+  ticket: TicketType | null;
+}
+
+const InfosHeader = ({ ticket }: Props) => {
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Aperçu fournisseur</InfosHeaderTitle>
-        <InfosHeaderDate>18/06/2023</InfosHeaderDate>
+        <InfosHeaderTitle>Aperçu Bon de sortie</InfosHeaderTitle>
+        {ticket && (
+          <InfosHeaderDate>
+            {new Date(ticket?.createdAt).toLocaleDateString()}
+
+            <InfosHeaderStatus status={ticket.status}>
+              {ticket.status}
+            </InfosHeaderStatus>
+          </InfosHeaderDate>
+        )}
       </InfosHeaderColumnContent>
     </Container>
   );
@@ -52,6 +65,29 @@ const InfosHeaderDate = styled.p`
   font-weight: 600;
   color: ${color.darkBlue};
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const InfosHeaderStatus = styled.p<{
+  status?: "En cour" | "Valider" | "Annuler";
+}>`
+  width: 100px;
+  height: 30px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ status }) =>
+    status === "En cour"
+      ? color.lightBlue
+      : status === "Valider"
+      ? color.lightGreen
+      : color.lightRed};
+  font-size: 0.8rem;
+  color: ${color.darkBlue};
 `;
 
 export default InfosHeader;

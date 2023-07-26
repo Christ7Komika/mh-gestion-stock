@@ -6,7 +6,7 @@ interface Props {
   setValue: Function;
   name: string;
   id: string;
-  defaultValue: string | null;
+  defaultValue?: string | null;
   error: string | null;
   suffix?: string;
   type?: string;
@@ -26,7 +26,10 @@ const InputText = ({
   const [text, setText] = useState("");
 
   useEffect(() => {
-    setValue(text ? text : defaultValue ? defaultValue : "");
+    if (defaultValue) {
+      setValue(text ? text : defaultValue ? defaultValue : "");
+    }
+    setValue(text);
   }, [text]);
   return (
     <Container>
@@ -37,9 +40,12 @@ const InputText = ({
       <Input
         type={type ? type : "text"}
         id={id}
-        onChange={(e) => setText(e.target.value)}
-        defaultValue={text ? text : defaultValue ? defaultValue : ""}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setText(e.target.value);
+        }}
+        defaultValue={defaultValue ? defaultValue : ""}
         placeholder={placeholder ? placeholder : ""}
+        value={text}
       />
     </Container>
   );
