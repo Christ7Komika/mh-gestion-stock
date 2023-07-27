@@ -2,11 +2,14 @@ import styled from "styled-components";
 import { color } from "../../../../utils/color";
 import { useEffect, useState } from "react";
 import DatePicker from "../../../input/DatePicker";
+import { useDispatch } from "react-redux";
+import { filterHistory, getHistory } from "../../../../redux/features/ticket";
 
 const InfosHistoricalHeader = () => {
   const [dates, setDates] = useState<Date[]>([]);
   const [format, setFormat] = useState<string[]>([]);
   const [datePlaceholder, setDatePlaceholder] = useState<string[]>([]);
+  const dispatch = useDispatch();
   const [init, setInit] = useState<boolean>(false);
   const getDateFormatTo = (d: string) => {
     const split = d.split("/");
@@ -18,6 +21,7 @@ const InfosHistoricalHeader = () => {
       setDates([]);
       setFormat([]);
       setDatePlaceholder([]);
+      getHistory()(dispatch);
       setInit(false);
     }
   }, [init]);
@@ -44,7 +48,6 @@ const InfosHistoricalHeader = () => {
             year: "numeric",
           }),
         ]);
-        console.log("format 1: ", format);
       } else if (dates.length === 2) {
         setFormat([
           dates[0].toLocaleDateString("fr-FR", {
@@ -61,11 +64,18 @@ const InfosHistoricalHeader = () => {
       }
     }
   }, [dates]);
+  useEffect(() => {
+    if (dates) {
+      const startDate = dates[0];
+      const endDate = dates[1] || null;
+      filterHistory({ startDate: startDate, endDate: endDate })(dispatch);
+    }
+  }, [dates]);
   return (
     <Container>
       <ColorLine />
       <InfosHeaderColumnContent>
-        <InfosHeaderTitle>Historique Bon de Cmde</InfosHeaderTitle>
+        <InfosHeaderTitle>Historique article</InfosHeaderTitle>
         <DatePicker
           setDates={setDates}
           dates={format}

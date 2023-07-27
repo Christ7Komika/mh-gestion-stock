@@ -45,7 +45,7 @@ const InputText = ({
         }}
         defaultValue={defaultValue ? defaultValue : ""}
         placeholder={placeholder ? placeholder : ""}
-        value={text}
+        value={text ? text : defaultValue ? defaultValue : ""}
       />
     </Container>
   );

@@ -3,23 +3,60 @@ import Card from "./Card";
 import { color } from "../../utils/color";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useEffect } from "react";
-import { getStores } from "../../redux/features/stores";
+import { useState, useEffect } from "react";
+import { getTickets } from "../../redux/features/ticket";
+import { TicketType } from "../../redux/features/stores";
 
 const GroupCard = () => {
   const dispatch = useDispatch();
-  const articles = useSelector((state: RootState) => state.store.datas);
+  const tickets = useSelector((state: RootState) => state.ticket.datas);
+  const [validTicket, setValidTicket] = useState<TicketType[] | []>();
+  const [loadTicket, setLoadTicket] = useState<TicketType[] | []>();
+  const [cancelTicket, setCancelTicket] = useState<TicketType[] | []>();
 
   useEffect(() => {
-    getStores()(dispatch);
+    getTickets()(dispatch);
   }, []);
+
+  useEffect(() => {
+    if (tickets) {
+      setValidTicket([
+        ...tickets.filter((ticket) => ticket.status === "Valider"),
+      ]);
+      setLoadTicket([
+        ...tickets.filter((ticket) => ticket.status === "En cour"),
+      ]);
+      setCancelTicket([
+        ...tickets.filter((ticket) => ticket.status === "Annuler"),
+      ]);
+    }
+  }, [tickets]);
 
   return (
     <Container>
-      <Card title="Articles en stock" value={articles?.length || 0} />
-      <Card title="Articles en fin de stock" value={articles?.length || 0} />
-      <Card title="Articles vendus" value={articles?.length || 0} />
-      <Card title="Articles non vendus" value={articles?.length || 0} />
+      {tickets && (
+        <>
+          <Card title="Total bon de sortie" value={tickets.length || 0} />
+          {validTicket && (
+            <Card
+              title="Bon de sortie validé"
+              value={validTicket.length || 0}
+            />
+          )}
+          {loadTicket && (
+            <Card
+              title="Bon de sortie en cour"
+              value={loadTicket.length || 0}
+            />
+          )}
+          {cancelTicket && (
+            <Card
+              title="Bon de sortie annulé"
+              value={cancelTicket.length || 0}
+            />
+          )}
+        </>
+      )}
     </Container>
   );
 };

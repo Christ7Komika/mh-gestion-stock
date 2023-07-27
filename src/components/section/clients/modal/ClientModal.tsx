@@ -61,10 +61,8 @@ const ClientModal = ({ setAction }: Props) => {
       return setCompanyError("Champ vide");
     }
 
-    let logo = image && image.name ? image.name : "";
-
     const form = new FormData();
-    form.append("logo", logo);
+    form.append("logo", image || "");
     form.append("name", name);
     form.append("company", company);
     form.append("phone", tel);
@@ -118,7 +116,7 @@ const ClientModal = ({ setAction }: Props) => {
         </ModalForm>
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -159,6 +157,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default ClientModal;

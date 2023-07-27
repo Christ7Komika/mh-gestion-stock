@@ -12,6 +12,18 @@ export interface ArticleType {
   _count: number;
 }
 
+export interface History {
+  id: string;
+  state: string;
+  type: string;
+  message: string;
+  updatedAt: Date;
+  createdAt: Date;
+  Comment: {
+    message: string;
+  };
+}
+
 export interface ItemType {
   id: string;
   quantity: string;
@@ -56,6 +68,7 @@ export interface Ticket {
 interface TicketState {
   datas: null | TicketType[];
   data: null | TicketType;
+  history: null | History[];
   isLoad: boolean;
   isLoadCreate: boolean;
   currentId: string | null;
@@ -67,6 +80,7 @@ const initialState: TicketState = {
   datas: null,
   data: null,
   currentId: null,
+  history: null,
   isLoad: false,
   isLoadCreate: false,
   isError: false,
@@ -89,6 +103,9 @@ export const ticketSlice = createSlice({
     isLoadCreate: (state, action: PayloadAction<boolean>) => {
       state.isLoadCreate = action.payload;
     },
+    history: (state, action: PayloadAction<History[]>) => {
+      state.history = action.payload;
+    },
     isSuccess: (state, action: PayloadAction<boolean>) => {
       state.isSuccess = action.payload;
     },
@@ -109,6 +126,7 @@ export const {
   isError,
   categoryId,
   isLoadCreate,
+  history,
 } = ticketSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -131,6 +149,47 @@ export const getTickets = () => (dispatch: AppDispatch) => {
       dispatch(isLoad(false));
     });
 };
+
+export const getHistory = () => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  const config = {
+    method: "get",
+    url: host + "/ticket/history/add",
+  };
+
+  axios<History[]>(config)
+    .then(({ data }) => {
+      dispatch(history(data));
+      dispatch(isSuccess(true));
+      dispatch(isLoad(false));
+    })
+    .catch(() => {
+      dispatch(isError(true));
+      dispatch(isLoad(false));
+    });
+};
+
+export const filterHistory =
+  (data: { startDate: Date; endDate: Date | null }) =>
+  (dispatch: AppDispatch) => {
+    dispatch(isLoad(true));
+    const config = {
+      method: "post",
+      url: host + "/ticket/history/filter",
+      data: data,
+    };
+
+    axios<History[]>(config)
+      .then(({ data }) => {
+        dispatch(history(data));
+        dispatch(isSuccess(true));
+        dispatch(isLoad(false));
+      })
+      .catch(() => {
+        dispatch(isError(true));
+        dispatch(isLoad(false));
+      });
+  };
 
 export const getTicket = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));

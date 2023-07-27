@@ -22,6 +22,7 @@ import {
 } from "../../../../redux/features/client";
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
+import { getImagePath } from "../../../../utils/image";
 
 interface Props {
   setAction: Function;
@@ -41,7 +42,6 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.client.isLoad);
-  const isError = useSelector((state: RootState) => state.client.isError);
 
   useEffect(() => {
     if (nameError && name) {
@@ -56,6 +56,8 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
       setEmailError("");
     }
   }, [nameError, emailError, companyError]);
+
+  console.log(client);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -93,7 +95,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
           <InputImage
             setValue={setImage}
             id="image"
-            defaultImage={client && client.logo ? client.logo : ""}
+            defaultImage={getImagePath(client?.logo)}
           />
           <InputText
             name="Nom *"
@@ -132,7 +134,6 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
             error={emailError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {error && (
           <ModalMessageError>
             Veuillez remplir au moins un champ à modifier
@@ -140,13 +141,13 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
         )}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
         ) : (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e) => submit(e)}>
+            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
               Valider
             </ModalValidButton>
             <ModalCancelButton onClick={() => setAction(false)}>
@@ -181,6 +182,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default UpdateClientModal;
