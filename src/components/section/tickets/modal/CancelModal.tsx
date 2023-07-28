@@ -13,7 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import { useEffect } from "react";
-import { cancelTicket, getTicket } from "../../../../redux/features/ticket";
+import {
+  cancelTicket,
+  getHistory,
+  getTicket,
+} from "../../../../redux/features/ticket";
 
 interface Props {
   setAction: Function;
@@ -36,6 +40,7 @@ const CancelModal = ({ setAction }: Props) => {
     if (id) {
       cancelTicket(id, (exit: boolean) => {
         if (exit) {
+          getHistory()(dispatch);
           setAction(false);
         }
       })(dispatch);

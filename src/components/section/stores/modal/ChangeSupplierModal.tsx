@@ -16,7 +16,14 @@ import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import InputPlainText from "../../../input/InputPlainText";
 import InputSelect from "../../../input/InputSelect";
-import { changeSupplier, getStore } from "../../../../redux/features/stores";
+import {
+  changeSupplier,
+  getHistory,
+  getStore,
+} from "../../../../redux/features/stores";
+import bcrypt from "bcryptjs";
+import InputText from "../../../input/InputText";
+import { LabelError } from "../../../input/InputText";
 
 interface Props {
   setAction: Function;
@@ -26,6 +33,10 @@ const ChangeSupplierModal = ({ setAction }: Props) => {
   const [supplier, setSupplier] = useState<string | null>(null);
   const [supplierError, setSupplierError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
+
   const dispatch = useDispatch();
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
@@ -33,6 +44,7 @@ const ChangeSupplierModal = ({ setAction }: Props) => {
   const suppliers = useSelector((state: RootState) => state.supplier.datas);
   const currentId = useSelector((state: RootState) => state.store.currentId);
   const store = useSelector((state: RootState) => state.store.data);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (currentId) {
@@ -40,24 +52,39 @@ const ChangeSupplierModal = ({ setAction }: Props) => {
     }
   }, [currentId]);
 
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [password, passwordError]);
+
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!supplier) {
       return setSupplierError("Le champ est vide");
     }
-    if (currentId) {
-      changeSupplier(
-        currentId,
-        {
-          supplier: supplier,
-          comment: comment || "",
-        },
-        (exit: boolean) => {
-          if (exit) {
-            return setAction(false);
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && currentId) {
+        changeSupplier(
+          currentId,
+          {
+            supplier: supplier,
+            comment: comment || "",
+          },
+          (exit: boolean) => {
+            if (exit) {
+              getHistory()(dispatch);
+              return setAction(false);
+            }
           }
-        }
-      )(dispatch);
+        )(dispatch);
+        return;
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -86,10 +113,18 @@ const ChangeSupplierModal = ({ setAction }: Props) => {
             setValue={setComment}
             error={""}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
+        {error && <LabelError>{error}</LabelError>}
         {isLoadChange ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>

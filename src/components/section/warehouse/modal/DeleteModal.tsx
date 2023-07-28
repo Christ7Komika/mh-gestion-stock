@@ -17,6 +17,7 @@ import InputText from "../../../input/InputText";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import { deleteWarehouse } from "../../../../redux/features/warehouse";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -25,35 +26,37 @@ interface Props {
 }
 
 const DeleteModal = ({ setAction, trueName, id }: Props) => {
-  const [name, setName] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.warehouse.isLoad);
-  const isError = useSelector((state: RootState) => state.warehouse.isError);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
-    if (name && nameError) {
-      setNameError("");
+    if (password && passwordError) {
+      setPasswordError("");
     }
-  }, [name]);
+  }, [password]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!name) {
-      return setNameError("Le champ est vide");
+
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
     }
 
-    if (name !== trueName) {
-      return setNameError("Le nom inséré est invalide");
-    }
-
-    if (name === trueName) {
-      deleteWarehouse(id, (exit: boolean) => {
-        if (exit) {
-          return setAction(false);
-        }
-      })(dispatch);
-      return;
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid) {
+        deleteWarehouse(id, (exit: boolean) => {
+          if (exit) {
+            return setAction(false);
+          }
+        })(dispatch);
+        return;
+      }
+      return setPasswordError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -66,20 +69,19 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
           </ModalHeaderExit>
         </ModalHeader>
         <p>Êtes vous sur de vouloir supprimer un entrepôt ''{trueName}''.</p>
-        <p>Inserer le nom de l'entrepôt que vous voulez supprimer.</p>
+        <p>Inserer le mot de passe.</p>
         <ModalForm>
           <InputText
             name=""
-            id="name"
-            defaultValue={name}
-            setValue={setName}
-            error={nameError}
+            id="password"
+            defaultValue={password}
+            setValue={setPassword}
+            error={passwordError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -120,6 +122,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default DeleteModal;

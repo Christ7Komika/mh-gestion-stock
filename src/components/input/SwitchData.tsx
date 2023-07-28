@@ -75,7 +75,7 @@ export const Text = styled.small`
   font-weight: 700;
 `;
 export const Container = styled.div`
-  width: 300px;
+  width: 330px;
   display: flex;
   flex-direction: column;
 `;

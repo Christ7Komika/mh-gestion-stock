@@ -31,7 +31,6 @@ const SupplierModal = ({ setAction }: Props) => {
   const [phone, setPhone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
 
   const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
   const dispatch = useDispatch();
@@ -48,10 +47,8 @@ const SupplierModal = ({ setAction }: Props) => {
       return setNameError("Champ vide");
     }
 
-    let logo = image && image.name ? image.name : "";
-
     const form = new FormData();
-    form.append("logo", logo);
+    form.append("logo", image || "");
     form.append("name", name);
     form.append("phone", phone);
     form.append("email", email);
@@ -92,7 +89,7 @@ const SupplierModal = ({ setAction }: Props) => {
             id="email"
             defaultValue={email}
             setValue={setEmail}
-            error={emailError}
+            error={""}
           />
         </ModalForm>
         {isLoad ? (
@@ -138,6 +135,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default SupplierModal;

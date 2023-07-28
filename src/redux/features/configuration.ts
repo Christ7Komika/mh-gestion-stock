@@ -70,7 +70,7 @@ export const getPass = () => (dispatch: AppDispatch) => {
     });
 };
 
-export const initPass = () => (dispatch: AppDispatch) => {
+export const initPass = (exit: Function) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
@@ -82,6 +82,7 @@ export const initPass = () => (dispatch: AppDispatch) => {
       dispatch(password(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
+      exit(true);
     })
     .catch(() => {
       dispatch(isError(true));

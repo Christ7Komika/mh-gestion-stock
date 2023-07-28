@@ -18,7 +18,11 @@ import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import InputPlainText from "../../../input/InputPlainText";
 import InputSelect from "../../../input/InputSelect";
-import { getStore, moveToStore } from "../../../../redux/features/stores";
+import {
+  getHistory,
+  getStore,
+  moveToStore,
+} from "../../../../redux/features/stores";
 import InputText from "../../../input/InputText";
 
 interface Props {
@@ -90,6 +94,7 @@ const MoveToModal = ({ setAction }: Props) => {
         };
         moveToStore(currentId, data, (exit: boolean) => {
           if (exit) {
+            getHistory()(dispatch);
             return setAction(false);
           }
         })(dispatch);

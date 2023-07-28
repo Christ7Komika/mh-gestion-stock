@@ -40,7 +40,7 @@ const InfosContent = ({ store }: Props) => {
       )}
       {store?.purchasePrice && (
         <InfosContentCard>
-          <InfosContentCardTitle>PRIX ACHAT</InfosContentCardTitle>
+          <InfosContentCardTitle>PRIX TTC</InfosContentCardTitle>
           <InfosContentCardText>
             {store.purchasePrice} FCFA
           </InfosContentCardText>
@@ -50,12 +50,6 @@ const InfosContent = ({ store }: Props) => {
         <InfosContentCard>
           <InfosContentCardTitle>PRIX UNITAIRE</InfosContentCardTitle>
           <InfosContentCardText>{store.unitPrice} FCFA</InfosContentCardText>
-        </InfosContentCard>
-      )}
-      {store?.sellingPrice && (
-        <InfosContentCard>
-          <InfosContentCardTitle>PRIX VENTE</InfosContentCardTitle>
-          <InfosContentCardText>{store.sellingPrice} FCFA</InfosContentCardText>
         </InfosContentCard>
       )}
       {store?.quantity && store.sellingPrice && (

@@ -33,7 +33,6 @@ const WarehouseModal = ({ setAction }: Props) => {
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.warehouse.isLoad);
-  const isError = useSelector((state: RootState) => state.warehouse.isError);
 
   useEffect(() => {
     if (nameError && name) {
@@ -83,10 +82,9 @@ const WarehouseModal = ({ setAction }: Props) => {
             error={""}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -127,6 +125,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default WarehouseModal;

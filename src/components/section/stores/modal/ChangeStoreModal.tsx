@@ -16,7 +16,14 @@ import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import InputPlainText from "../../../input/InputPlainText";
 import InputSelect from "../../../input/InputSelect";
-import { changeStorage, getStore } from "../../../../redux/features/stores";
+import {
+  changeStorage,
+  getHistory,
+  getStore,
+} from "../../../../redux/features/stores";
+import bcrypt from "bcryptjs";
+import { LabelError } from "../../../input/InputText";
+import InputText from "../../../input/InputText";
 
 interface Props {
   setAction: Function;
@@ -26,6 +33,10 @@ const ChangeStoreModal = ({ setAction }: Props) => {
   const [warehouse, setWarehouse] = useState<string | null>(null);
   const [warehouseError, setWarehouseError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const dispatch = useDispatch();
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
@@ -33,6 +44,7 @@ const ChangeStoreModal = ({ setAction }: Props) => {
   const warehouses = useSelector((state: RootState) => state.warehouse.datas);
   const currentId = useSelector((state: RootState) => state.store.currentId);
   const store = useSelector((state: RootState) => state.store.data);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (currentId) {
@@ -40,24 +52,41 @@ const ChangeStoreModal = ({ setAction }: Props) => {
     }
   }, [currentId]);
 
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [password, passwordError]);
+
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!warehouse) {
       return setWarehouseError("Le champ est vide");
     }
-    if (currentId) {
-      changeStorage(
-        currentId,
-        {
-          warehouse: warehouse,
-          comment: comment || "",
-        },
-        (exit: boolean) => {
-          if (exit) {
-            return setAction(false);
+
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && currentId) {
+        changeStorage(
+          currentId,
+          {
+            warehouse: warehouse,
+            comment: comment || "",
+          },
+          (exit: boolean) => {
+            if (exit) {
+              getHistory()(dispatch);
+              return setAction(false);
+            }
           }
-        }
-      )(dispatch);
+        )(dispatch);
+        return;
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -86,10 +115,18 @@ const ChangeStoreModal = ({ setAction }: Props) => {
             setValue={setComment}
             error={""}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
+        {error && <LabelError>{error}</LabelError>}
         {isLoadChange ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>

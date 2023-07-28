@@ -23,6 +23,8 @@ import {
   updateSupplier,
 } from "../../../../redux/features/supplier";
 import { Loader } from "../../../loader/Loader";
+import { getImagePath } from "../../../../utils/image";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -36,10 +38,12 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
   const [email, setEmail] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
-
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (nameError && name) {
@@ -49,28 +53,40 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
     if (emailError && email) {
       setEmailError("");
     }
-  }, [nameError, emailError]);
+
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [nameError, name, email, emailError, password, passwordError]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     if (!name && !image && !tel && !email) {
-      return setError(true);
+      return setError(
+        "Veuillez remplier au moins un des champs en plus du mot de passe."
+      );
+    }
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
     }
 
-    let logo = image && image.name ? image.name : "";
-    if (supplier) {
-      const form = new FormData();
-      form.append("logo", logo);
-      form.append("name", name);
-      form.append("phone", tel);
-      form.append("email", email);
-      updateSupplier(supplier.id, form, (exit: boolean) => {
-        if (exit) {
-          getHistory()(dispatch);
-          setAction(false);
-        }
-      })(dispatch);
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && supplier) {
+        const form = new FormData();
+        form.append("logo", image || "");
+        form.append("name", name);
+        form.append("phone", tel);
+        form.append("email", email);
+        updateSupplier(supplier.id, form, (exit: boolean) => {
+          if (exit) {
+            getHistory()(dispatch);
+            setAction(false);
+          }
+        })(dispatch);
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -86,7 +102,7 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
           <InputImage
             setValue={setImage}
             id="image"
-            defaultImage={supplier && supplier.logo ? supplier.logo : ""}
+            defaultImage={getImagePath(supplier?.logo)}
           />
           <InputText
             name="Nom *"
@@ -115,15 +131,18 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
             setValue={setEmail}
             error={emailError}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
-        {error && (
-          <ModalMessageError>
-            Veuillez remplir au moins un champ à modifier
-          </ModalMessageError>
-        )}
+        {error && <ModalMessageError>{error}</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -164,6 +183,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default UpdateSupplierModal;

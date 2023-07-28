@@ -31,7 +31,6 @@ const CategoryModal = ({ setAction }: Props) => {
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.category.isLoad);
-  const isError = useSelector((state: RootState) => state.category.isError);
 
   useEffect(() => {
     if (nameError && name) {
@@ -89,10 +88,9 @@ const CategoryModal = ({ setAction }: Props) => {
             error={""}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -133,6 +131,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default CategoryModal;

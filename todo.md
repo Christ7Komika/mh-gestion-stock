@@ -9,7 +9,7 @@ FAIRE DES VERIFICATIONS AU NIVEAU DES MAILS
 Mettre une image par defaut
 
 nom purchaseOrder status sum client
-
+revoir le \*
 article {
 designation
 quantite

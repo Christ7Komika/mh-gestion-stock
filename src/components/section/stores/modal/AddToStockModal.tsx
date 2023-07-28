@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
+  ModalMessageError,
   ModalStockInfos,
   ModalStockInfosData,
   ModalValidButton,
@@ -18,11 +19,12 @@ import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addQuantityToStore,
+  getHistory,
   getStore,
-  getStoreId,
 } from "../../../../redux/features/stores";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -32,7 +34,9 @@ const AddToStockModal = ({ setAction }: Props) => {
   const [quantity, setQuantity] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
-
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
   const dispatch = useDispatch();
   const store = useSelector((state: RootState) => state.store.data);
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
@@ -40,6 +44,7 @@ const AddToStockModal = ({ setAction }: Props) => {
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
   );
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   const initData = () => {
     setQuantity(null);
@@ -53,25 +58,42 @@ const AddToStockModal = ({ setAction }: Props) => {
     }
   }, [currentId]);
 
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [password, passwordError]);
+
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!quantity) {
       return setQuantityError("Champ vide");
     }
-    if (currentId) {
-      addQuantityToStore(
-        currentId,
-        {
-          quantity: quantity,
-          comment: comment || "",
-        },
-        (exit: boolean) => {
-          if (exit) {
-            initData();
-            setAction(false);
+
+    // if (!password) {
+    //   return setPasswordError("Veuillez inserer le mot de passe.");
+    // }
+
+    if (pwd) {
+      const isValid = true; // bcrypt.compareSync(password, pwd.password);
+      if (isValid && currentId) {
+        addQuantityToStore(
+          currentId,
+          {
+            quantity: quantity,
+            comment: comment || "",
+          },
+          (exit: boolean) => {
+            if (exit) {
+              getHistory()(dispatch);
+              initData();
+              setAction(false);
+            }
           }
-        }
-      )(dispatch);
+        )(dispatch);
+        return;
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
 
@@ -137,7 +159,16 @@ const AddToStockModal = ({ setAction }: Props) => {
             setValue={setComment}
             error={""}
           />
+
+          {/* <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          /> */}
         </ModalForm>
+        {error && <ModalMessageError>{error}</ModalMessageError>}
         {isLoadChange ? (
           <ModalGroupButton>
             <ModalValidButton>

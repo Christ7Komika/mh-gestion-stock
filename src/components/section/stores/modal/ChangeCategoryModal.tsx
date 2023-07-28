@@ -16,7 +16,13 @@ import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import InputPlainText from "../../../input/InputPlainText";
 import InputSelect from "../../../input/InputSelect";
-import { changeCategory, getStore } from "../../../../redux/features/stores";
+import {
+  changeCategory,
+  getHistory,
+  getStore,
+} from "../../../../redux/features/stores";
+import bcrypt from "bcryptjs";
+import InputText, { LabelError } from "../../../input/InputText";
 
 interface Props {
   setAction: Function;
@@ -26,6 +32,10 @@ const ChangeCategoryModal = ({ setAction }: Props) => {
   const [category, setCategory] = useState<string | null>(null);
   const [categoryError, setCategoryError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   const dispatch = useDispatch();
   const isLoadChange = useSelector(
     (state: RootState) => state.store.isLoadChange
@@ -33,6 +43,7 @@ const ChangeCategoryModal = ({ setAction }: Props) => {
   const categories = useSelector((state: RootState) => state.category.datas);
   const currentId = useSelector((state: RootState) => state.store.currentId);
   const store = useSelector((state: RootState) => state.store.data);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (currentId) {
@@ -40,24 +51,42 @@ const ChangeCategoryModal = ({ setAction }: Props) => {
     }
   }, [currentId]);
 
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [password, passwordError]);
+
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!category) {
       return setCategoryError("Le champ est vide");
     }
-    if (currentId) {
-      changeCategory(
-        currentId,
-        {
-          category: category,
-          comment: comment || "",
-        },
-        (exit: boolean) => {
-          if (exit) {
-            return setAction(false);
+
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+
+      if (isValid && currentId) {
+        changeCategory(
+          currentId,
+          {
+            category: category,
+            comment: comment || "",
+          },
+          (exit: boolean) => {
+            if (exit) {
+              getHistory()(dispatch);
+              return setAction(false);
+            }
           }
-        }
-      )(dispatch);
+        )(dispatch);
+        return;
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -86,7 +115,15 @@ const ChangeCategoryModal = ({ setAction }: Props) => {
             setValue={setComment}
             error={""}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
+        {error && <LabelError>{error}</LabelError>}
         {isLoadChange ? (
           <ModalGroupButton>
             <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>

@@ -60,7 +60,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
       setEmailError("");
     }
     if (passwordError && password) {
-      setEmailError("");
+      setPasswordError("");
     }
   }, [
     nameError,

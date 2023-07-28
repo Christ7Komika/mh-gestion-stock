@@ -23,7 +23,7 @@ import SwitchData from "../../../input/SwitchData";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
-import { createStore } from "../../../../redux/features/stores";
+import { createStore, getHistory } from "../../../../redux/features/stores";
 
 interface Props {
   setAction: Function;
@@ -42,7 +42,6 @@ const StockModal = ({ setAction }: Props) => {
   const [designationError, setDesignationError] = useState<string | null>(null);
   const [unitPrice, setUnitPrice] = useState<string | null>(null);
   const [priceError, setPriceError] = useState<string | null>(null);
-  const [sellingPrice, setSellingPrice] = useState<string | null>(null);
   const [purchasePrice, setPurchasePrice] = useState<string | null>(null);
   const [lotNumber, setLotNumber] = useState<string | null>(null);
   const [operatingPressure, setOperatingPressure] = useState<string | null>(
@@ -90,10 +89,6 @@ const StockModal = ({ setAction }: Props) => {
       return setPriceError("Les valeurs de prix doivent être numerique");
     }
 
-    if (sellingPrice && isNaN(parseFloat(sellingPrice))) {
-      return setPriceError("Les valeurs de prix doivent être numerique");
-    }
-
     if (purchasePrice && isNaN(parseFloat(purchasePrice))) {
       return setPriceError("Les valeurs de prix doivent être numerique");
     }
@@ -117,7 +112,7 @@ const StockModal = ({ setAction }: Props) => {
     form.append("quantity", quantity);
     form.append("designation", designation || "");
     form.append("purchasePrice", purchasePrice || "");
-    form.append("sellingPrice", sellingPrice || "");
+    form.append("sellingPrice", "");
     form.append("unitPrice", unitPrice || "");
     form.append("lotNumber", lotNumber || "");
     form.append("operatingPressure", operatingPressure || "");
@@ -131,6 +126,7 @@ const StockModal = ({ setAction }: Props) => {
 
     createStore(form, (exit: boolean) => {
       if (exit) {
+        getHistory()(dispatch);
         setAction(false);
       }
     })(dispatch);
@@ -227,17 +223,10 @@ const StockModal = ({ setAction }: Props) => {
             </ModalDoubleFormGroup>
             <ModalTripleFormGroup>
               <InputText
-                name="Prix d'achat"
+                name="Prix TTC"
                 id="pa"
                 defaultValue={purchasePrice}
                 setValue={setPurchasePrice}
-                error={""}
-              />
-              <InputText
-                name="Prix de vente"
-                id="pv"
-                defaultValue={sellingPrice}
-                setValue={setSellingPrice}
                 error={""}
               />
               <InputText

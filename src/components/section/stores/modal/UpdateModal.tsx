@@ -20,8 +20,13 @@ import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
-import { getStore, updateStore } from "../../../../redux/features/stores";
+import {
+  getHistory,
+  getStore,
+  updateStore,
+} from "../../../../redux/features/stores";
 import { getImagePath } from "../../../../utils/image";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -35,7 +40,6 @@ const UpdateModal = ({ setAction }: Props) => {
   const [type, setType] = useState<string | null>(null);
   const [designation, setDesignation] = useState<string | null>(null);
   const [unitPrice, setUnitPrice] = useState<string | null>(null);
-  const [sellingPrice, setSellingPrice] = useState<string | null>(null);
   const [purchasePrice, setPurchasePrice] = useState<string | null>(null);
   const [lotNumber, setLotNumber] = useState<string | null>(null);
   const [operatingPressure, setOperatingPressure] = useState<string | null>(
@@ -45,6 +49,8 @@ const UpdateModal = ({ setAction }: Props) => {
   const [fluid, setFluid] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const isLoadChange = useSelector(
@@ -52,6 +58,13 @@ const UpdateModal = ({ setAction }: Props) => {
   );
   const store = useSelector((state: RootState) => state.store.data);
   const currentId = useSelector((state: RootState) => state.store.currentId);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
+
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [password, passwordError]);
 
   const init = () => {
     setImage(null);
@@ -61,7 +74,6 @@ const UpdateModal = ({ setAction }: Props) => {
     setType(null);
     setDesignation(null);
     setUnitPrice(null);
-    setSellingPrice(null);
     setPurchasePrice(null);
     setLotNumber(null);
     setOperatingPressure(null);
@@ -92,7 +104,6 @@ const UpdateModal = ({ setAction }: Props) => {
       !type &&
       !designation &&
       !purchasePrice &&
-      !sellingPrice &&
       !unitPrice &&
       !lotNumber &&
       !operatingPressure &&
@@ -103,29 +114,40 @@ const UpdateModal = ({ setAction }: Props) => {
         "Veuillez remplir au modifier un des champs du formulaire."
       );
     }
-    if (store) {
-      const form = new FormData();
-      form.append("logo", image || "");
-      form.append("name", name || "");
-      form.append("reference", reference || "");
-      form.append("code", code || "");
-      form.append("type", type || "");
-      form.append("designation", designation || "");
-      form.append("purchasePrice", purchasePrice || "");
-      form.append("sellingPrice", sellingPrice || "");
-      form.append("unitPrice", unitPrice || "");
-      form.append("lotNumber", lotNumber || "");
-      form.append("operatingPressure", operatingPressure || "");
-      form.append("diameter", diameter || "");
-      form.append("fluid", fluid || "");
-      form.append("comment", comment || "");
-      if (currentId) {
-        updateStore(currentId, form, (exit: boolean) => {
-          if (exit && init()) {
-            setAction(false);
-          }
-        })(dispatch);
+
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && store) {
+        const form = new FormData();
+        form.append("logo", image || "");
+        form.append("name", name || "");
+        form.append("reference", reference || "");
+        form.append("code", code || "");
+        form.append("type", type || "");
+        form.append("designation", designation || "");
+        form.append("purchasePrice", purchasePrice || "");
+        form.append("sellingPrice", "");
+        form.append("unitPrice", unitPrice || "");
+        form.append("lotNumber", lotNumber || "");
+        form.append("operatingPressure", operatingPressure || "");
+        form.append("diameter", diameter || "");
+        form.append("fluid", fluid || "");
+        form.append("comment", comment || "");
+        if (currentId) {
+          updateStore(currentId, form, (exit: boolean) => {
+            if (exit && init()) {
+              getHistory()(dispatch);
+              setAction(false);
+            }
+          })(dispatch);
+          return;
+        }
       }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -168,8 +190,6 @@ const UpdateModal = ({ setAction }: Props) => {
               error={""}
               placeholder="Le type d'article"
             />
-          </ModalForm>
-          <ModalForm>
             <InputText
               name="Référence"
               id="length"
@@ -179,6 +199,8 @@ const UpdateModal = ({ setAction }: Props) => {
               suffix=""
               placeholder="La référence de l'article (voir fabriquant)"
             />
+          </ModalForm>
+          <ModalForm>
             <InputPlainText
               name="Désignation "
               id="designation"
@@ -192,13 +214,6 @@ const UpdateModal = ({ setAction }: Props) => {
                 id="pa"
                 defaultValue={store?.purchasePrice || purchasePrice}
                 setValue={setPurchasePrice}
-                error={""}
-              />
-              <InputText
-                name="Prix de vente"
-                id="pv"
-                defaultValue={store?.sellingPrice || sellingPrice}
-                setValue={setSellingPrice}
                 error={""}
               />
               <InputText
@@ -217,10 +232,6 @@ const UpdateModal = ({ setAction }: Props) => {
               setValue={setLotNumber}
               error={""}
             />
-          </ModalForm>
-          <ModalForm>
-            <ModalInfosTitle>Infos supplémentaire</ModalInfosTitle>
-
             <InputText
               name="Pression de service"
               id="pressionService"
@@ -235,6 +246,10 @@ const UpdateModal = ({ setAction }: Props) => {
               setValue={setDiameter}
               error={""}
             />
+          </ModalForm>
+          <ModalForm>
+            <ModalInfosTitle>Infos supplémentaire</ModalInfosTitle>
+
             <InputText
               name="Fluide"
               id="fluid"
@@ -248,6 +263,13 @@ const UpdateModal = ({ setAction }: Props) => {
               defaultValue={comment}
               setValue={setComment}
               error={""}
+            />
+            <InputText
+              name="password"
+              id="password"
+              defaultValue={""}
+              setValue={setPassword}
+              error={passwordError}
             />
           </ModalForm>
         </ModalSection3>

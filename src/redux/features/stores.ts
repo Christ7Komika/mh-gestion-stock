@@ -43,6 +43,20 @@ export interface CommentType {
   message: string;
 }
 
+export interface StoreAlert {
+  id: string;
+  name: string;
+  _count: number;
+  designation: string;
+  hasLength: string;
+  quantity: string;
+  Warehouse: {
+    select: {
+      name: string;
+    };
+  };
+}
+
 export interface MoveToAnotherStoreDataType {
   warehouse: string;
   quantity: string;
@@ -139,6 +153,8 @@ export type GroupBy =
 
 interface storeState {
   datas: null | StoreType[];
+  warning: null | StoreAlert[];
+  notification: null | StoreAlert[];
   dataSearch: null | StoreType[];
   data: null | StoreType;
   currentId: string | null;
@@ -154,6 +170,8 @@ interface storeState {
 // Define the initial state using that type
 const initialState: storeState = {
   datas: null,
+  warning: null,
+  notification: null,
   dataSearch: null,
   data: null,
   group: null,
@@ -172,6 +190,12 @@ export const storeSlice = createSlice({
   reducers: {
     stores: (state, action: PayloadAction<StoreType[]>) => {
       state.datas = [...action.payload];
+    },
+    notification: (state, action: PayloadAction<StoreAlert[]>) => {
+      state.notification = [...action.payload];
+    },
+    warning: (state, action: PayloadAction<StoreAlert[]>) => {
+      state.warning = [...action.payload];
     },
     search: (state, action: PayloadAction<StoreType[] | null>) => {
       state.dataSearch = action.payload;
@@ -226,6 +250,8 @@ export const {
   groupBy,
   isLoadGroup,
   search,
+  warning,
+  notification,
 } = storeSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -240,6 +266,42 @@ export const getStores = () => (dispatch: AppDispatch) => {
   axios<StoreType[]>(config)
     .then(({ data }) => {
       dispatch(stores(data));
+      dispatch(isSuccess(true));
+      dispatch(isLoad(false));
+    })
+    .catch(() => {
+      dispatch(isError(true));
+      dispatch(isLoad(false));
+    });
+};
+export const getNotifications = () => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  const config = {
+    method: "get",
+    url: host + "/articles/notification",
+  };
+
+  axios<StoreAlert[]>(config)
+    .then(({ data }) => {
+      dispatch(notification(data));
+      dispatch(isSuccess(true));
+      dispatch(isLoad(false));
+    })
+    .catch(() => {
+      dispatch(isError(true));
+      dispatch(isLoad(false));
+    });
+};
+export const getWarning = () => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  const config = {
+    method: "get",
+    url: host + "/articles/warning",
+  };
+
+  axios<StoreAlert[]>(config)
+    .then(({ data }) => {
+      dispatch(warning(data));
       dispatch(isSuccess(true));
       dispatch(isLoad(false));
     })

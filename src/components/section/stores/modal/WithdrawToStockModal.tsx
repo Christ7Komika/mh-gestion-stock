@@ -17,11 +17,13 @@ import React, { useEffect, useState } from "react";
 import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getHistory,
   getStore,
   removeQuantityToStore,
 } from "../../../../redux/features/stores";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -32,6 +34,8 @@ const WithdrawToStockModal = ({ setAction }: Props) => {
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [comment, setComment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const store = useSelector((state: RootState) => state.store.data);
@@ -40,12 +44,19 @@ const WithdrawToStockModal = ({ setAction }: Props) => {
     (state: RootState) => state.store.isLoadChange
   );
   const currentId = useSelector((state: RootState) => state.store.currentId);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   const initData = () => {
     setQuantity(null);
     setQuantityError(null);
     setComment(null);
   };
+
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [password, passwordError]);
 
   useEffect(() => {
     if (currentId) {
@@ -63,37 +74,46 @@ const WithdrawToStockModal = ({ setAction }: Props) => {
       return setQuantityError("Ne supporte que des chiffres");
     }
 
-    if (store) {
-      const currentQuantity = parseFloat(store.quantity) - parseFloat(quantity);
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && store) {
+        const currentQuantity =
+          parseFloat(store.quantity) - parseFloat(quantity);
 
-      if (currentQuantity < 0) {
-        if (store.hasLength) {
-          return setError(
-            "La longueur inscrite est superieur à la longueur en stock"
-          );
-        } else {
-          return setError(
-            "La quantité inscrite est superieur à la quantité en stock"
-          );
+        if (currentQuantity < 0) {
+          if (store.hasLength) {
+            return setError(
+              "La longueur inscrite est superieur à la longueur en stock"
+            );
+          } else {
+            return setError(
+              "La quantité inscrite est superieur à la quantité en stock"
+            );
+          }
+        }
+
+        if (currentId) {
+          removeQuantityToStore(
+            currentId,
+            {
+              currentQuantity: quantity,
+              quantity: currentQuantity.toString(),
+              comment: comment || "",
+            },
+            (exit: boolean) => {
+              if (exit) {
+                getHistory()(dispatch);
+                initData();
+                setAction(false);
+              }
+            }
+          )(dispatch);
         }
       }
-
-      if (currentId) {
-        removeQuantityToStore(
-          currentId,
-          {
-            currentQuantity: quantity,
-            quantity: currentQuantity.toString(),
-            comment: comment || "",
-          },
-          (exit: boolean) => {
-            if (exit) {
-              initData();
-              setAction(false);
-            }
-          }
-        )(dispatch);
-      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
 
@@ -158,6 +178,13 @@ const WithdrawToStockModal = ({ setAction }: Props) => {
             defaultValue={comment}
             setValue={setComment}
             error={""}
+          />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
           />
         </ModalForm>
         {error && <LabelError>{error}</LabelError>}

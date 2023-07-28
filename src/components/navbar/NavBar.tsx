@@ -2,20 +2,34 @@ import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getPass } from "../../redux/features/configuration";
 import { IoNotificationsSharp, IoAdd } from "react-icons/io5";
 import ConfigurationModal from "./modal/ConfigurationModal";
 import WarningModal from "./modal/WarningModal";
 import NotificationModal from "./modal/NotificationModal";
+import ChangePasswordModal from "./modal/ChangePasswordModal";
+import InitPasswordModal from "./modal/InitPasswordModal";
+import { RootState } from "../../redux/store";
+import { getNotifications, getWarning } from "../../redux/features/stores";
 const NavBar = () => {
   const [configurationModal, setConfigurationModal] = useState(false);
+  const [changePasswordModal, setChangePasswordModal] = useState(false);
+  const [initPasswordModal, setInitPasswordModal] = useState(false);
   const [notificationModal, setNotificationModal] = useState(false);
   const [warningModal, setWarningModal] = useState(false);
   const location = useLocation();
   const dispatch = useDispatch();
+
+  const notification = useSelector(
+    (state: RootState) => state.store.notification
+  );
+  const warning = useSelector((state: RootState) => state.store.warning);
+
   useEffect(() => {
     getPass()(dispatch);
+    getNotifications()(dispatch);
+    getWarning()(dispatch);
   }, []);
 
   const isActive = (url: string) => {
@@ -24,8 +38,18 @@ const NavBar = () => {
 
   return (
     <>
+      {changePasswordModal && (
+        <ChangePasswordModal setAction={setChangePasswordModal} />
+      )}
+      {initPasswordModal && (
+        <InitPasswordModal setAction={setInitPasswordModal} />
+      )}
       {configurationModal && (
-        <ConfigurationModal setAction={setConfigurationModal} />
+        <ConfigurationModal
+          setAction={setConfigurationModal}
+          setChangePasswordModal={setChangePasswordModal}
+          setInitPasswordModal={setInitPasswordModal}
+        />
       )}
       {warningModal && <WarningModal setAction={setWarningModal} />}
       {notificationModal && (
@@ -66,17 +90,21 @@ const NavBar = () => {
         </LeftSide>
         <RightSide>
           <WarningButton onClick={() => setWarningModal(!warningModal)}>
-            <WarningSpan>
-              <IoAdd size={10} />
-            </WarningSpan>
+            {warning && warning.length >= 1 && (
+              <WarningSpan>
+                <IoAdd size={10} />
+              </WarningSpan>
+            )}
             <IoNotificationsSharp size={15} />
           </WarningButton>
           <NotificationButton
             onClick={() => setNotificationModal(!notificationModal)}
           >
-            <NotificationSpan>
-              <IoAdd size={10} />
-            </NotificationSpan>
+            {notification && notification.length >= 1 && (
+              <NotificationSpan>
+                <IoAdd size={10} />
+              </NotificationSpan>
+            )}
             <IoNotificationsSharp size={15} />
           </NotificationButton>
           <ConfigurationButton

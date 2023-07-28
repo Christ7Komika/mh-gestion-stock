@@ -41,6 +41,7 @@ import ModalArticleInfosSection from "../../../split/ModalArticleInfosSection";
 import {
   TicketTypeData,
   createTicket,
+  getHistory,
 } from "../../../../redux/features/ticket";
 
 interface Props {
@@ -233,6 +234,7 @@ const TicketModal = ({ setAction }: Props) => {
 
     createTicket(data, (exit: boolean) => {
       if (exit) {
+        getHistory()(dispatch);
         emptyDatasStores()(dispatch);
         setArticle(null);
         setAction(false);

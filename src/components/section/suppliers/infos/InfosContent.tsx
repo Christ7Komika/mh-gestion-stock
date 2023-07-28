@@ -8,6 +8,7 @@ interface Props {
 }
 
 const InfosContent = ({ supplier }: Props) => {
+  console.log(supplier);
   return (
     <Container>
       {supplier?.logo && (

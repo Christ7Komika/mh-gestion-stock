@@ -21,7 +21,7 @@ import {
   CategoryType,
   updateCategory,
 } from "../../../../redux/features/category";
-
+import bcrypt from "bcryptjs";
 import InputPlainText from "../../../input/InputPlainText";
 
 interface Props {
@@ -34,11 +34,14 @@ const UpdateCategoryModal = ({ setAction, category }: Props) => {
   const [reference, setReference] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.category.isLoad);
   const isError = useSelector((state: RootState) => state.category.isError);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (nameError && name) {
@@ -46,24 +49,40 @@ const UpdateCategoryModal = ({ setAction, category }: Props) => {
     }
   }, [nameError]);
 
+  useEffect(() => {
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [passwordError]);
+
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     if (!name && !reference && !description) {
-      return setError(true);
+      return setError(
+        "Veuillez remplier au moins un des champs en plus du mot de passe."
+      );
     }
-    if (category) {
-      const form: Category = {
-        name: name && name,
-        reference: reference && reference,
-        description: description && description,
-      };
 
-      updateCategory(category.id, form, (exit: boolean) => {
-        if (exit) {
-          setAction(false);
-        }
-      })(dispatch);
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && category) {
+        const form: Category = {
+          name: name && name,
+          reference: reference && reference,
+          description: description && description,
+        };
+
+        updateCategory(category.id, form, (exit: boolean) => {
+          if (exit) {
+            setAction(false);
+          }
+        })(dispatch);
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -111,16 +130,18 @@ const UpdateCategoryModal = ({ setAction, category }: Props) => {
             setValue={setDescription}
             error={""}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
-        {error && (
-          <ModalMessageError>
-            Veuillez remplir au moins un champ à modifier
-          </ModalMessageError>
-        )}
+        {error && <ModalMessageError>{error}</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>

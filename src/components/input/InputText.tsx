@@ -27,6 +27,12 @@ const InputText = ({
 
   useEffect(() => {
     if (defaultValue) {
+      setText(defaultValue);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (defaultValue) {
       setValue(text ? text : defaultValue ? defaultValue : "");
     }
     setValue(text);
@@ -45,7 +51,7 @@ const InputText = ({
         }}
         defaultValue={defaultValue ? defaultValue : ""}
         placeholder={placeholder ? placeholder : ""}
-        value={text ? text : defaultValue ? defaultValue : ""}
+        value={text}
       />
     </Container>
   );

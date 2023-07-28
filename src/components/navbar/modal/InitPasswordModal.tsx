@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { color } from "../../../../utils/color";
+import { color } from "../../../utils/color";
 import {
   ModalCancelButton,
   ModalGroupButton,
@@ -7,62 +7,42 @@ import {
   ModalHeaderExit,
   ModalHeaderTitle,
   ModalValidButton,
-} from "../../../layout/Layout";
+} from "../../layout/Layout";
 import { IoExit } from "react-icons/io5";
+import { Loader } from "../../loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
-import { Loader } from "../../../loader/Loader";
-import { useEffect } from "react";
-import {
-  getHistory,
-  getTicket,
-  getTicketId,
-  validateTicket,
-} from "../../../../redux/features/ticket";
-
+import { getPass, initPass } from "../../../redux/features/configuration";
+import { RootState } from "../../../redux/store";
 interface Props {
   setAction: Function;
 }
 
-const ValidateModal = ({ setAction }: Props) => {
+const InitPasswordModal = ({ setAction }: Props) => {
+  const isLoad = useSelector((state: RootState) => state.configuration.isLoad);
   const dispatch = useDispatch();
-  const isLoad = useSelector((state: RootState) => state.ticket.isLoad);
-  const id = useSelector((state: RootState) => state.ticket.currentId);
-  const ticket = useSelector((state: RootState) => state.ticket.data);
-
-  useEffect(() => {
-    if (id) {
-      getTicket(id)(dispatch);
-    }
-  }, [id]);
-
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (id) {
-      validateTicket(id, (exit: boolean) => {
-        if (exit) {
-          getHistory()(dispatch);
-          setAction(false);
-        }
-      })(dispatch);
-    }
+    initPass((exit: boolean) => {
+      if (exit) {
+        getPass()(dispatch);
+        setAction(false);
+      }
+    })(dispatch);
   };
+
   return (
     <ModalContainer>
       <Modal>
         <ModalHeader>
-          <ModalHeaderTitle>Validation du bon de sortis</ModalHeaderTitle>
+          <ModalHeaderTitle>Initialisation du mot de passe</ModalHeaderTitle>
           <ModalHeaderExit onClick={() => setAction(false)}>
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <p>
-          Veuillez confirmer la validation du bon de sortie ''{ticket?.name}''
-          pour le bon de commande nº{ticket?.purchaseOrder}.
-        </p>
+        <p>Voulez vous initialiser le mot de passe</p>
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -103,7 +83,7 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
-  max-width: 600px;
+  max-width: 500px;
 `;
 
-export default ValidateModal;
+export default InitPasswordModal;

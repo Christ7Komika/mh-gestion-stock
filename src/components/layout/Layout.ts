@@ -100,13 +100,13 @@ export const ModalDoubleFormGroup = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 0.5rem;
-  width: 300px;
+  width: 100%;
 `;
 export const ModalTripleFormGroup = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   column-gap: 0.5rem;
-  width: 300px;
+  width: 100%;
 `;
 
 export const ModalGroupButton = styled.div`
@@ -127,7 +127,7 @@ export const ModalInputGroup = styled.div`
 `;
 
 export const ModalInfosTitle = styled.h2`
-  width: 300px;
+  width: 100%;
   height: 60px;
   border-radius: 5px;
   background: ${color.fadeBlue};

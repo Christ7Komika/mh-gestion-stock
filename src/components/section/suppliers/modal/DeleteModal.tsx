@@ -20,6 +20,7 @@ import {
   getHistory,
 } from "../../../../redux/features/supplier";
 import { Loader } from "../../../loader/Loader";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -28,39 +29,39 @@ interface Props {
 }
 
 const DeleteModal = ({ setAction, trueName, id }: Props) => {
-  const [name, setName] = useState<string | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.supplier.isLoad);
-  const isError = useSelector((state: RootState) => state.supplier.isError);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
-    if (name && nameError) {
-      setNameError("");
+    if (password && passwordError) {
+      setPasswordError("");
     }
-  }, [name]);
-
+  }, [password]);
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (!name) {
-      return setNameError("Le champ est vide");
+
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
     }
 
-    if (name !== trueName) {
-      return setNameError("Le nom inséré est invalide");
-    }
-
-    if (name === trueName) {
-      deleteSupplier(id, (exit: boolean) => {
-        if (exit) {
-          getHistory()(dispatch);
-          return setAction(false);
-        }
-      })(dispatch);
-
-      return;
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid) {
+        deleteSupplier(id, (exit: boolean) => {
+          if (exit) {
+            getHistory()(dispatch);
+            return setAction(false);
+          }
+        })(dispatch);
+        return;
+      }
+      return setPasswordError("Mot de passe inserer invalide.");
     }
   };
+
   return (
     <ModalContainer>
       <Modal>
@@ -71,20 +72,19 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
           </ModalHeaderExit>
         </ModalHeader>
         <p>Êtes vous sur de vouloir supprimer le fournisseur ''{trueName}''.</p>
-        <p>Inserer le nom du fournisseur que vous voulez supprimer.</p>
+        <p>Inserer le mot de passe.</p>
         <ModalForm>
           <InputText
             name=""
-            id="name"
-            defaultValue={name}
-            setValue={setName}
-            error={nameError}
+            id="password"
+            defaultValue={password}
+            setValue={setPassword}
+            error={passwordError}
           />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>

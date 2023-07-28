@@ -16,6 +16,7 @@ import { RootState } from "../../../../redux/store";
 import InputText from "../../../input/InputText";
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
+import bcrypt from "bcryptjs";
 
 import {
   Warehouse,
@@ -33,35 +34,51 @@ const UpdateWarehouseModal = ({ setAction, warehouse }: Props) => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [nameError, setNameError] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.warehouse.isLoad);
-  const isError = useSelector((state: RootState) => state.warehouse.isError);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (nameError && name) {
       setNameError("");
     }
-  }, [nameError]);
+    if (passwordError && password) {
+      setPasswordError("");
+    }
+  }, [nameError, name, passwordError, password]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     if (!name && !description) {
-      return setError(true);
+      return setError(
+        "Veuillez remplier au moins un des champs en plus du mot de passe."
+      );
     }
-    if (warehouse) {
-      const form: Warehouse = {
-        name: name && name,
-        description: description && description,
-      };
 
-      updateWarehouse(warehouse.id, form, (exit: boolean) => {
-        if (exit) {
-          setAction(false);
-        }
-      })(dispatch);
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (warehouse && isValid) {
+        const form: Warehouse = {
+          name: name,
+          description: description,
+        };
+
+        updateWarehouse(warehouse.id, form, (exit: boolean) => {
+          if (exit) {
+            setAction(false);
+          }
+        })(dispatch);
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -96,16 +113,18 @@ const UpdateWarehouseModal = ({ setAction, warehouse }: Props) => {
             setValue={setDescription}
             error={""}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
-        {isError && <ModalMessageError>La requête a été</ModalMessageError>}
-        {error && (
-          <ModalMessageError>
-            Veuillez remplir au moins un champ à modifier
-          </ModalMessageError>
-        )}
+        {error && <ModalMessageError>{error}</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
-            <ModalValidButton onClick={(e: React.SyntheticEvent) => submit(e)}>
+            <ModalValidButton>
               <Loader />
             </ModalValidButton>
           </ModalGroupButton>
@@ -146,6 +165,8 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
+  width: 100%;
+  max-width: 500px;
 `;
 
 export default UpdateWarehouseModal;

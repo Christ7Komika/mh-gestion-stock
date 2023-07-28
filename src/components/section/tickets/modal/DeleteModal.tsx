@@ -17,7 +17,11 @@ import InputText from "../../../input/InputText";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import bcrypt from "bcryptjs";
-import { deleteTicket, getTicket } from "../../../../redux/features/ticket";
+import {
+  deleteTicket,
+  getHistory,
+  getTicket,
+} from "../../../../redux/features/ticket";
 
 interface Props {
   setAction: Function;
@@ -46,6 +50,7 @@ const DeleteModal = ({ setAction }: Props) => {
       if (isValid) {
         deleteTicket(id, (exit: boolean) => {
           if (exit) {
+            getHistory()(dispatch);
             setAction(false);
           }
         })(dispatch);
