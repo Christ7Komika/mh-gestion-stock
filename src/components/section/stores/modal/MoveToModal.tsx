@@ -6,7 +6,8 @@ import {
   ModalGroupButton,
   ModalHeader,
   ModalHeaderExit,
-  ModalHeaderTitle, ModalMessageError,
+  ModalHeaderTitle,
+  ModalMessageError,
   ModalStockInfosData,
   ModalValidButton,
 } from "../../../layout/Layout";
@@ -17,10 +18,7 @@ import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
 import InputPlainText from "../../../input/InputPlainText";
 import InputSelect from "../../../input/InputSelect";
-import {
-  getStore,
-  moveToStore,
-} from "../../../../redux/features/stores";
+import { getStore, moveToStore } from "../../../../redux/features/stores";
 import InputText from "../../../input/InputText";
 
 interface Props {
@@ -58,8 +56,11 @@ const MoveToModal = ({ setAction }: Props) => {
       return setWarehouseError("Le champ est vide");
     }
 
-    if(warehouse === store.Warehouse.id) {
-      return setError("Veuillez séléctionner un stockage différent de " + store.Warehouse.name)
+    if (warehouse === store?.Warehouse.id) {
+      return setError(
+        "Veuillez séléctionner un stockage différent de " +
+          store?.Warehouse.name
+      );
     }
 
     if (!quantity) {
@@ -86,16 +87,12 @@ const MoveToModal = ({ setAction }: Props) => {
           currentQuantity: currentQuantity.toString(),
           hasLength: store.hasLength,
           comment: comment || "",
-        }
-        moveToStore(
-          currentId,
-          data,
-          (exit: boolean) => {
-            if (exit) {
-              return setAction(false);
-            }
+        };
+        moveToStore(currentId, data, (exit: boolean) => {
+          if (exit) {
+            return setAction(false);
           }
-        )(dispatch);
+        })(dispatch);
       }
     }
   };

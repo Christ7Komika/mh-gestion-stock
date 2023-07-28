@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPass } from "../../redux/features/configuration";
 import { IoNotificationsSharp, IoAdd } from "react-icons/io5";
+import ConfigurationModal from "./modal/ConfigurationModal";
+import WarningModal from "./modal/WarningModal";
+import NotificationModal from "./modal/NotificationModal";
 const NavBar = () => {
   const [configurationModal, setConfigurationModal] = useState(false);
   const [notificationModal, setNotificationModal] = useState(false);
@@ -21,6 +24,13 @@ const NavBar = () => {
 
   return (
     <>
+      {configurationModal && (
+        <ConfigurationModal setAction={setConfigurationModal} />
+      )}
+      {warningModal && <WarningModal setAction={setWarningModal} />}
+      {notificationModal && (
+        <NotificationModal setAction={setNotificationModal} />
+      )}
       <Container>
         <LeftSide>
           <Logo>MH</Logo>
@@ -55,19 +65,25 @@ const NavBar = () => {
           </GroupLink>
         </LeftSide>
         <RightSide>
-          <WarningButton>
+          <WarningButton onClick={() => setWarningModal(!warningModal)}>
             <WarningSpan>
               <IoAdd size={10} />
             </WarningSpan>
             <IoNotificationsSharp size={15} />
           </WarningButton>
-          <NotificationButton>
+          <NotificationButton
+            onClick={() => setNotificationModal(!notificationModal)}
+          >
             <NotificationSpan>
               <IoAdd size={10} />
             </NotificationSpan>
             <IoNotificationsSharp size={15} />
           </NotificationButton>
-          <ConfigurationButton>Configuration</ConfigurationButton>
+          <ConfigurationButton
+            onClick={() => setConfigurationModal(!configurationModal)}
+          >
+            Configuration
+          </ConfigurationButton>
         </RightSide>
       </Container>
     </>

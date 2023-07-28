@@ -19,6 +19,12 @@ const InfosHistoricalContent = () => {
         if (history.state === "Ajout") {
           return <HistoricalStock status="add" history={history} />;
         }
+        if (history.state === "Validation") {
+          return <HistoricalStock status="add" history={history} />;
+        }
+        if (history.state === "Annulation") {
+          return <HistoricalStock status="delete" history={history} />;
+        }
         if (history.state === "Modification") {
           return <HistoricalStock status="update" history={history} />;
         }

@@ -70,6 +70,7 @@ interface TicketState {
   data: null | TicketType;
   history: null | History[];
   isLoad: boolean;
+  isLoadGroup: boolean;
   isLoadCreate: boolean;
   currentId: string | null;
   isError: boolean;
@@ -82,6 +83,7 @@ const initialState: TicketState = {
   currentId: null,
   history: null,
   isLoad: false,
+  isLoadGroup: false,
   isLoadCreate: false,
   isError: false,
   isSuccess: false,
@@ -99,6 +101,9 @@ export const ticketSlice = createSlice({
     },
     isLoad: (state, action: PayloadAction<boolean>) => {
       state.isLoad = action.payload;
+    },
+    isLoadGroup: (state, action: PayloadAction<boolean>) => {
+      state.isLoadGroup = action.payload;
     },
     isLoadCreate: (state, action: PayloadAction<boolean>) => {
       state.isLoadCreate = action.payload;
@@ -122,6 +127,7 @@ export const {
   tickets,
   ticket,
   isLoad,
+  isLoadGroup,
   isSuccess,
   isError,
   categoryId,
@@ -209,6 +215,46 @@ export const getTicket = (id: string) => (dispatch: AppDispatch) => {
       dispatch(isLoad(false));
     });
 };
+
+export const filterByStatus = (data: string) => (dispatch: AppDispatch) => {
+  dispatch(isLoadGroup(true));
+  const config = {
+    method: "post",
+    url: host + "/ticket/status",
+    data: { status: data },
+  };
+
+  axios<TicketType[]>(config)
+    .then(({ data }) => {
+      dispatch(tickets(data));
+      dispatch(isSuccess(true));
+      dispatch(isLoadGroup(false));
+    })
+    .catch(() => {
+      dispatch(isError(true));
+      dispatch(isLoadGroup(false));
+    });
+};
+export const searchTickets = (data: string) => (dispatch: AppDispatch) => {
+  dispatch(isLoad(true));
+  const config = {
+    method: "post",
+    url: host + "/ticket/find",
+    data: { search: data },
+  };
+
+  axios<TicketType[]>(config)
+    .then(({ data }) => {
+      dispatch(tickets(data));
+      dispatch(isSuccess(true));
+      dispatch(isLoad(false));
+    })
+    .catch(() => {
+      dispatch(isError(true));
+      dispatch(isLoad(false));
+    });
+};
+
 export const validateTicket =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));

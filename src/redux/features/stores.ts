@@ -370,7 +370,7 @@ export const filterHistory =
   };
 
 export const filter =
-  (data: { data: FilterType }, exit: Function) => (dispatch: AppDispatch) => {
+  (data: FilterType, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
 
     const abortController = new AbortController();

@@ -8,16 +8,15 @@ interface SectionProps {
 export const SectionX3 = styled.main`
   display: grid;
   grid-template-columns: 300px 1fr 300px;
-  height: calc(100vh - 115px);
+  height: calc(100vh - 60px);
   column-gap: 1rem;
 `;
 
 export const SectionX2 = styled.main`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: calc(100vh - 115px);
+  height: calc(100vh - 60px);
   column-gap: 1rem;
-  
 `;
 
 export const Section = styled.section<SectionProps>`

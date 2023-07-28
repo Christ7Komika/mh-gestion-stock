@@ -45,7 +45,9 @@ const DeleteModal = ({ setAction }: Props) => {
       const isValid = bcrypt.compareSync(pass, pwd.password);
       if (isValid) {
         deleteTicket(id, (exit: boolean) => {
-          setAction(false);
+          if (exit) {
+            setAction(false);
+          }
         })(dispatch);
         return;
       } else {

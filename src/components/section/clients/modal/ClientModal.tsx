@@ -6,7 +6,6 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
-  ModalMessageError,
   ModalValidButton,
 } from "../../../layout/Layout";
 import { IoExit } from "react-icons/io5";
@@ -35,7 +34,6 @@ const ClientModal = ({ setAction }: Props) => {
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.client.isLoad);
-  const isError = useSelector((state: RootState) => state.client.isError);
 
   useEffect(() => {
     if (nameError && name) {

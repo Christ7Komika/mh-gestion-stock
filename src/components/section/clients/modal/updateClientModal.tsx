@@ -23,6 +23,7 @@ import {
 import { color } from "../../../../utils/color";
 import { Loader } from "../../../loader/Loader";
 import { getImagePath } from "../../../../utils/image";
+import bcrypt from "bcryptjs";
 
 interface Props {
   setAction: Function;
@@ -38,10 +39,13 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
   const [nameError, setNameError] = useState<string>("");
   const [companyError, setCompanyError] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [password, setPassword] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
   const isLoad = useSelector((state: RootState) => state.client.isLoad);
+  const pwd = useSelector((state: RootState) => state.configuration.data);
 
   useEffect(() => {
     if (nameError && name) {
@@ -55,31 +59,50 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
     if (emailError && email) {
       setEmailError("");
     }
-  }, [nameError, emailError, companyError]);
-
-  console.log(client);
+    if (passwordError && password) {
+      setEmailError("");
+    }
+  }, [
+    nameError,
+    name,
+    company,
+    email,
+    password,
+    emailError,
+    companyError,
+    passwordError,
+  ]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     if (!name && !image && !company && !tel && !email) {
-      return setError(true);
+      return setError(
+        "Veuillez remplier au moins un des champs en plus du mot de passe."
+      );
     }
 
-    let logo = image && image.name ? image.name : "";
-    if (client) {
-      const form = new FormData();
-      form.append("logo", logo);
-      form.append("name", name);
-      form.append("company", company);
-      form.append("phone", tel);
-      form.append("email", email);
-      updateClient(client.id, form, (exit: boolean) => {
-        if (exit) {
-          getHistory()(dispatch);
-          setAction(false);
-        }
-      })(dispatch);
+    if (!password) {
+      return setPasswordError("Veuillez inserer le mot de passe.");
+    }
+
+    if (pwd) {
+      const isValid = bcrypt.compareSync(password, pwd.password);
+      if (isValid && client) {
+        const form = new FormData();
+        form.append("logo", image || "");
+        form.append("name", name);
+        form.append("company", company);
+        form.append("phone", tel);
+        form.append("email", email);
+        updateClient(client.id, form, (exit: boolean) => {
+          if (exit) {
+            getHistory()(dispatch);
+            setAction(false);
+          }
+        })(dispatch);
+      }
+      return setError("Mot de passe inserer invalide.");
     }
   };
   return (
@@ -133,12 +156,15 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
             setValue={setEmail}
             error={emailError}
           />
+          <InputText
+            name="password"
+            id="password"
+            defaultValue={""}
+            setValue={setPassword}
+            error={passwordError}
+          />
         </ModalForm>
-        {error && (
-          <ModalMessageError>
-            Veuillez remplir au moins un champ à modifier
-          </ModalMessageError>
-        )}
+        {error && <ModalMessageError>{error}</ModalMessageError>}
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton>

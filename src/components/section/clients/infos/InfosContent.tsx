@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { color } from "../../../../utils/color";
 import { ClientType } from "../../../../redux/features/client";
+import { getImagePath } from "../../../../utils/image";
 
 interface Props {
   client: ClientType | null;
@@ -10,7 +11,7 @@ const InfosContent = ({ client }: Props) => {
   return (
     <Container>
       <InfosContentImageContainer>
-        <InfosContentImage src={client?.logo} />
+        <InfosContentImage src={getImagePath(client?.logo)} />
       </InfosContentImageContainer>
       <InfosContentCard>
         <InfosContentCardTitle>NOM</InfosContentCardTitle>
