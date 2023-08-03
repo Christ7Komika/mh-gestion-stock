@@ -28,7 +28,7 @@ const SwitchData = ({ getData, isLength, error }: Props) => {
   return (
     <Container>
       <Row>
-        <Text>Quantité</Text>
+        <Text>Quantité *</Text>
         <Switch
           onClick={() => {
             setSwitchTo(!switchTo);
@@ -38,7 +38,7 @@ const SwitchData = ({ getData, isLength, error }: Props) => {
           <BoxIcon></BoxIcon>
           <Selector isMove={switchTo} />
         </Switch>
-        <Text>Longueur</Text>
+        <Text>Longueur *</Text>
       </Row>
       <SwitchContainer>
         {switchTo ? (

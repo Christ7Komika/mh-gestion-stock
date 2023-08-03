@@ -85,7 +85,7 @@ const SupplierModal = ({ setAction }: Props) => {
             error={""}
           />
           <InputText
-            name="Email *"
+            name="Email"
             id="email"
             defaultValue={email}
             setValue={setEmail}

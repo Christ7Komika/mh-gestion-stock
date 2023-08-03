@@ -19,6 +19,10 @@ import {
   getTicketId,
   validateTicket,
 } from "../../../../redux/features/ticket";
+import {
+  getNotifications,
+  getWarning,
+} from "../../../../redux/features/stores";
 
 interface Props {
   setAction: Function;
@@ -41,6 +45,8 @@ const ValidateModal = ({ setAction }: Props) => {
     if (id) {
       validateTicket(id, (exit: boolean) => {
         if (exit) {
+          getWarning()(dispatch);
+          getNotifications()(dispatch);
           getHistory()(dispatch);
           setAction(false);
         }

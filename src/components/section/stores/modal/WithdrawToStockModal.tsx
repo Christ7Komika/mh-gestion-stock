@@ -18,7 +18,9 @@ import InputPlainText from "../../../input/InputPlainText";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getHistory,
+  getNotifications,
   getStore,
+  getWarning,
   removeQuantityToStore,
 } from "../../../../redux/features/stores";
 import { RootState } from "../../../../redux/store";
@@ -107,6 +109,8 @@ const WithdrawToStockModal = ({ setAction }: Props) => {
               if (exit) {
                 getHistory()(dispatch);
                 initData();
+                getWarning()(dispatch);
+                getNotifications()(dispatch);
                 setAction(false);
               }
             }
@@ -180,6 +184,7 @@ const WithdrawToStockModal = ({ setAction }: Props) => {
             error={""}
           />
           <InputText
+            type="password"
             name="password"
             id="password"
             defaultValue={""}

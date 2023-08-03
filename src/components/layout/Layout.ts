@@ -39,6 +39,12 @@ export const Section = styled.section<SectionProps>`
   }
 `;
 
+export const SkeletonLoader = styled.div`
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+`;
+
 /**
  * MODAL
  */

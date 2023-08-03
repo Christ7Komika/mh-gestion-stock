@@ -24,6 +24,7 @@ import MoveToModal from "./modal/MoveToModal";
 import ChangeCategoryModal from "./modal/ChangeCategoryModal";
 import ChangeSupplierModal from "./modal/ChangeSupplierModal";
 import { IoEye } from "react-icons/io5";
+import { twoDecimalNumber } from "../../../utils/number";
 
 const Table = () => {
   const [open, setOpen] = useState(false);
@@ -70,30 +71,24 @@ const Table = () => {
         <table>
           <TableHeader>
             <THRow>
-              <THead>ID</THead>
-              <THead>Nom</THead>
+              <THead>Code</THead>
+              <THead>Désignation</THead>
               <THead>Catégorie</THead>
-              <THead>Quantité / Longueur</THead>
-              <THead>Prit d'achat</THead>
+              <THead>Q/L</THead>
               <THead>Prix unitaire</THead>
-              <THead>Prix de vente</THead>
-              <THead>Ajouté le</THead>
               <THead>Action</THead>
             </THRow>
           </TableHeader>
           <TableBody>
-            {stores?.map((store, index) => (
+            {stores?.map((store) => (
               <TRow>
-                <TData>{index + 1}</TData>
-                <TData>{store.name}</TData>
+                <TData>{store.code}</TData>
+                <TData>{store.designation}</TData>
                 <TData>{store.Category.name}</TData>
-                <TData>{`${store.quantity} ${
+                <TData>{`${twoDecimalNumber(parseFloat(store.quantity))} ${
                   store.hasLength ? "mètre(s)" : "qté(s)"
                 }`}</TData>
-                <TData>{store.purchasePrice + " FCFA"}</TData>
                 <TData>{store.unitPrice + " FCFA"}</TData>
-                <TData>{store.sellingPrice + " FCFA"}</TData>
-                <TData>{new Date(store.createdAt).toLocaleDateString()}</TData>
                 <TData>
                   <OptionGroup>
                     <Option

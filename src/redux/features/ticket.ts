@@ -39,6 +39,7 @@ export interface TicketType {
   purchaseOrder: string;
   status: string;
   sum: string;
+  applicant: string;
   articles: StoreType[];
   item: ItemType[];
   updatedAt: Date;

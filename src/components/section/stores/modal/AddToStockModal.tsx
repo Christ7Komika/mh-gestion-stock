@@ -20,7 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addQuantityToStore,
   getHistory,
+  getNotifications,
   getStore,
+  getWarning,
 } from "../../../../redux/features/stores";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
@@ -85,6 +87,8 @@ const AddToStockModal = ({ setAction }: Props) => {
           },
           (exit: boolean) => {
             if (exit) {
+              getWarning()(dispatch);
+              getNotifications()(dispatch);
               getHistory()(dispatch);
               initData();
               setAction(false);
@@ -160,13 +164,16 @@ const AddToStockModal = ({ setAction }: Props) => {
             error={""}
           />
 
-          {/* <InputText
+          {/* 
+          <InputText
+            type="password"
             name="password"
             id="password"
             defaultValue={""}
             setValue={setPassword}
             error={passwordError}
-          /> */}
+          /> 
+          */}
         </ModalForm>
         {error && <ModalMessageError>{error}</ModalMessageError>}
         {isLoadChange ? (

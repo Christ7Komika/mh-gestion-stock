@@ -121,7 +121,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
             defaultImage={getImagePath(client?.logo)}
           />
           <InputText
-            name="Nom *"
+            name="Nom"
             id="name"
             defaultValue={
               name ? name : client && client.name ? client.name : ""
@@ -130,7 +130,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
             error={nameError}
           />
           <InputText
-            name="Société *"
+            name="Société"
             id="société"
             defaultValue={
               company ? company : client && client.company ? client.company : ""
@@ -157,6 +157,7 @@ const UpdateClientModal = ({ setAction, client }: Props) => {
             error={emailError}
           />
           <InputText
+            type="password"
             name="password"
             id="password"
             defaultValue={""}

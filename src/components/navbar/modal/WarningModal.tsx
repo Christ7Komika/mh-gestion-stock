@@ -6,13 +6,23 @@ import {
   ModalHeader,
   ModalHeaderExit,
   ModalHeaderTitle,
-  ModalMessageError,
   ModalValidButton,
 } from "../../layout/Layout";
 import { IoExit } from "react-icons/io5";
 import { Loader } from "../../loader/Loader";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../redux/store";
+import { getWarning } from "../../../redux/features/stores";
+import { useEffect } from "react";
+import {
+  TableContainer,
+  TableHeader,
+  THRow,
+  TRow,
+  THead,
+  TableBody,
+  TData,
+} from "../../layout/table";
 
 interface Props {
   setAction: Function;
@@ -20,6 +30,12 @@ interface Props {
 
 const WarningModal = ({ setAction }: Props) => {
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
+  const dispatch = useDispatch();
+  const warnings = useSelector((state: RootState) => state.store.warning);
+  useEffect(() => {
+    getWarning()(dispatch);
+  }, []);
+
   return (
     <ModalContainer>
       <Modal>
@@ -31,7 +47,46 @@ const WarningModal = ({ setAction }: Props) => {
             <IoExit />
           </ModalHeaderExit>
         </ModalHeader>
-        <h1>Warning Modal</h1>
+        <Table>
+          <TableContainer>
+            <table>
+              <TableHead style={{ background: "#fff" }}>
+                <THRow>
+                  <THead>ID</THead>
+                  <THead>Code</THead>
+                  <THead>Nom</THead>
+                  <THead>Désignation</THead>
+                  <THead>Q/L</THead>
+                  <THead>Entrepôt</THead>
+                  <THead>Founisseur</THead>
+                </THRow>
+              </TableHead>
+              <TableBody>
+                {warnings?.map((warning, index) => (
+                  <TRow key={warning.id}>
+                    <TData>{index + 1}</TData>
+                    <TData>{warning.code}</TData>
+                    <TData style={{ width: 200, lineBreak: "auto" }}>
+                      {warning.name}
+                    </TData>
+                    <TData style={{ width: 200, lineBreak: "auto" }}>
+                      {warning.designation}
+                    </TData>
+                    <TData>
+                      {warning.quantity} {warning.hasLength ? "mètre(s)" : ""}{" "}
+                    </TData>
+                    <TData style={{ width: 200, lineBreak: "auto" }}>
+                      {warning.Warehouse.name}
+                    </TData>
+                    <TData style={{ width: 200, lineBreak: "auto" }}>
+                      {warning.Supplier.name}
+                    </TData>
+                  </TRow>
+                ))}
+              </TableBody>
+            </table>
+          </TableContainer>
+        </Table>
         {isLoad ? (
           <ModalGroupButton>
             <ModalValidButton>
@@ -72,7 +127,28 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
-  max-width: 500px;
+  min-width: 900px;
+  height: 400px;
+`;
+
+const Table = styled.div`
+  width: 100%;
+  height: 100%;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${color.border};
+    border-radius: 5px;
+  }
+`;
+
+const TableHead = styled(TableHeader)`
+  top: 0;
+  z-index: 2;
 `;
 
 export default WarningModal;

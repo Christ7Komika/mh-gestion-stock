@@ -9,6 +9,9 @@ import OptionModal from "./modal/OptionModal";
 import ValidateModal from "./modal/ValidateModal";
 import CancelModal from "./modal/CancelModal";
 import DeleteModal from "./modal/DeleteModal";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PdfExitVoucher from "../../pdf/PdfExitVoucher";
+import { Loader } from "../../loader/Loader";
 
 const Table = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -18,6 +21,7 @@ const Table = () => {
   const dispatch = useDispatch();
   const tickets = useSelector((state: RootState) => state.ticket.datas);
 
+  console.log(tickets);
   useEffect(() => {
     getTickets()(dispatch);
   }, []);
@@ -69,7 +73,20 @@ const Table = () => {
                       action="remove"
                       onClick={() => getTicketId(ticket.id)(dispatch)}
                     >
-                      <BiSolidPrinter size={15} />
+                      <PDFDownloadLink
+                        document={PdfExitVoucher(ticket)}
+                        fileName="demande_pieces.pdf"
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          color: "#AC6311",
+                        }}
+                      >
+                        {({ blob, url, loading, error }) =>
+                          loading ? <Loader /> : <BiSolidPrinter size={15} />
+                        }
+                      </PDFDownloadLink>
                     </Option>
                     <Option
                       action="update"

@@ -26,6 +26,7 @@ export const TableHeader = styled.thead`
   left: 0;
   background: #fff;
   backdrop-filter: blur(1000px);
+  z-index: 2;
 `;
 export const THead = styled.th`
   font-size: 1rem;
@@ -76,6 +77,7 @@ export const TData = styled.td`
   text-align: center;
   font-size: 0.8rem;
   position: relative;
+  padding-inline: 5px;
 `;
 
 export const TableBody = styled.tbody`

@@ -41,6 +41,7 @@ interface clientState {
   currentId: string | null;
   history: History[] | null;
   isLoad: boolean;
+  isLoadUnique: boolean;
   isError: boolean;
   isSuccess: boolean;
 }
@@ -50,6 +51,7 @@ const initialState: clientState = {
   datas: null,
   data: null,
   isLoad: false,
+  isLoadUnique: false,
   isError: false,
   history: null,
   isSuccess: false,
@@ -73,6 +75,9 @@ export const clientSlice = createSlice({
     isLoad: (state, action: PayloadAction<boolean>) => {
       state.isLoad = action.payload;
     },
+    isLoadUnique: (state, action: PayloadAction<boolean>) => {
+      state.isLoadUnique = action.payload;
+    },
     isSuccess: (state, action: PayloadAction<boolean>) => {
       state.isSuccess = action.payload;
     },
@@ -93,6 +98,7 @@ export const {
   isError,
   clientId,
   history,
+  isLoadUnique,
 } = clientSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -116,7 +122,7 @@ export const getClients = () => (dispatch: AppDispatch) => {
     });
 };
 export const searchClients = (data: string) => (dispatch: AppDispatch) => {
-  dispatch(isLoad(true));
+  dispatch(isLoadUnique(true));
   const config = {
     method: "post",
     url: host + "/client/find",
@@ -127,11 +133,11 @@ export const searchClients = (data: string) => (dispatch: AppDispatch) => {
     .then(({ data }) => {
       dispatch(clients(data));
       dispatch(isSuccess(true));
-      dispatch(isLoad(false));
+      dispatch(isLoadUnique(false));
     })
     .catch(() => {
       dispatch(isError(true));
-      dispatch(isLoad(false));
+      dispatch(isLoadUnique(false));
     });
 };
 

@@ -44,16 +44,18 @@ export interface CommentType {
 }
 
 export interface StoreAlert {
+  _count: number;
   id: string;
   name: string;
-  _count: number;
+  code: number;
   designation: string;
   hasLength: string;
   quantity: string;
+  Supplier: {
+    name: string;
+  };
   Warehouse: {
-    select: {
-      name: string;
-    };
+    name: string;
   };
 }
 
@@ -278,7 +280,7 @@ export const getNotifications = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/articles/notification",
+    url: host + "/articles/get/notification",
   };
 
   axios<StoreAlert[]>(config)
@@ -296,7 +298,7 @@ export const getWarning = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
   const config = {
     method: "get",
-    url: host + "/articles/warning",
+    url: host + "/articles/get/warning",
   };
 
   axios<StoreAlert[]>(config)

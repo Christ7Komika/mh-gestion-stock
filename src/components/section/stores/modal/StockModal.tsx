@@ -23,7 +23,12 @@ import SwitchData from "../../../input/SwitchData";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import { Loader } from "../../../loader/Loader";
-import { createStore, getHistory } from "../../../../redux/features/stores";
+import {
+  createStore,
+  getHistory,
+  getNotifications,
+  getWarning,
+} from "../../../../redux/features/stores";
 
 interface Props {
   setAction: Function;
@@ -40,9 +45,9 @@ const StockModal = ({ setAction }: Props) => {
   const [quantityError, setQuantityError] = useState<string | null>(null);
   const [designation, setDesignation] = useState<string | null>(null);
   const [designationError, setDesignationError] = useState<string | null>(null);
-  const [unitPrice, setUnitPrice] = useState<string | null>(null);
+  const [unitPrice, setUnitPrice] = useState<string | null>("0");
   const [priceError, setPriceError] = useState<string | null>(null);
-  const [purchasePrice, setPurchasePrice] = useState<string | null>(null);
+  const [purchasePrice, setPurchasePrice] = useState<string | null>("0");
   const [lotNumber, setLotNumber] = useState<string | null>(null);
   const [operatingPressure, setOperatingPressure] = useState<string | null>(
     null
@@ -126,6 +131,8 @@ const StockModal = ({ setAction }: Props) => {
 
     createStore(form, (exit: boolean) => {
       if (exit) {
+        getWarning()(dispatch);
+        getNotifications()(dispatch);
         getHistory()(dispatch);
         setAction(false);
       }
@@ -158,7 +165,7 @@ const StockModal = ({ setAction }: Props) => {
               defaultValue={code}
               setValue={setCode}
               error={""}
-              placeholder="Le code de l'article (Iddentifiant unique)"
+              placeholder="Le code de l'article (identifiant unique)"
             />
             <InputText
               name="Type"
@@ -199,7 +206,7 @@ const StockModal = ({ setAction }: Props) => {
               data={warehouses}
             />
             <InputSelect
-              name="Catégorie "
+              name="Catégorie *"
               id="category"
               defaultValue={category}
               setId={setCategory}
@@ -208,7 +215,7 @@ const StockModal = ({ setAction }: Props) => {
               data={categories}
             />
             <InputPlainText
-              name="Désignation "
+              name="Désignation *"
               id="designation"
               defaultValue={designation}
               setValue={setDesignation}
@@ -223,14 +230,14 @@ const StockModal = ({ setAction }: Props) => {
             </ModalDoubleFormGroup>
             <ModalTripleFormGroup>
               <InputText
-                name="Prix TTC"
+                name="Prix TTC *"
                 id="pa"
                 defaultValue={purchasePrice}
                 setValue={setPurchasePrice}
                 error={""}
               />
               <InputText
-                name="Prix unitaire"
+                name="Prix unitaire *"
                 id="pu"
                 defaultValue={unitPrice}
                 setValue={setUnitPrice}
@@ -250,7 +257,7 @@ const StockModal = ({ setAction }: Props) => {
             <ModalInfosTitle>Infos supplémentaire</ModalInfosTitle>
 
             <InputText
-              name="Pression de service *"
+              name="Pression de service"
               id="pressionService"
               defaultValue={operatingPressure}
               setValue={setOperatingPressure}

@@ -72,6 +72,7 @@ const DeleteModal = ({ setAction, trueName, id }: Props) => {
         <p>Inserer le mot de passe.</p>
         <ModalForm>
           <InputText
+            type="password"
             name=""
             id="password"
             defaultValue={password}

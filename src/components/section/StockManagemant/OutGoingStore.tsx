@@ -1,8 +1,5 @@
 const OutGoingStore = () => {
-    return (
-        <p>OutGoingStore</p>
-    );
+  return <div>Stock entrant</div>;
 };
-
 
 export default OutGoingStore;

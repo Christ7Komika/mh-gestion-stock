@@ -34,6 +34,8 @@ import { getClients } from "../../../../redux/features/client";
 import {
   StoreType,
   emptyDatasStores,
+  getNotifications,
+  getWarning,
   searchDatasStores,
 } from "../../../../redux/features/stores";
 import ModalDataContentSection from "../../../split/ModalDataContentSection";
@@ -234,6 +236,8 @@ const TicketModal = ({ setAction }: Props) => {
 
     createTicket(data, (exit: boolean) => {
       if (exit) {
+        getWarning()(dispatch);
+        getNotifications()(dispatch);
         getHistory()(dispatch);
         emptyDatasStores()(dispatch);
         setArticle(null);
@@ -259,7 +263,6 @@ const TicketModal = ({ setAction }: Props) => {
               defaultValue={name}
               setValue={setName}
               error={nameError}
-              placeholder="Le nom de l'article"
             />
             <InputText
               name="Numéro de commande"
@@ -267,7 +270,6 @@ const TicketModal = ({ setAction }: Props) => {
               defaultValue={orderNumber}
               setValue={setOrderNumber}
               error={orderNumberError}
-              placeholder="Inserer le numéro de commande"
             />
             <InputText
               name="Demandeur"
@@ -275,7 +277,6 @@ const TicketModal = ({ setAction }: Props) => {
               defaultValue={applicant}
               setValue={setApplicant}
               error={""}
-              placeholder="Le nom du demandeur"
             />
             <InputSelect
               placeholder="Sélectionner le client"

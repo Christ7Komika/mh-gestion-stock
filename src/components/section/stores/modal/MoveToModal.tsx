@@ -20,7 +20,9 @@ import InputPlainText from "../../../input/InputPlainText";
 import InputSelect from "../../../input/InputSelect";
 import {
   getHistory,
+  getNotifications,
   getStore,
+  getWarning,
   moveToStore,
 } from "../../../../redux/features/stores";
 import InputText from "../../../input/InputText";
@@ -94,6 +96,8 @@ const MoveToModal = ({ setAction }: Props) => {
         };
         moveToStore(currentId, data, (exit: boolean) => {
           if (exit) {
+            getWarning()(dispatch);
+            getNotifications()(dispatch);
             getHistory()(dispatch);
             return setAction(false);
           }

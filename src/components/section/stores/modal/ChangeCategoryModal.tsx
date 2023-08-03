@@ -116,6 +116,7 @@ const ChangeCategoryModal = ({ setAction }: Props) => {
             error={""}
           />
           <InputText
+            type="password"
             name="password"
             id="password"
             defaultValue={""}

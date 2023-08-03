@@ -114,6 +114,7 @@ const UpdateWarehouseModal = ({ setAction, warehouse }: Props) => {
             error={""}
           />
           <InputText
+            type="password"
             name="password"
             id="password"
             defaultValue={""}

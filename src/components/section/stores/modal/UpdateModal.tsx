@@ -210,7 +210,7 @@ const UpdateModal = ({ setAction }: Props) => {
             />
             <ModalTripleFormGroup>
               <InputText
-                name="Prix d'achat"
+                name="Prix TTC"
                 id="pa"
                 defaultValue={store?.purchasePrice || purchasePrice}
                 setValue={setPurchasePrice}
@@ -265,6 +265,7 @@ const UpdateModal = ({ setAction }: Props) => {
               error={""}
             />
             <InputText
+              type="password"
               name="password"
               id="password"
               defaultValue={""}

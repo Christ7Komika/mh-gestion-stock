@@ -105,7 +105,7 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
             defaultImage={getImagePath(supplier?.logo)}
           />
           <InputText
-            name="Nom *"
+            name="Nom"
             id="name"
             defaultValue={
               name ? name : supplier && supplier.name ? supplier.name : ""
@@ -132,6 +132,7 @@ const UpdateSupplierModal = ({ setAction, supplier }: Props) => {
             error={emailError}
           />
           <InputText
+            type="password"
             name="password"
             id="password"
             defaultValue={""}

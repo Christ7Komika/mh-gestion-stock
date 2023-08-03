@@ -1,4 +1,3 @@
-import GroupCard from "../components/card/GroupCard";
 import NavBar from "../components/navbar/NavBar.tsx";
 import { Section, SectionX3 } from "../components/layout/Layout";
 import TableData from "../components/section/stores/TableData";
@@ -13,6 +12,7 @@ import { RootState } from "../redux/store";
 import InfosHeader from "../components/section/stores/infos/InfosHeader";
 import InfosContent from "../components/section/stores/infos/InfosContent";
 import InfosHistoricalContent from "../components/section/stores/infos/InfosHistoricalContent";
+import GroupCard from "../components/section/stores/card/GroupCard.tsx";
 
 const Stores = () => {
   const store = useSelector((state: RootState) => state.store.data);
