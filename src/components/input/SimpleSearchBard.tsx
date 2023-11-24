@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { color } from "../../utils/color";
 import { IoSearch } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Loader } from "../loader/Loader";
@@ -9,11 +9,18 @@ import { Loader } from "../loader/Loader";
 interface Props {
   setSearch: Function;
   isValid: Function;
+  defaultValue?: string;
 }
 
-const SimpleSearchBard = ({ setSearch, isValid }: Props) => {
-  const [text, setText] = useState<string | null>(null);
+const SimpleSearchBard = ({ setSearch, isValid, defaultValue }: Props) => {
+  const [text, setText] = useState<string>("");
   const isLoad = useSelector((state: RootState) => state.client.isLoad);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setText(defaultValue);
+    }
+  }, [defaultValue]);
 
   const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -21,6 +28,7 @@ const SimpleSearchBard = ({ setSearch, isValid }: Props) => {
     setSearch(text);
     isValid(true);
   };
+
   return (
     <Container>
       <SearchIcon onClick={submit}>
@@ -28,6 +36,7 @@ const SimpleSearchBard = ({ setSearch, isValid }: Props) => {
       </SearchIcon>
       <SearchText
         type="text"
+        value={text}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setText(e.target.value)
         }

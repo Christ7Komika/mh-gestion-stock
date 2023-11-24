@@ -117,6 +117,7 @@ const ModalContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 2rem;
 `;
 
 const Modal = styled.div`
@@ -127,13 +128,14 @@ const Modal = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.5rem;
-  min-width: 900px;
-  height: 400px;
+  width: 100%;
+  height: 600px;
 `;
 
 const Table = styled.div`
   width: 100%;
   height: 100%;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 5px;

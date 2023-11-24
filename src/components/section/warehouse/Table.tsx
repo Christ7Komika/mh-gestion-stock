@@ -1,5 +1,6 @@
 import { IoCreate, IoEye } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import { BiPackage } from "react-icons/bi";
 import {
   OptionGroup,
   TData,
@@ -21,6 +22,7 @@ import {
 } from "../../../redux/features/warehouse";
 import UpdateWarehouseModal from "./modal/UpdateWarehouseModal";
 import DeleteModal from "./modal/DeleteModal";
+import ArticlesModal from "./modal/ArticlesModal";
 
 const Table = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ const Table = () => {
   const [warehouseData, setWarehouseData] = useState<WarehouseType | null>(
     null
   );
+  const [articleModal, setArticleModal] = useState<boolean>(false);
 
   useEffect(() => {
     getWarehouses()(dispatch);
@@ -61,6 +64,8 @@ const Table = () => {
 
   return (
     <>
+      {articleModal && <ArticlesModal setAction={setArticleModal} />}
+
       {modalDelete && (
         <DeleteModal setAction={setModalDelete} trueName={name} id={id} />
       )}
@@ -92,6 +97,15 @@ const Table = () => {
                 </TData>
                 <TData>
                   <OptionGroup>
+                    <Option
+                      action="remove"
+                      onClick={() => {
+                        getWarehouseId(warehouse.id)(dispatch);
+                        setArticleModal(true);
+                      }}
+                    >
+                      <BiPackage size={15} />
+                    </Option>
                     <Option
                       action="add"
                       onClick={() => handleSee(warehouse.id)}

@@ -127,3 +127,20 @@ export const Option = styled.div<OptionProps>`
     opacity: 0.8;
   }
 `;
+
+export const LoaderGrid = styled.div`
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+`;
+
+export const EmptyText = styled.h2`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${color.darkBlue};
+  font-weight: 500;
+  font-size: 2rem;
+`;

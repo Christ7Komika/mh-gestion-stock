@@ -24,8 +24,8 @@ interface CategoryState {
   data: null | CategoryType;
   isLoad: boolean;
   currentId: string | null;
-  isError: Boolean;
-  isSuccess: Boolean;
+  isError: boolean;
+  isSuccess: boolean;
 }
 
 // Define the initial state using that type
@@ -70,9 +70,12 @@ export const { categories, category, isLoad, isSuccess, isError, categoryId } =
 
 export const getCategories = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
+
   const config = {
     method: "get",
     url: host + "/category",
+    signal,
   };
 
   axios<CategoryType[]>(config)
@@ -84,14 +87,17 @@ export const getCategories = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const getCategory = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/category/" + id,
+    signal,
   };
 
   axios<CategoryType>(config)
@@ -103,15 +109,18 @@ export const getCategory = (id: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const createCategory =
   (data: Category, exit?: Function) => (dispatch: AppDispatch) => {
+    const { signal, abort } = new AbortController();
     dispatch(isLoad(true));
     const config = {
       method: "post",
       url: host + "/category/",
+      signal,
       data: {
         ...data,
       },
@@ -128,15 +137,18 @@ export const createCategory =
         dispatch(isError(true));
         dispatch(isLoad(false));
         if (exit) exit(true);
-      });
+      })
+      .finally(() => abort());
   };
 
 export const updateCategory =
   (id: string, data: Category, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "put",
       url: host + "/category/" + id,
+      signal,
       data: { ...data },
     };
 
@@ -152,15 +164,18 @@ export const updateCategory =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const deleteCategory =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "delete",
       url: host + "/category/" + id,
+      signal,
     };
     axios<CategoryType[]>(config)
       .then(({ data }) => {
@@ -172,7 +187,8 @@ export const deleteCategory =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const getCategoryId = (id: string) => (dispatch: AppDispatch) => {

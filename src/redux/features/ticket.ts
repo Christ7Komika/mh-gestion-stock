@@ -140,9 +140,11 @@ export const {
 
 export const getTickets = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/ticket",
+    signal,
   };
 
   axios<TicketType[]>(config)
@@ -154,14 +156,17 @@ export const getTickets = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const getHistory = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/ticket/history/add",
+    signal,
   };
 
   axios<History[]>(config)
@@ -173,17 +178,20 @@ export const getHistory = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const filterHistory =
   (data: { startDate: Date; endDate: Date | null }) =>
   (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/ticket/history/filter",
       data: data,
+      signal,
     };
 
     axios<History[]>(config)
@@ -195,14 +203,17 @@ export const filterHistory =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const getTicket = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/ticket/" + id,
+    signal,
   };
 
   axios<TicketType>(config)
@@ -214,15 +225,18 @@ export const getTicket = (id: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const filterByStatus = (data: string) => (dispatch: AppDispatch) => {
   dispatch(isLoadGroup(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "post",
     url: host + "/ticket/status",
     data: { status: data },
+    signal,
   };
 
   axios<TicketType[]>(config)
@@ -234,14 +248,17 @@ export const filterByStatus = (data: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoadGroup(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const searchTickets = (data: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "post",
     url: host + "/ticket/find",
     data: { search: data },
+    signal,
   };
 
   axios<TicketType[]>(config)
@@ -253,15 +270,18 @@ export const searchTickets = (data: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const validateTicket =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "get",
       url: host + "/ticket/valid/" + id,
+      signal,
     };
 
     axios<TicketType[]>(config)
@@ -274,14 +294,17 @@ export const validateTicket =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 export const cancelTicket =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "get",
       url: host + "/ticket/cancel/" + id,
+      signal,
     };
 
     axios<TicketType[]>(config)
@@ -294,18 +317,21 @@ export const cancelTicket =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const createTicket =
   (data: TicketTypeData, exit?: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoadCreate(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/ticket",
       data: {
         ...data,
       },
+      signal,
     };
 
     axios<TicketType[]>(config)
@@ -319,16 +345,19 @@ export const createTicket =
         dispatch(isError(true));
         dispatch(isLoadCreate(false));
         if (exit) exit(true);
-      });
+      })
+      .finally(() => abort());
   };
 
 export const updateTicket =
   (id: string, data: Ticket, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "put",
       url: host + "/ticket/" + id,
       data: { ...data },
+      signal,
     };
 
     axios<TicketType[]>(config)
@@ -343,15 +372,18 @@ export const updateTicket =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const deleteTicket =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "delete",
       url: host + "/ticket/" + id,
+      signal,
     };
     axios<TicketType[]>(config)
       .then(({ data }) => {
@@ -363,7 +395,8 @@ export const deleteTicket =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const getTicketId = (id: string) => (dispatch: AppDispatch) => {

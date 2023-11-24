@@ -59,7 +59,7 @@ const ChangePasswordModal = ({ setAction }: Props) => {
     if (pwd) {
       const isValid = bcrypt.compareSync(oldPass, pwd.password);
       if (isValid) {
-        changePass(newPass, (exit: Boolean) => {
+        changePass(newPass, (exit: boolean) => {
           if (exit) {
             getPass()(dispatch);
             setAction(false);

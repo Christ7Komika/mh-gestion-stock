@@ -53,9 +53,11 @@ export const { password, isLoad, isSuccess, isError } =
 
 export const getPass = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/configuration",
+    signal,
   };
 
   axios<Configuration>(config)
@@ -67,14 +69,17 @@ export const getPass = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const initPass = (exit: Function) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/configuration/init",
+    signal,
   };
 
   axios<Configuration>(config)
@@ -87,18 +92,21 @@ export const initPass = (exit: Function) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const changePass =
   (pwd: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/configuration/change",
       data: {
         password: pwd,
       },
+      signal,
     };
 
     axios<Configuration>(config)
@@ -111,7 +119,8 @@ export const changePass =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export default configurationSlice.reducer;

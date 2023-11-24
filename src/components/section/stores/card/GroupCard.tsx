@@ -9,6 +9,7 @@ import { StoreType, getStores } from "../../../../redux/features/stores";
 const GroupCard = () => {
   const dispatch = useDispatch();
   const articles = useSelector((state: RootState) => state.store.datas);
+  const count = useSelector((state: RootState) => state.store.count);
   const [endStock, setEndStock] = useState<StoreType[] | []>([]);
 
   useEffect(() => {
@@ -27,10 +28,11 @@ const GroupCard = () => {
     <Container>
       {articles && (
         <>
-          <Card title="Total article enregistré" value={articles.length || 0} />
+          <Card title="Total article enregistré" value={count || 0} />
           {endStock && (
             <Card title="Total en fin de stock" value={endStock.length || 0} />
           )}
+          <Card title="Total article affiché" value={articles.length || 0} />
         </>
       )}
     </Container>
@@ -41,7 +43,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid ${color.border};
   position: sticky;
   top: 0;

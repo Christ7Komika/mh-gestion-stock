@@ -1,5 +1,6 @@
 import { IoCreate, IoEye } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
+import { BiPackage } from "react-icons/bi";
 import {
   OptionGroup,
   TData,
@@ -21,6 +22,7 @@ import {
 } from "../../../redux/features/category";
 import DeleteModal from "./modal/DeleteModal";
 import UpdateCategoryModal from "./modal/UpdateCategoryModal";
+import ArticlesModal from "./modal/ArticlesModal";
 
 const Table = () => {
   const dispatch = useDispatch();
@@ -29,6 +31,7 @@ const Table = () => {
   const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalUpdate, setModalUpdate] = useState<boolean>(false);
   const [categoryData, setCategoryData] = useState<CategoryType | null>(null);
+  const [articleModal, setArticleModal] = useState<boolean>(false);
 
   useEffect(() => {
     getCategories()(dispatch);
@@ -59,6 +62,7 @@ const Table = () => {
 
   return (
     <>
+      {articleModal && <ArticlesModal setAction={setArticleModal} />}
       {modalDelete && (
         <DeleteModal setAction={setModalDelete} trueName={name} id={id} />
       )}
@@ -92,6 +96,15 @@ const Table = () => {
                 </TData>
                 <TData>
                   <OptionGroup>
+                    <Option
+                      action="remove"
+                      onClick={() => {
+                        getCategoryId(category.id)(dispatch);
+                        setArticleModal(true);
+                      }}
+                    >
+                      <BiPackage size={15} />
+                    </Option>
                     <Option action="add" onClick={() => handleSee(category.id)}>
                       <IoEye size={15} />
                     </Option>

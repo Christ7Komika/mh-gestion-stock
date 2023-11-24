@@ -59,17 +59,14 @@ const NavBar = () => {
         <LeftSide>
           <Logo>MH</Logo>
           <GroupLink>
-            <CustomLink to="/" active={isActive("/")}>
-              ACCEUIL
-            </CustomLink>
-            <CustomLink active={isActive("/stocks")} to="/stocks">
+            <CustomLink active={isActive("/")} to="/">
               STOCKS
+            </CustomLink>
+            <CustomLink active={isActive("/ticket")} to="/ticket">
+              BON DE SORTIE
             </CustomLink>
             <CustomLink active={isActive("/entrepot")} to="/entrepot">
               ENTREPÔTS
-            </CustomLink>
-            <CustomLink active={isActive("/ticket")} to="/ticket">
-              TICKETS
             </CustomLink>
             <CustomLink active={isActive("/categories")} to="/categories">
               CATÉGORIES
@@ -111,7 +108,7 @@ const NavBar = () => {
             onClick={() => setConfigurationModal(!configurationModal)}
           >
             Configuration
-          </ConfigurationButton>
+          </ConfigurationButton> 
         </RightSide>
       </Container>
     </>

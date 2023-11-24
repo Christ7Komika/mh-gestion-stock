@@ -105,9 +105,11 @@ export const {
 
 export const getClients = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/client",
+    signal,
   };
 
   axios<ClientType[]>(config)
@@ -119,13 +121,16 @@ export const getClients = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const searchClients = (data: string) => (dispatch: AppDispatch) => {
   dispatch(isLoadUnique(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "post",
     url: host + "/client/find",
+    signal,
     data: { search: data },
   };
 
@@ -138,14 +143,17 @@ export const searchClients = (data: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoadUnique(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const getClient = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/client/" + id,
+    signal,
   };
 
   axios<ClientType>(config)
@@ -157,13 +165,16 @@ export const getClient = (id: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const getHistory = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/client/history/add",
+    signal,
   };
 
   axios<History[]>(config)
@@ -175,16 +186,19 @@ export const getHistory = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const filterHistory =
   (data: { startDate: Date; endDate: Date | null }) =>
   (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/client/history/filter",
       data: data,
+      signal,
     };
 
     axios<History[]>(config)
@@ -196,7 +210,8 @@ export const filterHistory =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const getClientId = (id: string) => (dispatch: AppDispatch) => {
@@ -206,10 +221,12 @@ export const getClientId = (id: string) => (dispatch: AppDispatch) => {
 export const createClient =
   (data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/client/",
       data: data,
+      signal,
     };
 
     axios<ClientType[]>(config)
@@ -222,16 +239,19 @@ export const createClient =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const updateClient =
   (id: string, data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "put",
       url: host + "/client/" + id,
       data: data,
+      signal,
     };
 
     axios<ClientType[]>(config)
@@ -244,15 +264,18 @@ export const updateClient =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const deleteClient =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "delete",
       url: host + "/client/" + id,
+      signal,
     };
     axios<ClientType[]>(config)
       .then(({ data }) => {
@@ -264,7 +287,8 @@ export const deleteClient =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export default clientSlice.reducer;

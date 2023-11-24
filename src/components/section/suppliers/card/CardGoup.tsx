@@ -12,7 +12,7 @@ const CardGroup = ({ name, count, type, handleOpen }: Props) => {
   return (
     <Card onClick={() => handleOpen(type, name)}>
       <CardContent>
-        <CardText>{name}</CardText>
+        <CardText>{name === "Aucun" ? "Inconnu" : name}</CardText>
         <CardHighLight>Artilce : {count}</CardHighLight>
       </CardContent>
     </Card>
@@ -26,8 +26,9 @@ const Card = styled.div`
   border-radius: 5px;
   padding-bottom: 7px;
   border: 1px solid ${color.darkBlue};
+  background-color: #fff;
   transition: linear 0.2s;
-  cursor: pointer;
+
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
       rgba(0, 0, 0, 0.05) 0px 5px 10px;

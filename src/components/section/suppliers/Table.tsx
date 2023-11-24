@@ -10,6 +10,7 @@ import {
   Option,
 } from "../../layout/table";
 import { IoCreate, IoEye } from "react-icons/io5";
+import { BiPackage } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,12 +22,14 @@ import {
 } from "../../../redux/features/supplier";
 import DeleteModal from "./modal/DeleteModal";
 import UpdateSupplierModal from "./modal/updateSupplierModal";
+import ArticlesModal from "./modal/ArticlesModal";
 
 const Table = () => {
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [modalDelete, setModalDelete] = useState<boolean>(false);
   const [modalUpdate, setModalUpdate] = useState<boolean>(false);
+  const [articleModal, setArticleModal] = useState<boolean>(false);
   const [supplierData, setSupplierData] = useState<SupplierType | null>(null);
   const dispatch = useDispatch();
   const suppliers = useSelector((state: RootState) => state.supplier.datas);
@@ -52,6 +55,7 @@ const Table = () => {
 
   return (
     <>
+      {articleModal && <ArticlesModal setAction={setArticleModal} />}
       {modalDelete && (
         <DeleteModal setAction={setModalDelete} trueName={name} id={id} />
       )}
@@ -85,6 +89,15 @@ const Table = () => {
                 </TData>
                 <TData>
                   <OptionGroup>
+                    <Option
+                      action="remove"
+                      onClick={() => {
+                        getSupplierId(supplier.id)(dispatch);
+                        setArticleModal(true);
+                      }}
+                    >
+                      <BiPackage size={15} />
+                    </Option>
                     <Option action="add" onClick={() => handleSee(supplier.id)}>
                       <IoEye size={15} />
                     </Option>

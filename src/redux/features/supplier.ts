@@ -103,9 +103,11 @@ export const {
 
 export const getSuppliers = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/supplier",
+    signal,
   };
 
   axios<SupplierType[]>(config)
@@ -117,14 +119,17 @@ export const getSuppliers = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const searchSupplier = (data: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "post",
     url: host + "/supplier/find",
     data: { search: data },
+    signal,
   };
 
   axios<SupplierType[]>(config)
@@ -136,14 +141,17 @@ export const searchSupplier = (data: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const getSupplier = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/supplier/" + id,
+    signal,
   };
 
   axios<SupplierType>(config)
@@ -155,13 +163,16 @@ export const getSupplier = (id: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const getHistory = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/supplier/history/add",
+    signal,
   };
 
   axios<History[]>(config)
@@ -173,16 +184,19 @@ export const getHistory = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 export const filterHistory =
   (data: { startDate: Date; endDate: Date | null }) =>
   (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/supplier/history/filter",
       data: data,
+      signal,
     };
 
     axios<History[]>(config)
@@ -194,7 +208,8 @@ export const filterHistory =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const getSupplierId = (id: string) => (dispatch: AppDispatch) => {
@@ -204,10 +219,12 @@ export const getSupplierId = (id: string) => (dispatch: AppDispatch) => {
 export const createSupplier =
   (data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/supplier/",
       data: data,
+      signal,
     };
 
     axios<SupplierType[]>(config)
@@ -220,16 +237,19 @@ export const createSupplier =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const updateSupplier =
   (id: string, data: FormData, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "put",
       url: host + "/supplier/" + id,
       data: data,
+      signal,
     };
 
     axios<SupplierType[]>(config)
@@ -242,15 +262,18 @@ export const updateSupplier =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const deleteSupplier =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "delete",
       url: host + "/supplier/" + id,
+      signal,
     };
     axios<SupplierType[]>(config)
       .then(({ data }) => {
@@ -262,7 +285,8 @@ export const deleteSupplier =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export default supplierSlice.reducer;

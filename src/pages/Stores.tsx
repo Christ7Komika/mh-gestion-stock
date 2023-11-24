@@ -18,6 +18,7 @@ const Stores = () => {
   const store = useSelector((state: RootState) => state.store.data);
   const id = useSelector((state: RootState) => state.store.currentId);
   const dispatch = useDispatch();
+
   useEffect(() => {
     getCategories()(dispatch);
     getSuppliers()(dispatch);

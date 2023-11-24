@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "../pages/Home";
 import Warehouse from "../pages/Warehouse";
 import Tickets from "../pages/Tickets";
 import Stores from "../pages/Stores";
@@ -10,12 +9,8 @@ import StockManagement from "../pages/StockManagement.tsx";
 
 export const router = createBrowserRouter([
   {
-    path: "/stocks",
-    element: <Stores />,
-  },
-  {
     path: "/",
-    element: <Home />,
+    element: <Stores />,
   },
   {
     path: "/entrepot",

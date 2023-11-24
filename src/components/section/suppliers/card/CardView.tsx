@@ -10,8 +10,6 @@ const CardView = () => {
   const dispatch = useDispatch();
   const articles = useSelector((state: RootState) => state.store.group);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [value, setValue] = useState("");
 
   useEffect(() => {
     filtersByGroup("", "name")(dispatch);
@@ -22,16 +20,8 @@ const CardView = () => {
     setValue(value);
     setOpen(true);
   };
-
-  console.log({
-    type: name,
-    value: value,
-    open: open,
-  });
-
   return (
     <>
-      {open && <GroupModal setAction={setOpen} />}
       <Container>
         {articles?.map((article: any) => {
           if (article.name) {

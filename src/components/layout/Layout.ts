@@ -12,6 +12,12 @@ export const SectionX3 = styled.main`
   column-gap: 1rem;
 `;
 
+export const SpaceBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export const SectionX2 = styled.main`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -37,6 +43,36 @@ export const Section = styled.section<SectionProps>`
     background: ${color.border};
     border-radius: 5px;
   }
+`;
+
+export const ShowMany = styled.div`
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Button = styled.p`
+  width: auto;
+  height: 35px;
+  border-radius: 35px;
+  padding-inline: 1rem;
+  background-color: ${color.lightBlue};
+  color: ${color.darkBlue};
+  border: 1px solid ${color.fadeBlue};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 `;
 
 export const SkeletonLoader = styled.div`

@@ -74,9 +74,11 @@ export const {
 
 export const getWarehouses = () => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/warehouse",
+    signal,
   };
 
   axios<WarehouseType[]>(config)
@@ -88,14 +90,17 @@ export const getWarehouses = () => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const getWarehouse = (id: string) => (dispatch: AppDispatch) => {
   dispatch(isLoad(true));
+  const { signal, abort } = new AbortController();
   const config = {
     method: "get",
     url: host + "/warehouse/" + id,
+    signal,
   };
 
   axios<WarehouseType>(config)
@@ -107,18 +112,21 @@ export const getWarehouse = (id: string) => (dispatch: AppDispatch) => {
     .catch(() => {
       dispatch(isError(true));
       dispatch(isLoad(false));
-    });
+    })
+    .finally(() => abort());
 };
 
 export const createWarehouse =
   (data: Warehouse, exit?: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "post",
       url: host + "/warehouse/",
       data: {
         ...data,
       },
+      signal,
     };
 
     axios<WarehouseType[]>(config)
@@ -132,16 +140,19 @@ export const createWarehouse =
         dispatch(isError(true));
         dispatch(isLoad(false));
         if (exit) exit(true);
-      });
+      })
+      .finally(() => abort());
   };
 
 export const updateWarehouse =
   (id: string, data: Warehouse, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "put",
       url: host + "/warehouse/" + id,
       data: { ...data },
+      signal,
     };
 
     axios<WarehouseType[]>(config)
@@ -156,15 +167,18 @@ export const updateWarehouse =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const deleteWarehouse =
   (id: string, exit: Function) => (dispatch: AppDispatch) => {
     dispatch(isLoad(true));
+    const { signal, abort } = new AbortController();
     const config = {
       method: "delete",
       url: host + "/warehouse/" + id,
+      signal,
     };
     axios<WarehouseType[]>(config)
       .then(({ data }) => {
@@ -178,7 +192,8 @@ export const deleteWarehouse =
       .catch(() => {
         dispatch(isError(true));
         dispatch(isLoad(false));
-      });
+      })
+      .finally(() => abort());
   };
 
 export const getWarehouseId = (id: string) => (dispatch: AppDispatch) => {

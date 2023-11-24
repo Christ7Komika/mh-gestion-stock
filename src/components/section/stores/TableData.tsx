@@ -40,6 +40,7 @@ const TableData = () => {
   const [isFilter, setIsFilter] = useState(false);
   const [reload, setReload] = useState<boolean>(false);
   const [groupBy, setGroupBy] = useState<string>("");
+  const [filterData, setFilterData] = useState<FilterType | null>(null);
 
   const isLoad = useSelector((state: RootState) => state.store.isLoad);
   const isLoadGroup = useSelector(
@@ -74,7 +75,6 @@ const TableData = () => {
 
   const cancelFilter = () => {
     setReload(true);
-
     if (reload) {
       setWarehouse("");
       setSearch("");
@@ -199,7 +199,7 @@ export const Container = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 1fr;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   align-items: center;
   gap: 0.5rem;
 `;
